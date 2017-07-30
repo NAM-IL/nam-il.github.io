@@ -4,7 +4,7 @@
 
 var data = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 var w = 200, h = 100;
-var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
+
 
 d3.select("body").append("div").text("새로운 문장");
 
@@ -20,6 +20,9 @@ d3.select("body").selectAll("div")
 })
 .attr("class", "bar-chart");
 
+
+
+var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
 
 svg.selectAll("rect")
 .data(data)
