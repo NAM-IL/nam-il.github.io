@@ -27,10 +27,8 @@ var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
 svg.selectAll("rect")
 .data(data)
 .enter()
-.append("rect");
-
-
-svg.attr("x", function(d, i) { // x 좌표 설정
+.append("rect")
+.attr("x", function(d, i) { // x 좌표 설정
       return i * (w / data.length)
 })
 .attr("y", function(d) { // y 좌표 설정
