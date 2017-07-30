@@ -4,10 +4,7 @@
 
 var data = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 var w = 200, h = 100;
-var svg = d3.select("body")
-            .append("svg")
-            .attr("width", w)
-            .attr("height", h);
+var svg = d3.select("body").append("svg").attr("width", w).attr("height", h);
 
 d3.select("body").append("div").text("새로운 문장");
 
@@ -32,17 +29,17 @@ svg.selectAll("rect")
 
 svg.attr("x", function(d, i) { // x 좌표 설정
       return i * (w / data.length)
-    })
-    .attr("y", function(d) { // y 좌표 설정
+})
+.attr("y", function(d) { // y 좌표 설정
       return h - d;
-    })
-    .attr("width", w / data.length - 1) // 너비 설정
-    .attr("height", function(d) { // 높이 설정
+})
+.attr("width", w / data.length - 1) // 너비 설정
+.attr("height", function(d) { // 높이 설정
       return d;
-    })
-    .attr("fill", function(d) { // 색상 설정
+})
+.attr("fill", function(d) { // 색상 설정
       return "hotpink";
-    });
+});
 
 
 svg.selectAll("text")
