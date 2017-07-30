@@ -15,4 +15,5 @@ d3.select("body").selectAll("div")
 })
 .style("width", function (d) { // 너비 설정
   return "20px";
-});
+})
+.attr("class", "bar-chart");
