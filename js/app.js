@@ -16,7 +16,3 @@ d3.select("body").selectAll("div")
 .style("width", function (d) { // 너비 설정
   return "20px";
 });
-
-.style("height", function (d) { // 높이 설정
-	  return d + "px";
-	});
