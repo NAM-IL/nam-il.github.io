@@ -1157,13 +1157,25 @@ body {
     position: relative;
     overflow: visible;
     z-index: 10;
+    isolation: isolate; /* Create new stacking context */
 }
 
 /* Ensure project tags don't show help cursor */
-.project-tags .tag,
-.project-tags .tag:hover,
+.project-tags .tag {
+    cursor: default !important;
+    isolation: isolate; /* Create new stacking context for each tag */
+    z-index: 1;
+    position: relative;
+}
+
+.project-tags .tag:hover {
+    cursor: default !important;
+    z-index: 2; /* Raise on hover to prevent affecting neighbors */
+}
+
 .project-tags .tag:active {
     cursor: default !important;
+    z-index: 2;
 }
 
 .tag {
@@ -1180,8 +1192,9 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    overflow: visible;
+    overflow: hidden; /* Prevent overflow from affecting neighbors */
     cursor: default !important;
+    will-change: transform; /* Optimize transform performance */
 }
 
 /* Tag tooltip styles - removed for project tags, only for skill names */
@@ -1209,6 +1222,13 @@ body {
     transform: translateY(-2px) scale(1.05);
     color: var(--primary-color);
     cursor: default !important;
+    z-index: 10; /* Raise on hover to prevent affecting neighbors */
+}
+
+/* Project tags specific hover - prevent affecting neighbors */
+.project-tags .tag:hover {
+    z-index: 10;
+    isolation: isolate;
 }
 
 .tag:not([data-tooltip]):hover::before {

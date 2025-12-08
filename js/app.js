@@ -8,29 +8,19 @@ let currentLang = localStorage.getItem('language') || 'ko';
 function switchLanguage(lang) {
     // Prevent multiple simultaneous language switches
     if (switchLanguage.isSwitching) {
-        console.log('Language switch already in progress, skipping...');
         return;
     }
     switchLanguage.isSwitching = true;
     
-    // Set timeout to reset flag in case of issues (safety net)
-    setTimeout(() => {
+    // Safety net: always reset flag after 2 seconds
+    const safetyTimeout = setTimeout(() => {
         switchLanguage.isSwitching = false;
-    }, 5000);
+    }, 2000);
     
     try {
-        // Stop TTS if speaking (check if variables are defined)
-        if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
-            if (typeof stopTTS === 'function') {
-                stopTTS();
-            }
-        }
-        
-        // Update language state first
+        // Update language state immediately (critical)
         currentLang = lang;
         localStorage.setItem('language', lang);
-        
-        // Update HTML lang attribute
         document.documentElement.lang = lang;
         
         // Update language button immediately
@@ -42,72 +32,76 @@ function switchLanguage(lang) {
             }
         }
         
-        // Update elements synchronously but safely
-        try {
-            const elements = document.querySelectorAll('[data-ko][data-en]');
-            const totalElements = elements.length;
-            let processedCount = 0;
-            
-            for (let i = 0; i < totalElements; i++) {
-                const element = elements[i];
+        // Stop TTS if speaking (non-blocking)
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
+            if (typeof stopTTS === 'function') {
                 try {
-                    // Skip certain element types that might cause issues
-                    if (!element || element.tagName === 'SCRIPT' || element.tagName === 'STYLE') {
-                        continue;
-                    }
-                    
-                    // Skip if element is not in the document (detached)
-                    if (!element.isConnected) {
-                        continue;
-                    }
-                    
-                    const text = element.getAttribute(`data-${lang}`);
-                    if (text !== null && text !== undefined && text !== '') {
-                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                            element.value = text;
-                        } else {
-                            // For elements with children, be more careful
-                            const hasOnlyTextChildren = element.children.length === 0 || 
-                                (element.children.length === 1 && element.children[0].tagName === 'SPAN');
-                            
-                            if (hasOnlyTextChildren) {
-                                element.textContent = text;
-                            } else {
-                                // If element has complex children, only update if it's safe
-                                const firstTextNode = Array.from(element.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
-                                if (firstTextNode) {
-                                    firstTextNode.textContent = text;
-                                } else {
-                                    // Last resort: update textContent (may remove children)
-                                    element.textContent = text;
-                                }
-                            }
-                        }
-                    }
-                    processedCount++;
+                    stopTTS();
                 } catch (e) {
-                    console.warn('Error updating element:', e, element);
+                    console.warn('Error stopping TTS:', e);
                 }
             }
-            
-            console.log(`Language switched to ${lang}, updated ${processedCount}/${totalElements} elements`);
-        } catch (e) {
-            console.error('Error updating elements:', e);
         }
         
-        // Update TTS and visitor labels
-        updateTTSLabels(lang);
-        updateVisitorLabel(lang);
-        
-        // Reset flag
-        switchLanguage.isSwitching = false;
+        // Update elements asynchronously to prevent blocking
+        setTimeout(() => {
+            try {
+                updateLanguageElements(lang);
+                updateTTSLabels(lang);
+                updateVisitorLabel(lang);
+            } catch (e) {
+                console.error('Error in async language update:', e);
+            } finally {
+                clearTimeout(safetyTimeout);
+                switchLanguage.isSwitching = false;
+            }
+        }, 0);
         
     } catch (e) {
         console.error('Error in switchLanguage:', e);
-        // Ensure language state is still updated even if there's an error
-        currentLang = lang;
-        localStorage.setItem('language', lang);
+        clearTimeout(safetyTimeout);
         switchLanguage.isSwitching = false;
+    }
+}
+
+// Separate function to update language elements (non-blocking)
+function updateLanguageElements(lang) {
+    try {
+        const elements = document.querySelectorAll('[data-ko][data-en]');
+        const maxElements = Math.min(elements.length, 200); // Limit to prevent blocking
+        
+        for (let i = 0; i < maxElements; i++) {
+            const element = elements[i];
+            if (!element || !element.isConnected) continue;
+            if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') continue;
+            
+            try {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text && text.trim() !== '') {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.value = text;
+                    } else if (element.children.length === 0) {
+                        // Simple case: no children, just update text
+                        element.textContent = text;
+                    } else {
+                        // Has children: try to preserve structure
+                        // Only update if it's safe (simple structure)
+                        const childCount = element.children.length;
+                        if (childCount === 1 && element.children[0].tagName === 'SPAN') {
+                            // Single span child - update parent textContent
+                            element.textContent = text;
+                        } else {
+                            // Complex structure - update textContent anyway (may lose children)
+                            element.textContent = text;
+                        }
+                    }
+                }
+            } catch (e) {
+                // Silently skip problematic elements
+            }
+        }
+    } catch (e) {
+        console.error('Error updating language elements:', e);
     }
 }
 
