@@ -940,98 +940,114 @@ function playTTS() {
 
 // Function to restart TTS with stored text and new speed
 function restartTTSWithCurrentText() {
-    if (!speechSynthesis || !currentTTSText) return;
+    if (!speechSynthesis || !currentTTSText) {
+        console.warn('Cannot restart TTS: speechSynthesis or currentTTSText is missing');
+        return;
+    }
     
     const lang = currentTTSLang || 'ko';
     
+    // Cancel any current speech immediately
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+    }
+    
+    // Reset state
+    isPaused = false;
+    currentUtterance = null;
+    
     // Function to speak with voice selection
     function speakWithVoiceRestart() {
-        // Ensure previous utterance is fully cancelled
-        if (speechSynthesis.speaking || speechSynthesis.pending) {
-            speechSynthesis.cancel();
+        // Create utterance
+        currentUtterance = new SpeechSynthesisUtterance(currentTTSText);
+        
+        // Set language
+        if (lang === 'ko') {
+            currentUtterance.lang = 'ko-KR';
+        } else {
+            currentUtterance.lang = 'en-US';
         }
         
-        // Small delay to ensure cancellation is complete
-        setTimeout(() => {
-            // Create utterance
-            currentUtterance = new SpeechSynthesisUtterance(currentTTSText);
+        currentUtterance.rate = ttsSpeed; // Use updated speed
+        currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
+        currentUtterance.volume = 1.0;
+        
+        // Get male voice
+        const maleVoice = getMaleVoice(lang);
+        if (maleVoice) {
+            currentUtterance.voice = maleVoice;
+            console.log('🎤 Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name, 'Pitch:', currentUtterance.pitch);
             
-            // Set language
+            // Additional validation for Korean: double-check it's not a female voice
             if (lang === 'ko') {
-                currentUtterance.lang = 'ko-KR';
-            } else {
-                currentUtterance.lang = 'en-US';
-            }
-            
-            currentUtterance.rate = ttsSpeed; // Use updated speed
-            currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
-            currentUtterance.volume = 1.0;
-            
-            // Get male voice
-            const maleVoice = getMaleVoice(lang);
-            if (maleVoice) {
-                currentUtterance.voice = maleVoice;
-                console.log('🎤 Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name, 'Pitch:', currentUtterance.pitch);
-                
-                // Additional validation for Korean: double-check it's not a female voice
-                if (lang === 'ko') {
-                    const voiceName = maleVoice.name.toLowerCase();
-                    const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
-                    if (femaleCheck) {
-                        console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
-                        // Lower pitch even more if female voice detected
-                        currentUtterance.pitch = 0.6;
-                        console.log('🔧 Adjusted pitch to 0.6 to compensate');
-                    }
+                const voiceName = maleVoice.name.toLowerCase();
+                const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
+                if (femaleCheck) {
+                    console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
+                    // Lower pitch even more if female voice detected
+                    currentUtterance.pitch = 0.6;
+                    console.log('🔧 Adjusted pitch to 0.6 to compensate');
                 }
             }
-            
-            // Event handlers
-            currentUtterance.onstart = function() {
-                isPaused = false;
-                setTimeout(() => {
-                    updateTTSButtons();
-                }, 50);
-            };
-            
-            currentUtterance.onend = function() {
-                isPaused = false;
-                currentUtterance = null;
-                currentTTSText = '';
-                setTimeout(() => {
-                    updateTTSButtons();
-                }, 50);
-            };
-            
-            currentUtterance.onerror = function(event) {
-                console.error('TTS Error:', event.error);
-                isPaused = false;
-                currentUtterance = null;
-                currentTTSText = '';
-                setTimeout(() => {
-                    updateTTSButtons();
-                }, 50);
-            };
-            
-            // Reset state before speaking
+        }
+        
+        // Event handlers
+        currentUtterance.onstart = function() {
             isPaused = false;
-            
-            // Speak immediately
+            console.log('✅ TTS restarted successfully');
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+        };
+        
+        currentUtterance.onend = function() {
+            isPaused = false;
+            currentUtterance = null;
+            currentTTSText = '';
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+        };
+        
+        currentUtterance.onerror = function(event) {
+            console.error('TTS Error:', event.error);
+            isPaused = false;
+            currentUtterance = null;
+            currentTTSText = '';
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+        };
+        
+        // Reset state before speaking
+        isPaused = false;
+        
+        // Speak immediately
+        try {
             speechSynthesis.speak(currentUtterance);
-            
             // Update buttons immediately
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 100);
+        } catch (error) {
+            console.error('Error speaking:', error);
             updateTTSButtons();
-        }, 50); // Minimal delay to ensure clean restart
+        }
     }
     
     // Check if voices are loaded
     const availableVoices = speechSynthesis.getVoices();
     if (availableVoices.length > 0) {
-        speakWithVoiceRestart();
+        // Small delay to ensure cancellation is complete
+        setTimeout(() => {
+            speakWithVoiceRestart();
+        }, 50);
     } else {
         // Wait for voices to load
         const voicesChangedHandler = function() {
-            speakWithVoiceRestart();
+            setTimeout(() => {
+                speakWithVoiceRestart();
+            }, 50);
             speechSynthesis.removeEventListener('voiceschanged', voicesChangedHandler);
         };
         speechSynthesis.addEventListener('voiceschanged', voicesChangedHandler);

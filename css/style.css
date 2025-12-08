@@ -822,6 +822,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    position: relative;
+    overflow: visible;
 }
 
 .skill-name {
@@ -834,12 +836,16 @@ body {
 }
 
 /* Tooltip styles */
+.skill-name[data-tooltip] {
+    position: relative;
+}
+
 .skill-name[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 8px);
     left: 50%;
-    transform: translateX(-50%) translateY(-8px);
+    transform: translateX(-50%);
     background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
     color: #ffffff;
     padding: 0.5rem 0.75rem;
@@ -849,35 +855,36 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1000;
+    z-index: 10000;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 4px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 4px;
 }
 
 .skill-name[data-tooltip]::before {
     content: '';
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 2px);
     left: 50%;
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: rgba(30, 30, 30, 0.95);
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1001;
+    z-index: 10001;
 }
 
 .skill-name[data-tooltip]:hover::after,
 .skill-name[data-tooltip]:hover::before {
     opacity: 1;
-    transform: translateX(-50%) translateY(-12px);
+    transform: translateX(-50%) translateY(-4px);
 }
 
 .skill-name[data-tooltip]:hover::before {
-    transform: translateX(-50%) translateY(-6px);
+    transform: translateX(-50%) translateY(0);
 }
 
 .skill-bar {
@@ -986,12 +993,17 @@ body {
 .project-card {
     background: white;
     border-radius: 1rem;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: var(--shadow-md);
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
+}
+
+.project-card .project-image {
+    overflow: hidden;
 }
 
 .project-card:hover {
@@ -1142,6 +1154,9 @@ body {
     gap: 0.5rem;
     margin-top: auto;
     padding-top: 1rem;
+    position: relative;
+    overflow: visible;
+    z-index: 10;
 }
 
 .tag {
@@ -1163,12 +1178,16 @@ body {
 }
 
 /* Tag tooltip styles */
+.tag[data-tooltip] {
+    position: relative;
+}
+
 .tag[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 8px);
     left: 50%;
-    transform: translateX(-50%) translateY(-8px);
+    transform: translateX(-50%);
     background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
     color: #ffffff;
     padding: 0.5rem 0.75rem;
@@ -1178,36 +1197,36 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1000;
+    z-index: 10000;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 4px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .tag[data-tooltip]::before {
     content: '';
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 2px);
     left: 50%;
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: rgba(30, 30, 30, 0.95);
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1001;
+    z-index: 10001;
 }
 
 .tag[data-tooltip]:hover::after,
 .tag[data-tooltip]:hover::before {
     opacity: 1;
-    transform: translateX(-50%) translateY(-12px);
+    transform: translateX(-50%) translateY(-4px);
 }
 
 .tag[data-tooltip]:hover::before {
-    transform: translateX(-50%) translateY(-6px);
+    transform: translateX(-50%) translateY(0);
 }
 
 /* Shine effect - only for tags without tooltip */
@@ -1662,12 +1681,16 @@ body {
 }
 
 /* Modal tag tooltip styles */
+.modal-tags .tag[data-tooltip] {
+    position: relative;
+}
+
 .modal-tags .tag[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 8px);
     left: 50%;
-    transform: translateX(-50%) translateY(-8px);
+    transform: translateX(-50%);
     background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
     color: #ffffff;
     padding: 0.5rem 0.75rem;
@@ -1677,36 +1700,36 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 3000;
+    z-index: 10000;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 4px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .modal-tags .tag[data-tooltip]::before {
     content: '';
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100% + 2px);
     left: 50%;
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: rgba(30, 30, 30, 0.95);
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 3001;
+    z-index: 10001;
 }
 
 .modal-tags .tag[data-tooltip]:hover::after,
 .modal-tags .tag[data-tooltip]:hover::before {
     opacity: 1;
-    transform: translateX(-50%) translateY(-12px);
+    transform: translateX(-50%) translateY(-4px);
 }
 
 .modal-tags .tag[data-tooltip]:hover::before {
-    transform: translateX(-50%) translateY(-6px);
+    transform: translateX(-50%) translateY(0);
 }
 
 /* Shine effect for modal tags without tooltip */
