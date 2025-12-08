@@ -60,6 +60,12 @@ function switchLanguage(lang) {
     if (speedLabel) {
         speedLabel.textContent = speedLabel.getAttribute(`data-${lang}`) || speedLabel.textContent;
     }
+    
+    // Update visitor label
+    const visitorLabel = document.querySelector('.visitor-label');
+    if (visitorLabel) {
+        visitorLabel.textContent = visitorLabel.getAttribute(`data-${lang}`) || visitorLabel.textContent;
+    }
 }
 
 // Skill tooltip descriptions
@@ -108,6 +114,51 @@ function initTagTooltips() {
     });
 }
 
+// Visitor Count Management
+function initVisitorCount() {
+    const visitorCountEl = document.getElementById('visitorCount');
+    if (!visitorCountEl) return;
+    
+    // Get today's date as key
+    const today = new Date().toISOString().split('T')[0];
+    const todayKey = `visit_${today}`;
+    const totalKey = 'total_visits';
+    const lastVisitKey = 'last_visit_date';
+    
+    // Check if already visited today
+    const lastVisit = localStorage.getItem(lastVisitKey);
+    const visitedToday = localStorage.getItem(todayKey);
+    
+    // Get total visits
+    let totalVisits = parseInt(localStorage.getItem(totalKey) || '0');
+    
+    // If first visit today, increment
+    if (lastVisit !== today || !visitedToday) {
+        totalVisits++;
+        localStorage.setItem(totalKey, totalVisits.toString());
+        localStorage.setItem(todayKey, 'true');
+        localStorage.setItem(lastVisitKey, today);
+    }
+    
+    // Format number with commas
+    const formattedCount = totalVisits.toLocaleString('ko-KR');
+    visitorCountEl.textContent = formattedCount;
+    
+    // Update visitor label on language change
+    const visitorLabel = document.querySelector('.visitor-label');
+    if (visitorLabel) {
+        const updateLabel = () => {
+            const label = visitorLabel.getAttribute(`data-${currentLang}`) || visitorLabel.textContent;
+            visitorLabel.textContent = label;
+        };
+        updateLabel();
+        
+        // Observe language changes
+        const observer = new MutationObserver(updateLabel);
+        observer.observe(visitorLabel, { childList: true, attributes: true });
+    }
+}
+
 // Navigation toggle for mobile
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize language
@@ -121,6 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize tag tooltips
     initTagTooltips();
+    
+    // Initialize visitor count
+    initVisitorCount();
     
     // Re-initialize tag tooltips when modal is opened (for dynamically created tags)
     const projectLinks = document.querySelectorAll('.project-link');
