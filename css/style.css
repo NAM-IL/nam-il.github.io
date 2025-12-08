@@ -1250,11 +1250,32 @@ body {
 
 /* Role section indentation (excluding portfolio content) */
 #modalRole {
-    padding-left: 1.5rem;
+    padding-left: 0;
 }
 
 #modalRole:not(.portfolio-content *) {
+    padding-left: 0;
+}
+
+/* Role section ul list indentation */
+#modalRole ul,
+#modalRole .modal-role-list {
+    margin: 0;
     padding-left: 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    list-style-type: disc;
+}
+
+#modalRole ul li,
+#modalRole .modal-role-list li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+#modalRole ul li:last-child,
+#modalRole .modal-role-list li:last-child {
+    margin-bottom: 0;
 }
 
 /* Portfolio content styles */

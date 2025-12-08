@@ -277,6 +277,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         '</ul>';
                 } else {
                     modalRoleEl.textContent = role || '';
+                    // Add padding class for text-only content
+                    if (role) {
+                        modalRoleEl.style.paddingLeft = '1.5rem';
+                    }
                 }
                 const roleSection = modalRoleEl.closest('.modal-section');
                 if (roleSection) {
@@ -289,6 +293,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const reviewSection = modalReviewEl.closest('.modal-section');
                 const reviewTitleEl = document.getElementById('modalReviewTitle');
                 
+                // Get review data element
+                const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
+                const isPortfolioType = reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio';
+                
                 // Check if this is Miracle Reading System project
                 const isMiracleReading = title === '미라클 리딩 시스템';
                 
@@ -299,8 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     // Get portfolio content from review data
-                    const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
-                    if (reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio') {
+                    if (isPortfolioType) {
                         // Set innerHTML to preserve HTML structure
                         modalReviewEl.innerHTML = reviewDataEl.innerHTML;
                     } else {
@@ -311,7 +318,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (reviewTitleEl) {
                         reviewTitleEl.textContent = '프로젝트 후기';
                     }
-                    modalReviewEl.textContent = review || '프로젝트 후기 정보가 없습니다.';
+                    
+                    // Check if portfolio type (like Productivity Hub)
+                    if (isPortfolioType) {
+                        // Set innerHTML to preserve HTML structure
+                        modalReviewEl.innerHTML = reviewDataEl.innerHTML;
+                    } else {
+                        // Use text content for simple text reviews
+                        modalReviewEl.textContent = review || '프로젝트 후기 정보가 없습니다.';
+                    }
                 }
                 
                 if (reviewSection) {
@@ -450,6 +465,7 @@ function initTTS() {
         
         // Speed control
         if (speedSlider && speedValue) {
+            let speedChangeTimeout = null;
             speedSlider.addEventListener('input', function() {
                 const newSpeed = parseFloat(this.value);
                 const wasSpeaking = speechSynthesis.speaking || speechSynthesis.pending;
@@ -458,18 +474,24 @@ function initTTS() {
                 ttsSpeed = newSpeed;
                 speedValue.textContent = ttsSpeed.toFixed(1) + 'x';
                 
+                // Clear any pending restart
+                if (speedChangeTimeout) {
+                    clearTimeout(speedChangeTimeout);
+                }
+                
                 // If currently speaking, restart with new speed
                 if (wasSpeaking && currentTTSText && !wasPaused) {
-                    console.log('Speed changed during playback, restarting with new speed:', ttsSpeed);
-                    // Cancel current speech
-                    speechSynthesis.cancel();
-                    isPaused = false;
-                    currentUtterance = null;
-                    
-                    // Restart with new speed after a short delay
-                    setTimeout(() => {
+                    // Use debounce to avoid multiple restarts during slider drag
+                    speedChangeTimeout = setTimeout(() => {
+                        console.log('Speed changed during playback, restarting with new speed:', ttsSpeed);
+                        // Cancel current speech immediately
+                        speechSynthesis.cancel();
+                        isPaused = false;
+                        currentUtterance = null;
+                        
+                        // Restart with new speed immediately (no delay for smoother transition)
                         restartTTSWithCurrentText();
-                    }, 100);
+                    }, 150); // Small debounce delay
                 }
             });
         }
@@ -506,14 +528,27 @@ function getMaleVoice(lang) {
         const femaleIndicators = [
             'female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung',
             'yeona', 'hyeri', 'jiyeon', 'eunji', 'sohee', 'jisoo', 'jennie', 'rose', 'lisa',
-            '아름', '수진', '지은', '미나', '소영', '지현', '서연', '유나', '소라', '나라'
+            '아름', '수진', '지은', '미나', '소영', '지현', '서연', '유나', '소라', '나라',
+            '은지', '소희', '지수', '제니', '로즈', '리사', '혜리', '지연', '예나',
+            'female voice', '여성 음성', 'woman', '여자', 'girl', '소녀'
         ];
+        
+        // Helper function to check if voice is female
+        function isFemaleVoice(voiceName) {
+            const name = voiceName.toLowerCase();
+            for (const indicator of femaleIndicators) {
+                if (name.includes(indicator.toLowerCase())) {
+                    return true;
+                }
+            }
+            return false;
+        }
         
         // First pass: Find voices with explicit male indicators
         const explicitMaleVoices = langVoices.filter(voice => {
             const name = voice.name.toLowerCase();
-            const maleIndicators = ['male', '남성', 'man', '남자', 'male voice', '남성 음성'];
-            return maleIndicators.some(indicator => name.includes(indicator));
+            const maleIndicators = ['male', '남성', 'man', '남자', 'male voice', '남성 음성', '남자 음성'];
+            return maleIndicators.some(indicator => name.includes(indicator)) && !isFemaleVoice(voice.name);
         });
         
         if (explicitMaleVoices.length > 0) {
@@ -523,18 +558,22 @@ function getMaleVoice(lang) {
                 return (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
             });
             const selected = preferred || explicitMaleVoices[0];
-            console.log('Selected explicit male Korean voice:', selected.name);
+            console.log('✅ Selected explicit male Korean voice:', selected.name, 'Lang:', selected.lang);
             return selected;
         }
         
-        // Second pass: Exclude ALL known female voices
+        // Second pass: Exclude ALL known female voices - STRICT filtering
         const nonFemaleVoices = langVoices.filter(voice => {
-            const name = voice.name.toLowerCase();
             // Exclude if contains ANY female indicator
-            for (const indicator of femaleIndicators) {
-                if (name.includes(indicator)) {
-                    return false;
-                }
+            if (isFemaleVoice(voice.name)) {
+                return false;
+            }
+            // Additional check: exclude if name suggests female (contains common female name patterns)
+            const name = voice.name.toLowerCase();
+            // Exclude voices with common female name endings or patterns
+            if (name.match(/[가-힣]*[영|은|지|나|라|나|미|희|연|수]$/)) {
+                // Korean female name endings
+                return false;
             }
             return true;
         });
@@ -542,8 +581,8 @@ function getMaleVoice(lang) {
         console.log('Korean voices filtered:', {
             total: langVoices.length,
             nonFemale: nonFemaleVoices.length,
-            allVoices: langVoices.map(v => v.name),
-            filteredVoices: nonFemaleVoices.map(v => v.name)
+            allVoices: langVoices.map(v => ({ name: v.name, lang: v.lang })),
+            filteredVoices: nonFemaleVoices.map(v => ({ name: v.name, lang: v.lang }))
         });
         
         if (nonFemaleVoices.length > 0) {
@@ -553,34 +592,34 @@ function getMaleVoice(lang) {
                 const name = voice.name.toLowerCase();
                 const isPreferred = (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
                 if (isPreferred) {
-                    // Double check: make sure it's not a female voice
-                    for (const indicator of femaleIndicators) {
-                        if (name.includes(indicator)) {
-                            return false;
-                        }
-                    }
-                    return true;
+                    // Triple check: make absolutely sure it's not a female voice
+                    return !isFemaleVoice(voice.name);
                 }
                 return false;
             });
             
             const selected = preferred || nonFemaleVoices[0];
-            console.log('Selected Korean voice (filtered):', selected.name, 'Lang:', selected.lang);
+            console.log('✅ Selected Korean voice (filtered):', selected.name, 'Lang:', selected.lang);
             return selected;
         } else {
-            console.warn('No non-female Korean voices found after filtering');
+            console.warn('⚠️ No non-female Korean voices found after filtering');
             // Last resort: try to find any voice that might be male based on name patterns
+            // But still exclude known female patterns
             const fallback = langVoices.find(voice => {
                 const name = voice.name.toLowerCase();
                 // Look for patterns that might indicate male (default voices are often male)
-                return name.includes('default') || name.includes('standard') || 
+                const mightBeMale = (name.includes('default') || name.includes('standard') || 
                        (name.includes('google') && !name.includes('female')) ||
-                       (name.includes('microsoft') && !name.includes('female'));
+                       (name.includes('microsoft') && !name.includes('female')));
+                return mightBeMale && !isFemaleVoice(voice.name);
             });
             if (fallback) {
-                console.log('Using fallback Korean voice:', fallback.name);
+                console.log('⚠️ Using fallback Korean voice:', fallback.name);
                 return fallback;
             }
+            // Absolute last resort: return first voice but log warning
+            console.error('❌ Could not find suitable male Korean voice, using first available:', langVoices[0]?.name);
+            return langVoices[0];
         }
     }
     
@@ -692,15 +731,27 @@ function playTTS() {
         
         currentUtterance.rate = ttsSpeed;
         // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
-        // For Korean, use much lower pitch (0.7) to ensure more masculine sound
-        currentUtterance.pitch = lang === 'ko' ? 0.7 : 0.9; // Very low pitch for Korean male voice
+        // For Korean, use much lower pitch (0.65) to ensure more masculine sound
+        currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
         
         // Get male voice
         const maleVoice = getMaleVoice(lang);
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
-            console.log('Using voice:', maleVoice.name, 'Language:', maleVoice.lang, 'Pitch:', currentUtterance.pitch);
+            console.log('🎤 Using voice:', maleVoice.name, 'Language:', maleVoice.lang, 'Pitch:', currentUtterance.pitch);
+            
+            // Additional validation for Korean: double-check it's not a female voice
+            if (lang === 'ko') {
+                const voiceName = maleVoice.name.toLowerCase();
+                const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
+                if (femaleCheck) {
+                    console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
+                    // Lower pitch even more if female voice detected
+                    currentUtterance.pitch = 0.6;
+                    console.log('🔧 Adjusted pitch to 0.6 to compensate');
+                }
+            }
         } else {
             console.warn('No male voice found for language:', lang);
             // Log all available Korean voices for debugging
@@ -772,64 +823,82 @@ function restartTTSWithCurrentText() {
     
     // Function to speak with voice selection
     function speakWithVoiceRestart() {
-        // Create utterance
-        currentUtterance = new SpeechSynthesisUtterance(currentTTSText);
-        
-        // Set language
-        if (lang === 'ko') {
-            currentUtterance.lang = 'ko-KR';
-        } else {
-            currentUtterance.lang = 'en-US';
+        // Ensure previous utterance is fully cancelled
+        if (speechSynthesis.speaking || speechSynthesis.pending) {
+            speechSynthesis.cancel();
         }
         
-        currentUtterance.rate = ttsSpeed; // Use updated speed
-        currentUtterance.pitch = lang === 'ko' ? 0.7 : 0.9;
-        currentUtterance.volume = 1.0;
-        
-        // Get male voice
-        const maleVoice = getMaleVoice(lang);
-        if (maleVoice) {
-            currentUtterance.voice = maleVoice;
-            console.log('Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name);
-        }
-        
-        // Event handlers
-        currentUtterance.onstart = function() {
-            isPaused = false;
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
-        };
-        
-        currentUtterance.onend = function() {
-            isPaused = false;
-            currentUtterance = null;
-            currentTTSText = '';
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
-        };
-        
-        currentUtterance.onerror = function(event) {
-            console.error('TTS Error:', event.error);
-            isPaused = false;
-            currentUtterance = null;
-            currentTTSText = '';
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
-        };
-        
-        // Reset state before speaking
-        isPaused = false;
-        
-        // Speak
-        speechSynthesis.speak(currentUtterance);
-        
-        // Update buttons after a short delay
+        // Small delay to ensure cancellation is complete
         setTimeout(() => {
+            // Create utterance
+            currentUtterance = new SpeechSynthesisUtterance(currentTTSText);
+            
+            // Set language
+            if (lang === 'ko') {
+                currentUtterance.lang = 'ko-KR';
+            } else {
+                currentUtterance.lang = 'en-US';
+            }
+            
+            currentUtterance.rate = ttsSpeed; // Use updated speed
+            currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
+            currentUtterance.volume = 1.0;
+            
+            // Get male voice
+            const maleVoice = getMaleVoice(lang);
+            if (maleVoice) {
+                currentUtterance.voice = maleVoice;
+                console.log('🎤 Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name, 'Pitch:', currentUtterance.pitch);
+                
+                // Additional validation for Korean: double-check it's not a female voice
+                if (lang === 'ko') {
+                    const voiceName = maleVoice.name.toLowerCase();
+                    const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
+                    if (femaleCheck) {
+                        console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
+                        // Lower pitch even more if female voice detected
+                        currentUtterance.pitch = 0.6;
+                        console.log('🔧 Adjusted pitch to 0.6 to compensate');
+                    }
+                }
+            }
+            
+            // Event handlers
+            currentUtterance.onstart = function() {
+                isPaused = false;
+                setTimeout(() => {
+                    updateTTSButtons();
+                }, 50);
+            };
+            
+            currentUtterance.onend = function() {
+                isPaused = false;
+                currentUtterance = null;
+                currentTTSText = '';
+                setTimeout(() => {
+                    updateTTSButtons();
+                }, 50);
+            };
+            
+            currentUtterance.onerror = function(event) {
+                console.error('TTS Error:', event.error);
+                isPaused = false;
+                currentUtterance = null;
+                currentTTSText = '';
+                setTimeout(() => {
+                    updateTTSButtons();
+                }, 50);
+            };
+            
+            // Reset state before speaking
+            isPaused = false;
+            
+            // Speak immediately
+            speechSynthesis.speak(currentUtterance);
+            
+            // Update buttons immediately
             updateTTSButtons();
-        }, 100);
+        }, 50); // Minimal delay to ensure clean restart
     }
     
     // Check if voices are loaded
