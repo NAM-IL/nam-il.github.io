@@ -8,6 +8,9 @@ let isTTSInitialized = false;
 let isSkillTooltipsInitialized = false;
 let isVisitorCountInitialized = false;
 
+// Global flag to prevent infinite loops
+let isInitializing = false;
+
 // Language Management
 let currentLang = localStorage.getItem('language') || 'ko';
 
@@ -217,6 +220,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isInitialized) return;
     isInitialized = true;
     
+    // Execute initialization asynchronously to prevent blocking
+    setTimeout(function() {
+        initializePage();
+    }, 0);
+});
+
+function initializePage() {
+    // Prevent multiple simultaneous initializations
+    if (isInitializing) {
+        console.warn('Initialization already in progress, skipping...');
+        return;
+    }
+    isInitializing = true;
+    
     // Wrap entire initialization in try-catch to prevent page blocking
     try {
         // Initialize language - only set state, don't update elements
@@ -298,18 +315,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Close menu when clicking on a link
+        // Close menu and smooth scroll for navigation links (combined to avoid duplicate listeners)
         const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                navMenu.classList.remove('active');
-            });
-        });
-
-        // Smooth scroll for navigation links
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
+                // Close menu
+                if (navMenu) {
+                    navMenu.classList.remove('active');
+                }
+                // Smooth scroll
                 const targetId = this.getAttribute('href');
                 const targetSection = document.querySelector(targetId);
                 
@@ -357,74 +372,92 @@ document.addEventListener('DOMContentLoaded', function() {
             }, { passive: true });
         }
 
-        // Animate skill bars on scroll
-        try {
-            const skillBars = document.querySelectorAll('.skill-progress');
-            const observerOptions = {
-                threshold: 0.5,
-                rootMargin: '0px'
-            };
+        // Animate skill bars on scroll (delayed to prevent blocking)
+        setTimeout(function() {
+            try {
+                const skillBars = document.querySelectorAll('.skill-progress');
+                if (skillBars.length > 0) {
+                    const observerOptions = {
+                        threshold: 0.5,
+                        rootMargin: '0px'
+                    };
 
-            const skillObserver = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const progress = entry.target.getAttribute('data-progress');
-                        entry.target.style.width = progress + '%';
-                        entry.target.classList.add('animated');
-                    }
-                });
-            }, observerOptions);
+                    const skillObserver = new IntersectionObserver(function(entries) {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                                const progress = entry.target.getAttribute('data-progress');
+                                if (progress) {
+                                    entry.target.style.width = progress + '%';
+                                    entry.target.classList.add('animated');
+                                }
+                            }
+                        });
+                    }, observerOptions);
 
-            skillBars.forEach(bar => {
-                skillObserver.observe(bar);
-            });
-        } catch (e) {
-            // Ignore
-        }
+                    skillBars.forEach(bar => {
+                        skillObserver.observe(bar);
+                    });
+                }
+            } catch (e) {
+                console.error('Error in skill bars observer:', e);
+            }
+        }, 100);
 
-        // Animate stats on scroll
-        try {
-            const statNumbers = document.querySelectorAll('.stat-number');
-            const statObserver = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                        animateValue(entry.target, 0, parseInt(entry.target.textContent), 2000);
-                        entry.target.classList.add('animated');
-                    }
-                });
-            }, { threshold: 0.5, rootMargin: '0px' });
+        // Animate stats on scroll (delayed to prevent blocking)
+        setTimeout(function() {
+            try {
+                const statNumbers = document.querySelectorAll('.stat-number');
+                if (statNumbers.length > 0) {
+                    const statObserver = new IntersectionObserver(function(entries) {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                                const text = entry.target.textContent;
+                                const value = parseInt(text.replace(/[^0-9]/g, ''));
+                                if (!isNaN(value)) {
+                                    animateValue(entry.target, 0, value, 2000);
+                                    entry.target.classList.add('animated');
+                                }
+                            }
+                        });
+                    }, { threshold: 0.5, rootMargin: '0px' });
 
-            statNumbers.forEach(stat => {
-                statObserver.observe(stat);
-            });
-        } catch (e) {
-            // Ignore
-        }
+                    statNumbers.forEach(stat => {
+                        statObserver.observe(stat);
+                    });
+                }
+            } catch (e) {
+                console.error('Error in stat numbers observer:', e);
+            }
+        }, 100);
 
-        // Add fade-in animation to sections on scroll
-        try {
-            const sections = document.querySelectorAll('.section');
-            const sectionObserver = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
+        // Add fade-in animation to sections on scroll (delayed to prevent blocking)
+        setTimeout(function() {
+            try {
+                const sections = document.querySelectorAll('.section');
+                if (sections.length > 0) {
+                    const sectionObserver = new IntersectionObserver(function(entries) {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }
+                        });
+                    }, {
+                        threshold: 0.1,
+                        rootMargin: '0px 0px -50px 0px'
+                    });
 
-            sections.forEach(section => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(30px)';
-                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                sectionObserver.observe(section);
-            });
-        } catch (e) {
-            // Ignore
-        }
+                    sections.forEach(section => {
+                        section.style.opacity = '0';
+                        section.style.transform = 'translateY(30px)';
+                        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        sectionObserver.observe(section);
+                    });
+                }
+            } catch (e) {
+                console.error('Error in sections observer:', e);
+            }
+        }, 100);
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');
@@ -662,9 +695,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } catch (e) {
         // Critical: Catch any errors in initialization to prevent page blocking
-        console.error('Critical error in DOMContentLoaded:', e);
+        console.error('Critical error in initializePage:', e);
+    } finally {
+        // Always reset initialization flag
+        isInitializing = false;
     }
-});
+}
 
 // Function to animate numbers
 function animateValue(element, start, end, duration) {
