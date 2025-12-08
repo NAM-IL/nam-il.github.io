@@ -727,6 +727,7 @@ body {
     color: var(--text-secondary);
     margin-bottom: 0;
     line-height: 1.6;
+    padding-left: 1.5rem;
 }
 
 .role-list {
@@ -917,6 +918,7 @@ body {
     color: var(--text-secondary);
     line-height: 1.8;
     font-size: 1rem;
+    padding-left: 1.5rem;
 }
 
 .modal-role-list {
@@ -1189,6 +1191,71 @@ body {
 .btn-submit {
     width: 100%;
     margin-top: 1rem;
+}
+
+.contact-linkedin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    min-height: 300px;
+}
+
+.linkedin-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+    color: #0077b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 119, 181, 0.1);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.linkedin-icon:hover {
+    transform: scale(1.1);
+}
+
+.linkedin-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.contact-linkedin h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.contact-linkedin p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+.btn-linkedin {
+    background: linear-gradient(135deg, #0077b5, #005885);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 6px -1px rgba(0, 119, 181, 0.3);
+}
+
+.btn-linkedin:hover {
+    background: linear-gradient(135deg, #005885, #0077b5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -1px rgba(0, 119, 181, 0.4);
 }
 
 /* ===== Footer ===== */

@@ -86,29 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
         statObserver.observe(stat);
     });
 
-    // Contact form submission
-    const contactForm = document.querySelector('.contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const formData = new FormData(this);
-            const name = this.querySelector('input[type="text"]').value;
-            const email = this.querySelector('input[type="email"]').value;
-            const message = this.querySelector('textarea').value;
-
-            // Here you would typically send the data to a server
-            console.log('Form submitted:', { name, email, message });
-            
-            // Show success message (you can customize this)
-            alert('메시지가 전송되었습니다! (이것은 데모입니다)');
-            
-            // Reset form
-            this.reset();
-        });
-    }
-
     // Add fade-in animation to sections on scroll
     const sections = document.querySelectorAll('.section');
     const sectionObserver = new IntersectionObserver(function(entries) {
