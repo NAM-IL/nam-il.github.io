@@ -2,6 +2,12 @@
  * Portfolio Website JavaScript
  */
 
+// Initialization flags to prevent multiple initializations
+let isInitialized = false;
+let isTTSInitialized = false;
+let isSkillTooltipsInitialized = false;
+let isVisitorCountInitialized = false;
+
 // Language Management
 let currentLang = localStorage.getItem('language') || 'ko';
 
@@ -136,63 +142,81 @@ const skillTooltips = {
 
 // Initialize skill tooltips
 function initSkillTooltips() {
-    const skillNames = document.querySelectorAll('.skill-name');
-    skillNames.forEach(skillName => {
-        const skillText = skillName.textContent.trim();
-        const tooltip = skillTooltips[skillText];
-        if (tooltip) {
-            skillName.setAttribute('data-tooltip', tooltip);
-        }
-    });
+    // Prevent multiple initializations
+    if (isSkillTooltipsInitialized) return;
+    isSkillTooltipsInitialized = true;
+    
+    try {
+        const skillNames = document.querySelectorAll('.skill-name');
+        skillNames.forEach(skillName => {
+            const skillText = skillName.textContent.trim();
+            const tooltip = skillTooltips[skillText];
+            if (tooltip) {
+                skillName.setAttribute('data-tooltip', tooltip);
+            }
+        });
+    } catch (e) {
+        console.error('Error in initSkillTooltips:', e);
+        isSkillTooltipsInitialized = false; // Reset on error
+    }
 }
 
 // Visitor Count Management
 function initVisitorCount() {
-    const visitorCountEl = document.getElementById('visitorCount');
-    if (!visitorCountEl) return;
+    // Prevent multiple initializations
+    if (isVisitorCountInitialized) return;
+    isVisitorCountInitialized = true;
     
-    // Get today's date as key
-    const today = new Date().toISOString().split('T')[0];
-    const todayKey = `visit_${today}`;
-    const totalKey = 'total_visits';
-    const lastVisitKey = 'last_visit_date';
-    
-    // Check if already visited today
-    const lastVisit = localStorage.getItem(lastVisitKey);
-    const visitedToday = localStorage.getItem(todayKey);
-    
-    // Get total visits
-    let totalVisits = parseInt(localStorage.getItem(totalKey) || '0');
-    
-    // If first visit today, increment
-    if (lastVisit !== today || !visitedToday) {
-        totalVisits++;
-        localStorage.setItem(totalKey, totalVisits.toString());
-        localStorage.setItem(todayKey, 'true');
-        localStorage.setItem(lastVisitKey, today);
-    }
-    
-    // Format number with commas
-    const formattedCount = totalVisits.toLocaleString('ko-KR');
-    visitorCountEl.textContent = formattedCount;
-    
-    // Update visitor label on language change
-    const visitorLabel = document.querySelector('.visitor-label');
-    if (visitorLabel) {
-        const updateLabel = () => {
-            const label = visitorLabel.getAttribute(`data-${currentLang}`) || visitorLabel.textContent;
-            visitorLabel.textContent = label;
-        };
-        updateLabel();
+    try {
+        const visitorCountEl = document.getElementById('visitorCount');
+        if (!visitorCountEl) return;
         
-        // Observe language changes
-        const observer = new MutationObserver(updateLabel);
-        observer.observe(visitorLabel, { childList: true, attributes: true });
+        // Get today's date as key
+        const today = new Date().toISOString().split('T')[0];
+        const todayKey = `visit_${today}`;
+        const totalKey = 'total_visits';
+        const lastVisitKey = 'last_visit_date';
+        
+        // Check if already visited today
+        const lastVisit = localStorage.getItem(lastVisitKey);
+        const visitedToday = localStorage.getItem(todayKey);
+        
+        // Get total visits
+        let totalVisits = parseInt(localStorage.getItem(totalKey) || '0');
+        
+        // If first visit today, increment
+        if (lastVisit !== today || !visitedToday) {
+            totalVisits++;
+            localStorage.setItem(totalKey, totalVisits.toString());
+            localStorage.setItem(todayKey, 'true');
+            localStorage.setItem(lastVisitKey, today);
+        }
+        
+        // Format number with commas
+        const formattedCount = totalVisits.toLocaleString('ko-KR');
+        visitorCountEl.textContent = formattedCount;
+        
+        // Update visitor label on language change (without MutationObserver to prevent infinite loop)
+        const visitorLabel = document.querySelector('.visitor-label');
+        if (visitorLabel) {
+            // Set initial label
+            const label = visitorLabel.getAttribute(`data-${currentLang}`) || visitorLabel.textContent;
+            if (visitorLabel.getAttribute(`data-${currentLang}`)) {
+                visitorLabel.textContent = label;
+            }
+        }
+    } catch (e) {
+        console.error('Error in initVisitorCount:', e);
+        isVisitorCountInitialized = false; // Reset on error
     }
 }
 
 // Navigation toggle for mobile
 document.addEventListener('DOMContentLoaded', function() {
+    // Prevent multiple initializations
+    if (isInitialized) return;
+    isInitialized = true;
+    
     // Wrap entire initialization in try-catch to prevent page blocking
     try {
         // Initialize language - only set state, don't update elements
@@ -669,9 +693,14 @@ let currentTTSLang = 'ko'; // Store current language
 let ttsCharIndex = 0; // Track current character index during playback
 
 function initTTS() {
-    // Check if browser supports Web Speech API
-    if ('speechSynthesis' in window) {
-        speechSynthesis = window.speechSynthesis;
+    // Prevent multiple initializations
+    if (isTTSInitialized) return;
+    isTTSInitialized = true;
+    
+    try {
+        // Check if browser supports Web Speech API
+        if ('speechSynthesis' in window) {
+            speechSynthesis = window.speechSynthesis;
         
         // Get buttons
         const playBtn = document.getElementById('ttsPlayBtn');
@@ -746,6 +775,10 @@ function initTTS() {
         if (ttsControls) {
             ttsControls.style.display = 'none';
         }
+    }
+    } catch (e) {
+        console.error('Error in initTTS:', e);
+        isTTSInitialized = false; // Reset on error
     }
 }
 
