@@ -6,6 +6,11 @@
 let currentLang = localStorage.getItem('language') || 'ko';
 
 function switchLanguage(lang) {
+    // Stop TTS if speaking
+    if (speechSynthesis && (speechSynthesis.speaking || isPaused)) {
+        stopTTS();
+    }
+    
     currentLang = lang;
     localStorage.setItem('language', lang);
     
@@ -22,12 +27,48 @@ function switchLanguage(lang) {
     
     // Update HTML lang attribute
     document.documentElement.lang = lang;
+    
+    // Stop TTS if speaking when language changes
+    if (speechSynthesis && (speechSynthesis.speaking || isPaused)) {
+        stopTTS();
+    }
+    
+    // Update TTS button texts
+    const playBtn = document.getElementById('ttsPlayBtn');
+    const pauseBtn = document.getElementById('ttsPauseBtn');
+    const stopBtn = document.getElementById('ttsStopBtn');
+    const speedLabel = document.querySelector('.tts-speed-label');
+    
+    if (playBtn) {
+        const playText = playBtn.querySelector('.tts-button-text');
+        if (playText) {
+            playText.textContent = playText.getAttribute(`data-${lang}`) || playText.textContent;
+        }
+    }
+    if (pauseBtn) {
+        const pauseText = pauseBtn.querySelector('.tts-button-text');
+        if (pauseText) {
+            pauseText.textContent = pauseText.getAttribute(`data-${lang}`) || pauseText.textContent;
+        }
+    }
+    if (stopBtn) {
+        const stopText = stopBtn.querySelector('.tts-button-text');
+        if (stopText) {
+            stopText.textContent = stopText.getAttribute(`data-${lang}`) || stopText.textContent;
+        }
+    }
+    if (speedLabel) {
+        speedLabel.textContent = speedLabel.getAttribute(`data-${lang}`) || speedLabel.textContent;
+    }
 }
 
 // Navigation toggle for mobile
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize language
     switchLanguage(currentLang);
+    
+    // Initialize TTS
+    initTTS();
     
     // Language switcher button
     const langBtn = document.getElementById('langBtn');
@@ -350,6 +391,271 @@ function animateValue(element, start, end, duration) {
         }
     };
     window.requestAnimationFrame(step);
+}
+
+// TTS (Text-to-Speech) functionality
+let speechSynthesis = null;
+let currentUtterance = null;
+let isPaused = false;
+let ttsSpeed = 1.0;
+
+function initTTS() {
+    // Check if browser supports Web Speech API
+    if ('speechSynthesis' in window) {
+        speechSynthesis = window.speechSynthesis;
+        
+        // Get buttons
+        const playBtn = document.getElementById('ttsPlayBtn');
+        const pauseBtn = document.getElementById('ttsPauseBtn');
+        const stopBtn = document.getElementById('ttsStopBtn');
+        const speedSlider = document.getElementById('ttsSpeed');
+        const speedValue = document.getElementById('ttsSpeedValue');
+        
+        // Play button
+        if (playBtn) {
+            playBtn.addEventListener('click', function() {
+                playTTS();
+            });
+        }
+        
+        // Pause button
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', function() {
+                pauseTTS();
+            });
+        }
+        
+        // Stop button
+        if (stopBtn) {
+            stopBtn.addEventListener('click', function() {
+                stopTTS();
+            });
+        }
+        
+        // Speed control
+        if (speedSlider && speedValue) {
+            speedSlider.addEventListener('input', function() {
+                ttsSpeed = parseFloat(this.value);
+                speedValue.textContent = ttsSpeed.toFixed(1) + 'x';
+                
+                // Update current utterance speed if speaking
+                if (currentUtterance && speechSynthesis.speaking && !isPaused) {
+                    // Note: Rate cannot be changed while speaking, need to restart
+                    // For better UX, we'll update it for next utterance
+                    if (currentUtterance) {
+                        currentUtterance.rate = ttsSpeed;
+                    }
+                }
+            });
+        }
+        
+        // Stop TTS when page is unloaded
+        window.addEventListener('beforeunload', function() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+        });
+    } else {
+        // Hide TTS controls if not supported
+        const ttsControls = document.querySelector('.tts-controls');
+        if (ttsControls) {
+            ttsControls.style.display = 'none';
+        }
+    }
+}
+
+function getMaleVoice(lang) {
+    const voices = speechSynthesis.getVoices();
+    const langVoices = voices.filter(voice => {
+        if (lang === 'ko') {
+            return voice.lang.includes('ko') || voice.lang.includes('KR');
+        } else {
+            return voice.lang.includes('en') || voice.lang.includes('US') || voice.lang.includes('GB');
+        }
+    });
+    
+    if (langVoices.length === 0) return null;
+    
+    // Try to find male voice (usually lower pitch or specific name patterns)
+    const maleVoice = langVoices.find(voice => {
+        const name = voice.name.toLowerCase();
+        // English male voices
+        if (lang === 'en') {
+            return name.includes('male') || 
+                   name.includes('man') || 
+                   name.includes('david') || 
+                   name.includes('daniel') ||
+                   name.includes('james') ||
+                   name.includes('john') ||
+                   name.includes('mark') ||
+                   name.includes('paul') ||
+                   name.includes('thomas') ||
+                   (name.includes('google') && name.includes('male')) ||
+                   (name.includes('microsoft') && (name.includes('david') || name.includes('mark')));
+        }
+        // Korean male voices
+        else {
+            return name.includes('male') || 
+                   name.includes('남성') ||
+                   name.includes('yunjung') ||
+                   (name.includes('google') && name.includes('male')) ||
+                   (name.includes('microsoft') && name.includes('male')) ||
+                   (name.includes('yuna') === false && name.includes('female') === false);
+        }
+    });
+    
+    // If no specific male voice found, try to find by pitch (male voices typically have lower default pitch)
+    // Or use the first available voice
+    if (!maleVoice) {
+        // Try to find voice with lower pitch (male voices often have pitch around 1.0 or lower)
+        const lowerPitchVoice = langVoices.find(voice => {
+            // Some browsers expose voice properties
+            return voice.default === true || voice.localService === true;
+        });
+        return lowerPitchVoice || langVoices[0];
+    }
+    
+    return maleVoice;
+}
+
+function playTTS() {
+    const aboutTextContent = document.getElementById('aboutTextContent');
+    const playBtn = document.getElementById('ttsPlayBtn');
+    const pauseBtn = document.getElementById('ttsPauseBtn');
+    const stopBtn = document.getElementById('ttsStopBtn');
+    
+    if (!speechSynthesis || !aboutTextContent) return;
+    
+    // If paused, resume
+    if (isPaused && speechSynthesis.speaking) {
+        speechSynthesis.resume();
+        isPaused = false;
+        updateTTSButtons(true);
+        return;
+    }
+    
+    // If already speaking, do nothing
+    if (speechSynthesis.speaking && !isPaused) {
+        return;
+    }
+    
+    // Get current language
+    const lang = currentLang || 'ko';
+    
+    // Get text content based on current language
+    let text = '';
+    const paragraphs = aboutTextContent.querySelectorAll('p');
+    paragraphs.forEach(p => {
+        const langText = p.getAttribute(`data-${lang}`);
+        if (langText) {
+            text += langText + ' ';
+        } else {
+            // Fallback to visible text if data attribute not found
+            text += (p.innerText || p.textContent) + ' ';
+        }
+    });
+    text = text.trim();
+    
+    if (!text) return;
+    
+    // Function to speak with voice selection
+    function speakWithVoice() {
+        // Create utterance
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        
+        // Set language based on current language mode
+        if (lang === 'ko') {
+            currentUtterance.lang = 'ko-KR';
+        } else {
+            currentUtterance.lang = 'en-US';
+        }
+        
+        currentUtterance.rate = ttsSpeed;
+        // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
+        currentUtterance.pitch = 0.9; // Slightly lower pitch for more masculine sound
+        currentUtterance.volume = 1.0;
+        
+        // Get male voice
+        const maleVoice = getMaleVoice(lang);
+        if (maleVoice) {
+            currentUtterance.voice = maleVoice;
+            console.log('Using voice:', maleVoice.name, 'Language:', maleVoice.lang);
+        } else {
+            console.warn('No male voice found for language:', lang);
+        }
+        
+        // Event handlers
+        currentUtterance.onstart = function() {
+            isPaused = false;
+            updateTTSButtons(true);
+        };
+        
+        currentUtterance.onend = function() {
+            isPaused = false;
+            updateTTSButtons(false);
+        };
+        
+        currentUtterance.onerror = function(event) {
+            console.error('TTS Error:', event.error);
+            isPaused = false;
+            updateTTSButtons(false);
+        };
+        
+        // Speak
+        speechSynthesis.speak(currentUtterance);
+        updateTTSButtons(true);
+    }
+    
+    // Check if voices are loaded
+    const voices = speechSynthesis.getVoices();
+    if (voices.length > 0) {
+        speakWithVoice();
+    } else {
+        // Wait for voices to load
+        const voicesChangedHandler = function() {
+            speakWithVoice();
+            speechSynthesis.removeEventListener('voiceschanged', voicesChangedHandler);
+        };
+        speechSynthesis.addEventListener('voiceschanged', voicesChangedHandler);
+    }
+}
+
+function pauseTTS() {
+    if (speechSynthesis.speaking && !isPaused) {
+        speechSynthesis.pause();
+        isPaused = true;
+        updateTTSButtons(true);
+    }
+}
+
+function stopTTS() {
+    if (speechSynthesis.speaking || isPaused) {
+        speechSynthesis.cancel();
+        isPaused = false;
+        currentUtterance = null;
+        updateTTSButtons(false);
+    }
+}
+
+function updateTTSButtons(isPlaying) {
+    const playBtn = document.getElementById('ttsPlayBtn');
+    const pauseBtn = document.getElementById('ttsPauseBtn');
+    const stopBtn = document.getElementById('ttsStopBtn');
+    
+    if (isPlaying) {
+        if (playBtn) playBtn.style.display = 'none';
+        if (pauseBtn) pauseBtn.style.display = 'flex';
+        if (stopBtn) stopBtn.style.display = 'flex';
+    } else {
+        if (playBtn) playBtn.style.display = 'flex';
+        if (pauseBtn) pauseBtn.style.display = 'none';
+        if (stopBtn) stopBtn.style.display = 'none';
+    }
+}
+
+// Load voices when available
+if ('speechSynthesis' in window) {
+    speechSynthesis = window.speechSynthesis;
 }
 
 // Add active class to current navigation link
