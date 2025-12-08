@@ -231,8 +231,34 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Populate review - always show section
             if (modalReviewEl) {
-                modalReviewEl.textContent = review || '프로젝트 후기 정보가 없습니다.';
                 const reviewSection = modalReviewEl.closest('.modal-section');
+                const reviewTitleEl = document.getElementById('modalReviewTitle');
+                
+                // Check if this is Miracle Reading System project
+                const isMiracleReading = title === '미라클 리딩 시스템';
+                
+                if (isMiracleReading) {
+                    // Change title to "프로젝트 상세"
+                    if (reviewTitleEl) {
+                        reviewTitleEl.textContent = '프로젝트 상세';
+                    }
+                    
+                    // Get portfolio content from review data
+                    const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
+                    if (reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio') {
+                        // Set innerHTML to preserve HTML structure
+                        modalReviewEl.innerHTML = reviewDataEl.innerHTML;
+                    } else {
+                        modalReviewEl.innerHTML = '<p>프로젝트 상세 정보가 없습니다.</p>';
+                    }
+                } else {
+                    // Keep original title for other projects
+                    if (reviewTitleEl) {
+                        reviewTitleEl.textContent = '프로젝트 후기';
+                    }
+                    modalReviewEl.textContent = review || '프로젝트 후기 정보가 없습니다.';
+                }
+                
                 if (reviewSection) {
                     reviewSection.style.display = 'block';
                 }
