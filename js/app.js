@@ -151,13 +151,19 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const projectCard = this.closest('.project-card');
+            if (!projectCard) return;
+            
             const projectContent = projectCard.querySelector('.project-content');
+            if (!projectContent) return;
             
             // Extract project information
-            const title = projectContent.querySelector('.project-title').textContent;
-            const client = projectContent.querySelector('.detail-row .detail-value').textContent;
-            const period = projectContent.querySelectorAll('.detail-row .detail-value')[1]?.textContent || '';
-            const environment = projectContent.querySelectorAll('.detail-row .detail-value')[2]?.textContent || '';
+            const titleEl = projectContent.querySelector('.project-title');
+            const title = titleEl ? titleEl.textContent : '';
+            
+            const detailRows = projectContent.querySelectorAll('.detail-row .detail-value');
+            const client = detailRows[0] ? detailRows[0].textContent : '';
+            const period = detailRows[1] ? detailRows[1].textContent : '';
+            const environment = detailRows[2] ? detailRows[2].textContent : '';
             
             // Get data from hidden project-data div
             const projectData = projectContent.querySelector('.project-data');
@@ -173,6 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (introEl) introduction = introEl.textContent.trim();
                 if (roleEl) role = roleEl.textContent.trim();
                 if (reviewEl) review = reviewEl.textContent.trim();
+            } else {
+                console.warn('Project data not found for:', title);
             }
             
             // Get tags
@@ -182,33 +190,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 tags.push(tag.textContent.trim());
             });
             
-            // Populate modal
-            document.getElementById('modalProjectTitle').textContent = title;
-            document.getElementById('modalClient').textContent = client;
-            document.getElementById('modalPeriod').textContent = period;
-            document.getElementById('modalEnvironment').textContent = environment;
-            document.getElementById('modalIntroduction').textContent = introduction;
+            // Populate modal - get all modal elements
+            const modalTitleEl = document.getElementById('modalProjectTitle');
+            const modalClientEl = document.getElementById('modalClient');
+            const modalPeriodEl = document.getElementById('modalPeriod');
+            const modalEnvironmentEl = document.getElementById('modalEnvironment');
+            const modalIntroductionEl = document.getElementById('modalIntroduction');
+            const modalRoleEl = document.getElementById('modalRole');
+            const modalReviewEl = document.getElementById('modalReview');
             
-            // Format role
-            const roleContainer = document.getElementById('modalRole');
-            if (role.includes('|')) {
-                roleContainer.innerHTML = '<ul class="modal-role-list">' + 
-                    role.split('|').map(r => '<li>' + r + '</li>').join('') + 
-                    '</ul>';
-            } else {
-                roleContainer.textContent = role;
+            // Populate basic info
+            if (modalTitleEl) modalTitleEl.textContent = title || '';
+            if (modalClientEl) modalClientEl.textContent = client || '';
+            if (modalPeriodEl) modalPeriodEl.textContent = period || '';
+            if (modalEnvironmentEl) modalEnvironmentEl.textContent = environment || '';
+            
+            // Populate introduction - always show section
+            if (modalIntroductionEl) {
+                modalIntroductionEl.textContent = introduction || '';
+                const introSection = modalIntroductionEl.closest('.modal-section');
+                if (introSection) {
+                    introSection.style.display = 'block';
+                }
             }
             
-            document.getElementById('modalReview').textContent = review || '프로젝트 후기 정보가 없습니다.';
+            // Populate role - always show section
+            if (modalRoleEl) {
+                if (role && role.includes('|')) {
+                    modalRoleEl.innerHTML = '<ul class="modal-role-list">' + 
+                        role.split('|').map(r => '<li>' + r.trim() + '</li>').join('') + 
+                        '</ul>';
+                } else {
+                    modalRoleEl.textContent = role || '';
+                }
+                const roleSection = modalRoleEl.closest('.modal-section');
+                if (roleSection) {
+                    roleSection.style.display = 'block';
+                }
+            }
             
-            // Ensure all modal sections are visible
-            const introSection = document.getElementById('modalIntroduction').closest('.modal-section');
-            const roleSection = document.getElementById('modalRole').closest('.modal-section');
-            const reviewSection = document.getElementById('modalReview').closest('.modal-section');
-            
-            if (introSection) introSection.style.display = 'block';
-            if (roleSection) roleSection.style.display = 'block';
-            if (reviewSection) reviewSection.style.display = 'block';
+            // Populate review - always show section
+            if (modalReviewEl) {
+                modalReviewEl.textContent = review || '프로젝트 후기 정보가 없습니다.';
+                const reviewSection = modalReviewEl.closest('.modal-section');
+                if (reviewSection) {
+                    reviewSection.style.display = 'block';
+                }
+            }
             
             // Populate tags
             const tagsContainer = document.getElementById('modalTags');
