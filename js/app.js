@@ -15,9 +15,6 @@ let isInitializing = false;
 let currentLang = localStorage.getItem('language') || 'ko';
 
 function switchLanguage(lang) {
-    // ABSOLUTE MINIMUM: Only update state, no complex operations
-    // All operations are wrapped in try-catch to prevent any blocking
-    
     // Update language state (synchronous, safe)
     currentLang = lang;
     
@@ -65,8 +62,69 @@ function switchLanguage(lang) {
         // Ignore
     }
     
-    // NOTE: All element text updates are disabled to prevent page freezing
-    // Only language state and button text are updated
+    // Update all elements with data-ko and data-en attributes (async, batched for performance)
+    setTimeout(() => {
+        try {
+            updateLanguageElements(lang);
+        } catch (e) {
+            console.error('Error updating language elements:', e);
+        }
+    }, 10);
+}
+
+// Safe function to update language elements without causing infinite loops
+function updateLanguageElements(lang) {
+    try {
+        // Get all elements with both data-ko and data-en attributes
+        const elements = document.querySelectorAll('[data-ko][data-en]');
+        const totalElements = elements.length;
+        
+        // Process in smaller batches to prevent blocking
+        const batchSize = 50;
+        let processed = 0;
+        
+        function processBatch(startIndex) {
+            const endIndex = Math.min(startIndex + batchSize, totalElements);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                try {
+                    const element = elements[i];
+                    if (!element || !element.isConnected) continue;
+                    
+                    const text = element.getAttribute(`data-${lang}`);
+                    if (text !== null && text !== undefined && text !== '') {
+                        // Only update if text is different to prevent unnecessary DOM updates
+                        if (element.textContent !== text) {
+                            element.textContent = text;
+                        }
+                    }
+                } catch (e) {
+                    // Ignore individual element errors
+                }
+            }
+            
+            processed = endIndex;
+            
+            // Continue with next batch if there are more elements
+            if (processed < totalElements) {
+                setTimeout(() => processBatch(processed), 0);
+            }
+        }
+        
+        // Start processing
+        if (totalElements > 0) {
+            processBatch(0);
+        }
+        
+        // Update TTS labels
+        updateTTSLabels(lang);
+        
+        // Update visitor label
+        updateVisitorLabel(lang);
+        
+    } catch (e) {
+        console.error('Error in updateLanguageElements:', e);
+    }
 }
 
 
@@ -236,7 +294,7 @@ function initializePage() {
     
     // Wrap entire initialization in try-catch to prevent page blocking
     try {
-        // Initialize language - only set state, don't update elements
+        // Initialize language - set state and update elements
         try {
             document.documentElement.lang = currentLang;
             const langBtn = document.getElementById('langBtn');
@@ -246,6 +304,14 @@ function initializePage() {
                     langText.textContent = currentLang === 'ko' ? 'EN' : 'KO';
                 }
             }
+            // Apply initial language to all elements (delayed to prevent blocking)
+            setTimeout(() => {
+                try {
+                    updateLanguageElements(currentLang);
+                } catch (e) {
+                    console.error('Error applying initial language:', e);
+                }
+            }, 100);
         } catch (e) {
             console.error('Error initializing language:', e);
         }
