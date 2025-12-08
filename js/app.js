@@ -495,24 +495,57 @@ function getMaleVoice(lang) {
         }
         // Korean male voices
         else {
-            return name.includes('male') || 
-                   name.includes('남성') ||
-                   name.includes('yunjung') ||
-                   (name.includes('google') && name.includes('male')) ||
-                   (name.includes('microsoft') && name.includes('male')) ||
-                   (name.includes('yuna') === false && name.includes('female') === false);
+            // Prioritize explicit male indicators
+            if (name.includes('male') || name.includes('남성')) {
+                return true;
+            }
+            // Exclude known female voices
+            if (name.includes('female') || name.includes('여성') || 
+                name.includes('yuna') || name.includes('sora') || name.includes('nara')) {
+                return false;
+            }
+            // Google Korean male voice
+            if (name.includes('google') && (name.includes('korean') || name.includes('한국어'))) {
+                // Google TTS usually has male as default for Korean
+                return true;
+            }
+            // Microsoft Korean male voice
+            if (name.includes('microsoft') && name.includes('korean')) {
+                return true;
+            }
+            // yunjung can be male in some systems
+            if (name.includes('yunjung')) {
+                return true;
+            }
+            return false;
         }
     });
     
-    // If no specific male voice found, try to find by pitch (male voices typically have lower default pitch)
-    // Or use the first available voice
+    // If no specific male voice found, try fallback strategies
     if (!maleVoice) {
-        // Try to find voice with lower pitch (male voices often have pitch around 1.0 or lower)
-        const lowerPitchVoice = langVoices.find(voice => {
-            // Some browsers expose voice properties
-            return voice.default === true || voice.localService === true;
-        });
-        return lowerPitchVoice || langVoices[0];
+        if (lang === 'ko') {
+            // For Korean: exclude female voices and prefer Google/Microsoft
+            const nonFemaleVoices = langVoices.filter(voice => {
+                const name = voice.name.toLowerCase();
+                return !name.includes('female') && 
+                       !name.includes('여성') && 
+                       !name.includes('yuna') &&
+                       !name.includes('sora') &&
+                       !name.includes('nara');
+            });
+            
+            if (nonFemaleVoices.length > 0) {
+                // Prefer Google or Microsoft voices
+                const preferred = nonFemaleVoices.find(voice => {
+                    const name = voice.name.toLowerCase();
+                    return name.includes('google') || name.includes('microsoft');
+                });
+                return preferred || nonFemaleVoices[0];
+            }
+        }
+        
+        // Fallback: use first available voice
+        return langVoices[0];
     }
     
     return maleVoice;
@@ -534,7 +567,7 @@ function playTTS() {
         return;
     }
     
-    // If already speaking, do nothing
+    // If already speaking and not paused, do nothing
     if (speechSynthesis.speaking && !isPaused) {
         return;
     }
@@ -572,16 +605,18 @@ function playTTS() {
         
         currentUtterance.rate = ttsSpeed;
         // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
-        currentUtterance.pitch = 0.9; // Slightly lower pitch for more masculine sound
+        // For Korean, use even lower pitch (0.85) to ensure more masculine sound
+        currentUtterance.pitch = lang === 'ko' ? 0.85 : 0.9; // Lower pitch for more masculine sound
         currentUtterance.volume = 1.0;
         
         // Get male voice
         const maleVoice = getMaleVoice(lang);
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
-            console.log('Using voice:', maleVoice.name, 'Language:', maleVoice.lang);
+            console.log('Using voice:', maleVoice.name, 'Language:', maleVoice.lang, 'Pitch:', currentUtterance.pitch);
         } else {
             console.warn('No male voice found for language:', lang);
+            // Even if no specific male voice found, keep the lower pitch setting
         }
         
         // Event handlers
@@ -621,6 +656,17 @@ function playTTS() {
 }
 
 function pauseTTS() {
+    if (!speechSynthesis) return;
+    
+    // If paused, resume
+    if (isPaused && speechSynthesis.speaking) {
+        speechSynthesis.resume();
+        isPaused = false;
+        updateTTSButtons(true);
+        return;
+    }
+    
+    // If speaking and not paused, pause
     if (speechSynthesis.speaking && !isPaused) {
         speechSynthesis.pause();
         isPaused = true;
@@ -643,10 +689,12 @@ function updateTTSButtons(isPlaying) {
     const stopBtn = document.getElementById('ttsStopBtn');
     
     if (isPlaying) {
+        // Playing or paused - show pause and stop buttons
         if (playBtn) playBtn.style.display = 'none';
         if (pauseBtn) pauseBtn.style.display = 'flex';
         if (stopBtn) stopBtn.style.display = 'flex';
     } else {
+        // Not playing - show play button only
         if (playBtn) playBtn.style.display = 'flex';
         if (pauseBtn) pauseBtn.style.display = 'none';
         if (stopBtn) stopBtn.style.display = 'none';
