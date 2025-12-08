@@ -12,18 +12,22 @@ function switchLanguage(lang) {
     }
     switchLanguage.isSwitching = true;
     
-    // Safety net: always reset flag after 2 seconds
+    // Critical: Always reset flag after 1 second (safety net)
     const safetyTimeout = setTimeout(() => {
         switchLanguage.isSwitching = false;
-    }, 2000);
+    }, 1000);
     
+    // Update language state immediately (non-blocking)
+    currentLang = lang;
     try {
-        // Update language state immediately (critical)
-        currentLang = lang;
         localStorage.setItem('language', lang);
-        document.documentElement.lang = lang;
-        
-        // Update language button immediately
+    } catch (e) {
+        // Ignore localStorage errors
+    }
+    document.documentElement.lang = lang;
+    
+    // Update language button immediately
+    try {
         const langBtn = document.getElementById('langBtn');
         if (langBtn) {
             const langText = langBtn.querySelector('.lang-text');
@@ -31,46 +35,49 @@ function switchLanguage(lang) {
                 langText.textContent = lang === 'ko' ? 'EN' : 'KO';
             }
         }
-        
-        // Stop TTS if speaking (non-blocking)
-        if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
-            if (typeof stopTTS === 'function') {
-                try {
-                    stopTTS();
-                } catch (e) {
-                    console.warn('Error stopping TTS:', e);
-                }
+    } catch (e) {
+        // Ignore button update errors
+    }
+    
+    // Stop TTS if speaking (non-blocking, don't wait)
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
+        if (typeof stopTTS === 'function') {
+            try {
+                stopTTS();
+            } catch (e) {
+                // Ignore TTS errors
             }
         }
-        
-        // Update elements asynchronously to prevent blocking
-        setTimeout(() => {
-            try {
-                updateLanguageElements(lang);
-                updateTTSLabels(lang);
-                updateVisitorLabel(lang);
-            } catch (e) {
-                console.error('Error in async language update:', e);
-            } finally {
-                clearTimeout(safetyTimeout);
-                switchLanguage.isSwitching = false;
-            }
-        }, 0);
-        
-    } catch (e) {
-        console.error('Error in switchLanguage:', e);
-        clearTimeout(safetyTimeout);
-        switchLanguage.isSwitching = false;
     }
+    
+    // Update elements in small batches to prevent blocking
+    // Use requestIdleCallback if available, otherwise setTimeout
+    const updateCallback = window.requestIdleCallback || ((fn) => setTimeout(fn, 1));
+    
+    updateCallback(() => {
+        try {
+            updateLanguageElementsBatch(lang, 0);
+            updateTTSLabels(lang);
+            updateVisitorLabel(lang);
+        } catch (e) {
+            console.error('Error in language update:', e);
+        } finally {
+            clearTimeout(safetyTimeout);
+            switchLanguage.isSwitching = false;
+        }
+    });
 }
 
-// Separate function to update language elements (non-blocking)
-function updateLanguageElements(lang) {
+// Update language elements in small batches to prevent blocking
+function updateLanguageElementsBatch(lang, startIndex) {
     try {
         const elements = document.querySelectorAll('[data-ko][data-en]');
-        const maxElements = Math.min(elements.length, 200); // Limit to prevent blocking
+        const batchSize = 10; // Process only 10 elements at a time
+        const maxElements = Math.min(elements.length, 100); // Total limit
+        const endIndex = Math.min(startIndex + batchSize, maxElements);
         
-        for (let i = 0; i < maxElements; i++) {
+        // Process current batch
+        for (let i = startIndex; i < endIndex; i++) {
             const element = elements[i];
             if (!element || !element.isConnected) continue;
             if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') continue;
@@ -80,28 +87,25 @@ function updateLanguageElements(lang) {
                 if (text && text.trim() !== '') {
                     if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                         element.value = text;
-                    } else if (element.children.length === 0) {
-                        // Simple case: no children, just update text
-                        element.textContent = text;
                     } else {
-                        // Has children: try to preserve structure
-                        // Only update if it's safe (simple structure)
-                        const childCount = element.children.length;
-                        if (childCount === 1 && element.children[0].tagName === 'SPAN') {
-                            // Single span child - update parent textContent
-                            element.textContent = text;
-                        } else {
-                            // Complex structure - update textContent anyway (may lose children)
-                            element.textContent = text;
-                        }
+                        // Simple update - just set textContent
+                        element.textContent = text;
                     }
                 }
             } catch (e) {
                 // Silently skip problematic elements
             }
         }
+        
+        // If there are more elements, schedule next batch
+        if (endIndex < maxElements) {
+            const nextCallback = window.requestIdleCallback || ((fn) => setTimeout(fn, 10));
+            nextCallback(() => {
+                updateLanguageElementsBatch(lang, endIndex);
+            });
+        }
     } catch (e) {
-        console.error('Error updating language elements:', e);
+        console.error('Error updating language elements batch:', e);
     }
 }
 
