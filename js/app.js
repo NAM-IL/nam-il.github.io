@@ -102,18 +102,6 @@ function initSkillTooltips() {
     });
 }
 
-// Initialize tag tooltips (for project tags and modal tags)
-function initTagTooltips() {
-    const tags = document.querySelectorAll('.tag');
-    tags.forEach(tag => {
-        const tagText = tag.textContent.trim();
-        const tooltip = skillTooltips[tagText];
-        if (tooltip) {
-            tag.setAttribute('data-tooltip', tooltip);
-        }
-    });
-}
-
 // Visitor Count Management
 function initVisitorCount() {
     const visitorCountEl = document.getElementById('visitorCount');
@@ -169,9 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize skill tooltips
     initSkillTooltips();
-    
-    // Initialize tag tooltips
-    initTagTooltips();
     
     // Initialize visitor count
     initVisitorCount();
@@ -447,11 +432,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show modal
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            // Re-initialize tag tooltips after modal is shown
-            setTimeout(() => {
-                initTagTooltips();
-            }, 100);
         });
     });
 
@@ -891,13 +871,16 @@ function playTTS() {
         };
         
         currentUtterance.onerror = function(event) {
-            console.error('TTS Error:', event.error);
-            isPaused = false;
-            currentUtterance = null;
-            currentTTSText = ''; // Clear stored text on error
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
+            // Ignore 'interrupted' error - it's normal when cancelling speech for speed change
+            if (event.error !== 'interrupted') {
+                console.error('TTS Error:', event.error);
+                isPaused = false;
+                currentUtterance = null;
+                currentTTSText = ''; // Clear stored text on error
+                setTimeout(() => {
+                    updateTTSButtons();
+                }, 50);
+            }
         };
         
         // Reset state before speaking
@@ -998,13 +981,16 @@ function restartTTSWithCurrentText() {
         };
         
         currentUtterance.onerror = function(event) {
-            console.error('TTS Error:', event.error);
-            isPaused = false;
-            currentUtterance = null;
-            currentTTSText = '';
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
+            // Ignore 'interrupted' error - it's normal when cancelling speech for speed change
+            if (event.error !== 'interrupted') {
+                console.error('TTS Error:', event.error);
+                isPaused = false;
+                currentUtterance = null;
+                currentTTSText = '';
+                setTimeout(() => {
+                    updateTTSButtons();
+                }, 50);
+            }
         };
         
         // Reset state before speaking
