@@ -201,28 +201,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.getElementById('modalReview').textContent = review || '프로젝트 후기 정보가 없습니다.';
             
-            // Show/hide sections based on content
-            const introSection = document.querySelector('.modal-section:has(#modalIntroduction)');
-            const roleSection = document.querySelector('.modal-section:has(#modalRole)');
-            const reviewSection = document.querySelector('.modal-section:has(#modalReview)');
+            // Ensure all modal sections are visible
+            const introSection = document.getElementById('modalIntroduction').closest('.modal-section');
+            const roleSection = document.getElementById('modalRole').closest('.modal-section');
+            const reviewSection = document.getElementById('modalReview').closest('.modal-section');
             
-            if (introduction) {
-                document.getElementById('modalIntroduction').parentElement.parentElement.style.display = 'block';
-            } else {
-                document.getElementById('modalIntroduction').parentElement.parentElement.style.display = 'none';
-            }
-            
-            if (role) {
-                document.getElementById('modalRole').parentElement.parentElement.style.display = 'block';
-            } else {
-                document.getElementById('modalRole').parentElement.parentElement.style.display = 'none';
-            }
-            
-            if (review) {
-                document.getElementById('modalReview').parentElement.parentElement.style.display = 'block';
-            } else {
-                document.getElementById('modalReview').parentElement.parentElement.style.display = 'none';
-            }
+            if (introSection) introSection.style.display = 'block';
+            if (roleSection) roleSection.style.display = 'block';
+            if (reviewSection) reviewSection.style.display = 'block';
             
             // Populate tags
             const tagsContainer = document.getElementById('modalTags');
