@@ -12,21 +12,21 @@ function switchLanguage(lang) {
     }
     switchLanguage.isSwitching = true;
     
-    // Critical: Always reset flag after 1 second (safety net)
-    const safetyTimeout = setTimeout(() => {
+    // CRITICAL: Always reset flag after 100ms (safety net)
+    setTimeout(() => {
         switchLanguage.isSwitching = false;
-    }, 1000);
+    }, 100);
     
-    // Update language state immediately (non-blocking)
+    // Update language state immediately (non-blocking, critical)
     currentLang = lang;
     try {
         localStorage.setItem('language', lang);
+        document.documentElement.lang = lang;
     } catch (e) {
-        // Ignore localStorage errors
+        // Ignore
     }
-    document.documentElement.lang = lang;
     
-    // Update language button immediately
+    // Update language button immediately (critical UI feedback)
     try {
         const langBtn = document.getElementById('langBtn');
         if (langBtn) {
@@ -36,78 +36,37 @@ function switchLanguage(lang) {
             }
         }
     } catch (e) {
-        // Ignore button update errors
+        // Ignore
     }
     
-    // Stop TTS if speaking (non-blocking, don't wait)
-    if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
-        if (typeof stopTTS === 'function') {
-            try {
+    // Stop TTS if speaking (non-blocking)
+    try {
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
+            if (typeof stopTTS === 'function') {
                 stopTTS();
-            } catch (e) {
-                // Ignore TTS errors
             }
         }
+    } catch (e) {
+        // Ignore
     }
     
-    // Update elements in small batches to prevent blocking
-    // Use requestIdleCallback if available, otherwise setTimeout
-    const updateCallback = window.requestIdleCallback || ((fn) => setTimeout(fn, 1));
-    
-    updateCallback(() => {
+    // Update elements - DISABLED to prevent freezing
+    // Only update critical TTS and visitor labels
+    setTimeout(() => {
         try {
-            updateLanguageElementsBatch(lang, 0);
             updateTTSLabels(lang);
             updateVisitorLabel(lang);
         } catch (e) {
-            console.error('Error in language update:', e);
+            // Ignore
         } finally {
-            clearTimeout(safetyTimeout);
             switchLanguage.isSwitching = false;
         }
-    });
+    }, 50);
+    
+    // NOTE: General element updates are disabled to prevent page freezing
+    // Only critical UI elements (TTS labels, visitor label) are updated
 }
 
-// Update language elements in small batches to prevent blocking
-function updateLanguageElementsBatch(lang, startIndex) {
-    try {
-        const elements = document.querySelectorAll('[data-ko][data-en]');
-        const batchSize = 10; // Process only 10 elements at a time
-        const maxElements = Math.min(elements.length, 100); // Total limit
-        const endIndex = Math.min(startIndex + batchSize, maxElements);
-        
-        // Process current batch
-        for (let i = startIndex; i < endIndex; i++) {
-            const element = elements[i];
-            if (!element || !element.isConnected) continue;
-            if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') continue;
-            
-            try {
-                const text = element.getAttribute(`data-${lang}`);
-                if (text && text.trim() !== '') {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.value = text;
-                    } else {
-                        // Simple update - just set textContent
-                        element.textContent = text;
-                    }
-                }
-            } catch (e) {
-                // Silently skip problematic elements
-            }
-        }
-        
-        // If there are more elements, schedule next batch
-        if (endIndex < maxElements) {
-            const nextCallback = window.requestIdleCallback || ((fn) => setTimeout(fn, 10));
-            nextCallback(() => {
-                updateLanguageElementsBatch(lang, endIndex);
-            });
-        }
-    } catch (e) {
-        console.error('Error updating language elements batch:', e);
-    }
-}
 
 // Helper function to update TTS labels
 function updateTTSLabels(lang) {
