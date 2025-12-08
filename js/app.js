@@ -8,9 +8,15 @@ let currentLang = localStorage.getItem('language') || 'ko';
 function switchLanguage(lang) {
     // Prevent multiple simultaneous language switches
     if (switchLanguage.isSwitching) {
+        console.log('Language switch already in progress, skipping...');
         return;
     }
     switchLanguage.isSwitching = true;
+    
+    // Set timeout to reset flag in case of issues (safety net)
+    setTimeout(() => {
+        switchLanguage.isSwitching = false;
+    }, 5000);
     
     try {
         // Stop TTS if speaking (check if variables are defined)
@@ -36,64 +42,66 @@ function switchLanguage(lang) {
             }
         }
         
-        // Update elements in batches using requestAnimationFrame to prevent blocking
-        requestAnimationFrame(() => {
-            try {
-                const elements = document.querySelectorAll('[data-ko][data-en]');
-                const batchSize = 50; // Process in batches
-                let index = 0;
-                
-                function processBatch() {
-                    const end = Math.min(index + batchSize, elements.length);
-                    for (let i = index; i < end; i++) {
-                        const element = elements[i];
-                        try {
-                            // Skip certain element types that might cause issues
-                            if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') {
-                                continue;
-                            }
-                            
-                            const text = element.getAttribute(`data-${lang}`);
-                            if (text !== null && text !== undefined && text !== '') {
-                                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                                    element.value = text;
-                                } else if (element.children.length === 0) {
-                                    // Only update if element has no children to avoid breaking structure
-                                    element.textContent = text;
-                                } else {
-                                    // If element has children, try to update only if it's a simple text node
-                                    const firstChild = element.firstChild;
-                                    if (firstChild && firstChild.nodeType === Node.TEXT_NODE) {
-                                        firstChild.textContent = text;
-                                    } else {
-                                        element.textContent = text;
-                                    }
-                                }
-                            }
-                        } catch (e) {
-                            console.warn('Error updating element:', e, element);
-                        }
+        // Update elements synchronously but safely
+        try {
+            const elements = document.querySelectorAll('[data-ko][data-en]');
+            const totalElements = elements.length;
+            let processedCount = 0;
+            
+            for (let i = 0; i < totalElements; i++) {
+                const element = elements[i];
+                try {
+                    // Skip certain element types that might cause issues
+                    if (!element || element.tagName === 'SCRIPT' || element.tagName === 'STYLE') {
+                        continue;
                     }
                     
-                    index = end;
-                    if (index < elements.length) {
-                        requestAnimationFrame(processBatch);
-                    } else {
-                        // All elements processed, update TTS and visitor labels
-                        updateTTSLabels(lang);
-                        updateVisitorLabel(lang);
-                        switchLanguage.isSwitching = false;
+                    // Skip if element is not in the document (detached)
+                    if (!element.isConnected) {
+                        continue;
                     }
+                    
+                    const text = element.getAttribute(`data-${lang}`);
+                    if (text !== null && text !== undefined && text !== '') {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            element.value = text;
+                        } else {
+                            // For elements with children, be more careful
+                            const hasOnlyTextChildren = element.children.length === 0 || 
+                                (element.children.length === 1 && element.children[0].tagName === 'SPAN');
+                            
+                            if (hasOnlyTextChildren) {
+                                element.textContent = text;
+                            } else {
+                                // If element has complex children, only update if it's safe
+                                const firstTextNode = Array.from(element.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+                                if (firstTextNode) {
+                                    firstTextNode.textContent = text;
+                                } else {
+                                    // Last resort: update textContent (may remove children)
+                                    element.textContent = text;
+                                }
+                            }
+                        }
+                    }
+                    processedCount++;
+                } catch (e) {
+                    console.warn('Error updating element:', e, element);
                 }
-                
-                processBatch();
-            } catch (e) {
-                console.error('Error updating elements:', e);
-                updateTTSLabels(lang);
-                updateVisitorLabel(lang);
-                switchLanguage.isSwitching = false;
             }
-        });
+            
+            console.log(`Language switched to ${lang}, updated ${processedCount}/${totalElements} elements`);
+        } catch (e) {
+            console.error('Error updating elements:', e);
+        }
+        
+        // Update TTS and visitor labels
+        updateTTSLabels(lang);
+        updateVisitorLabel(lang);
+        
+        // Reset flag
+        switchLanguage.isSwitching = false;
+        
     } catch (e) {
         console.error('Error in switchLanguage:', e);
         // Ensure language state is still updated even if there's an error
