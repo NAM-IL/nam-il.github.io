@@ -6,6 +6,12 @@
 let currentLang = localStorage.getItem('language') || 'ko';
 
 function switchLanguage(lang) {
+    // Prevent multiple simultaneous language switches
+    if (switchLanguage.isSwitching) {
+        return;
+    }
+    switchLanguage.isSwitching = true;
+    
     try {
         // Stop TTS if speaking (check if variables are defined)
         if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
@@ -14,24 +20,78 @@ function switchLanguage(lang) {
             }
         }
         
+        // Update language state first
         currentLang = lang;
         localStorage.setItem('language', lang);
         
-        // Update all elements with data-ko and data-en attributes
-        const elements = document.querySelectorAll('[data-ko][data-en]');
-        elements.forEach(element => {
+        // Update HTML lang attribute
+        document.documentElement.lang = lang;
+        
+        // Update language button immediately
+        const langBtn = document.getElementById('langBtn');
+        if (langBtn) {
+            const langText = langBtn.querySelector('.lang-text');
+            if (langText) {
+                langText.textContent = lang === 'ko' ? 'EN' : 'KO';
+            }
+        }
+        
+        // Update elements in batches using requestAnimationFrame to prevent blocking
+        requestAnimationFrame(() => {
             try {
-                const text = element.getAttribute(`data-${lang}`);
-                if (text !== null && text !== undefined && text !== '') {
-                    // Only update text content, don't modify structure
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.value = text;
+                const elements = document.querySelectorAll('[data-ko][data-en]');
+                const batchSize = 50; // Process in batches
+                let index = 0;
+                
+                function processBatch() {
+                    const end = Math.min(index + batchSize, elements.length);
+                    for (let i = index; i < end; i++) {
+                        const element = elements[i];
+                        try {
+                            // Skip certain element types that might cause issues
+                            if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') {
+                                continue;
+                            }
+                            
+                            const text = element.getAttribute(`data-${lang}`);
+                            if (text !== null && text !== undefined && text !== '') {
+                                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                                    element.value = text;
+                                } else if (element.children.length === 0) {
+                                    // Only update if element has no children to avoid breaking structure
+                                    element.textContent = text;
+                                } else {
+                                    // If element has children, try to update only if it's a simple text node
+                                    const firstChild = element.firstChild;
+                                    if (firstChild && firstChild.nodeType === Node.TEXT_NODE) {
+                                        firstChild.textContent = text;
+                                    } else {
+                                        element.textContent = text;
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            console.warn('Error updating element:', e, element);
+                        }
+                    }
+                    
+                    index = end;
+                    if (index < elements.length) {
+                        requestAnimationFrame(processBatch);
                     } else {
-                        element.textContent = text;
+                        // All elements processed, update TTS and visitor labels
+                        updateTTSLabels(lang);
+                        updateVisitorLabel(lang);
+                        switchLanguage.isSwitching = false;
                     }
                 }
+                
+                processBatch();
             } catch (e) {
-                console.warn('Error updating element:', e, element);
+                console.error('Error updating elements:', e);
+                updateTTSLabels(lang);
+                updateVisitorLabel(lang);
+                switchLanguage.isSwitching = false;
             }
         });
     } catch (e) {
@@ -39,56 +99,58 @@ function switchLanguage(lang) {
         // Ensure language state is still updated even if there's an error
         currentLang = lang;
         localStorage.setItem('language', lang);
+        switchLanguage.isSwitching = false;
     }
-    
-    // Update language button
-    const langBtn = document.getElementById('langBtn');
-    if (langBtn) {
-        langBtn.querySelector('.lang-text').textContent = lang === 'ko' ? 'EN' : 'KO';
-    }
-    
-    // Update HTML lang attribute
-    document.documentElement.lang = lang;
-    
-    // Stop TTS if speaking when language changes (check if variables are defined)
-    if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
-        if (typeof stopTTS === 'function') {
-            stopTTS();
+}
+
+// Helper function to update TTS labels
+function updateTTSLabels(lang) {
+    try {
+        const playBtn = document.getElementById('ttsPlayBtn');
+        const pauseBtn = document.getElementById('ttsPauseBtn');
+        const stopBtn = document.getElementById('ttsStopBtn');
+        const speedLabel = document.querySelector('.tts-speed-label');
+        
+        if (playBtn) {
+            const playText = playBtn.querySelector('.tts-button-text');
+            if (playText) {
+                const text = playText.getAttribute(`data-${lang}`);
+                if (text) playText.textContent = text;
+            }
         }
-    }
-    
-    // Update TTS button texts
-    const playBtn = document.getElementById('ttsPlayBtn');
-    const pauseBtn = document.getElementById('ttsPauseBtn');
-    const stopBtn = document.getElementById('ttsStopBtn');
-    const speedLabel = document.querySelector('.tts-speed-label');
-    
-    if (playBtn) {
-        const playText = playBtn.querySelector('.tts-button-text');
-        if (playText) {
-            playText.textContent = playText.getAttribute(`data-${lang}`) || playText.textContent;
+        if (pauseBtn) {
+            const pauseText = pauseBtn.querySelector('.tts-button-text');
+            if (pauseText) {
+                const text = pauseText.getAttribute(`data-${lang}`);
+                if (text) pauseText.textContent = text;
+            }
         }
-    }
-    if (pauseBtn) {
-        const pauseText = pauseBtn.querySelector('.tts-button-text');
-        if (pauseText) {
-            pauseText.textContent = pauseText.getAttribute(`data-${lang}`) || pauseText.textContent;
+        if (stopBtn) {
+            const stopText = stopBtn.querySelector('.tts-button-text');
+            if (stopText) {
+                const text = stopText.getAttribute(`data-${lang}`);
+                if (text) stopText.textContent = text;
+            }
         }
-    }
-    if (stopBtn) {
-        const stopText = stopBtn.querySelector('.tts-button-text');
-        if (stopText) {
-            stopText.textContent = stopText.getAttribute(`data-${lang}`) || stopText.textContent;
+        if (speedLabel) {
+            const text = speedLabel.getAttribute(`data-${lang}`);
+            if (text) speedLabel.textContent = text;
         }
+    } catch (e) {
+        console.warn('Error updating TTS labels:', e);
     }
-    if (speedLabel) {
-        speedLabel.textContent = speedLabel.getAttribute(`data-${lang}`) || speedLabel.textContent;
-    }
-    
-    // Update visitor label
-    const visitorLabel = document.querySelector('.visitor-label');
-    if (visitorLabel) {
-        visitorLabel.textContent = visitorLabel.getAttribute(`data-${lang}`) || visitorLabel.textContent;
+}
+
+// Helper function to update visitor label
+function updateVisitorLabel(lang) {
+    try {
+        const visitorLabel = document.querySelector('.visitor-label');
+        if (visitorLabel) {
+            const text = visitorLabel.getAttribute(`data-${lang}`);
+            if (text) visitorLabel.textContent = text;
+        }
+    } catch (e) {
+        console.warn('Error updating visitor label:', e);
     }
 }
 
