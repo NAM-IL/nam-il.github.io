@@ -410,6 +410,46 @@ body {
     color: var(--text-secondary);
 }
 
+.additional-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.additional-info h4 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.additional-info h4:first-child {
+    margin-top: 0;
+}
+
+.additional-info p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.8;
+}
+
+.additional-info ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.additional-info li {
+    margin-bottom: 0.5rem;
+}
+
+.additional-info strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
 /* ===== Skills Section ===== */
 .skills-section {
     background: var(--bg-white);
@@ -630,6 +670,20 @@ body {
     color: var(--text-secondary);
     margin-bottom: 1rem;
     line-height: 1.6;
+}
+
+.project-meta {
+    margin-bottom: 1rem;
+}
+
+.project-period {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: var(--primary-color);
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 0.5rem;
 }
 
 .project-tags {
