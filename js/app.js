@@ -129,6 +129,158 @@ document.addEventListener('DOMContentLoaded', function() {
         section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         sectionObserver.observe(section);
     });
+
+    // Project Modal functionality
+    const modal = document.getElementById('projectModal');
+    const modalOverlay = document.querySelector('.modal-overlay');
+    const modalClose = document.querySelector('.modal-close');
+    const projectLinks = document.querySelectorAll('.project-link');
+
+    // Open modal when project link is clicked
+    projectLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const projectCard = this.closest('.project-card');
+            const projectContent = projectCard.querySelector('.project-content');
+            
+            // Extract project information
+            const title = projectContent.querySelector('.project-title').textContent;
+            const client = projectContent.querySelector('.detail-row .detail-value').textContent;
+            const period = projectContent.querySelectorAll('.detail-row .detail-value')[1]?.textContent || '';
+            const environment = projectContent.querySelectorAll('.detail-row .detail-value')[2]?.textContent || '';
+            
+            // Find introduction
+            let introduction = '';
+            const sections = projectContent.querySelectorAll('.project-section');
+            sections.forEach(section => {
+                const heading = section.querySelector('.section-heading');
+                if (heading && heading.textContent === '프로젝트 소개') {
+                    const desc = section.querySelector('.project-description');
+                    if (desc) introduction = desc.textContent.trim();
+                }
+            });
+            
+            // Find role
+            let role = '';
+            sections.forEach(section => {
+                const heading = section.querySelector('.section-heading');
+                if (heading && heading.textContent === '역할') {
+                    const roleList = section.querySelector('.role-list');
+                    if (roleList) {
+                        const items = roleList.querySelectorAll('li');
+                        role = Array.from(items).map(li => li.textContent.trim()).join('|');
+                    } else {
+                        const desc = section.querySelector('.project-description');
+                        if (desc) role = desc.textContent.trim();
+                    }
+                }
+            });
+            
+            // Find review
+            let review = '';
+            sections.forEach(section => {
+                const heading = section.querySelector('.section-heading');
+                if (heading && heading.textContent === '프로젝트 후기') {
+                    const desc = section.querySelector('.project-description');
+                    if (desc) review = desc.textContent.trim();
+                }
+            });
+            
+            // Get tags
+            const tags = [];
+            const tagElements = projectContent.querySelectorAll('.project-tags .tag');
+            tagElements.forEach(tag => {
+                tags.push(tag.textContent.trim());
+            });
+            
+            // Populate modal
+            document.getElementById('modalProjectTitle').textContent = title;
+            document.getElementById('modalClient').textContent = client;
+            document.getElementById('modalPeriod').textContent = period;
+            document.getElementById('modalEnvironment').textContent = environment;
+            document.getElementById('modalIntroduction').textContent = introduction;
+            
+            // Format role
+            const roleContainer = document.getElementById('modalRole');
+            if (role.includes('|')) {
+                roleContainer.innerHTML = '<ul class="modal-role-list">' + 
+                    role.split('|').map(r => '<li>' + r + '</li>').join('') + 
+                    '</ul>';
+            } else {
+                roleContainer.textContent = role;
+            }
+            
+            document.getElementById('modalReview').textContent = review || '프로젝트 후기 정보가 없습니다.';
+            
+            // Populate tags
+            const tagsContainer = document.getElementById('modalTags');
+            tagsContainer.innerHTML = tags.map(tag => '<span class="tag">' + tag + '</span>').join('');
+            
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Close modal
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', closeModal);
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Scroll to Top Button
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    
+    // Show/hide scroll top button based on scroll position
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            scrollTopBtn.classList.add('visible');
+        } else {
+            scrollTopBtn.classList.remove('visible');
+        }
+    });
+
+    // Smooth scroll to top when button is clicked
+    if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    // Stat items click to scroll to sections
+    const statItems = document.querySelectorAll('.stat-item[data-target]');
+    statItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 });
 
 // Function to animate numbers
