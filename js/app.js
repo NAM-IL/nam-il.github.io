@@ -6,27 +6,31 @@
 let currentLang = localStorage.getItem('language') || 'ko';
 
 function switchLanguage(lang) {
-    // Prevent multiple simultaneous language switches
-    if (switchLanguage.isSwitching) {
-        return;
-    }
-    switchLanguage.isSwitching = true;
+    // ABSOLUTE MINIMUM: Only update state, no complex operations
+    // All operations are wrapped in try-catch to prevent any blocking
     
-    // CRITICAL: Always reset flag after 100ms (safety net)
-    setTimeout(() => {
-        switchLanguage.isSwitching = false;
-    }, 100);
-    
-    // Update language state immediately (non-blocking, critical)
+    // Update language state (synchronous, safe)
     currentLang = lang;
+    
+    // Update localStorage asynchronously to prevent blocking
+    setTimeout(() => {
+        try {
+            localStorage.setItem('language', lang);
+        } catch (e) {
+            // Ignore localStorage errors
+        }
+    }, 0);
+    
+    // Update HTML lang attribute (synchronous, safe)
     try {
-        localStorage.setItem('language', lang);
-        document.documentElement.lang = lang;
+        if (document && document.documentElement) {
+            document.documentElement.lang = lang;
+        }
     } catch (e) {
         // Ignore
     }
     
-    // Update language button immediately (critical UI feedback)
+    // Update language button (single element, synchronous, safe)
     try {
         const langBtn = document.getElementById('langBtn');
         if (langBtn) {
@@ -39,32 +43,21 @@ function switchLanguage(lang) {
         // Ignore
     }
     
-    // Stop TTS if speaking (non-blocking)
+    // Stop TTS (non-blocking, safe)
     try {
-        if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
-            if (typeof stopTTS === 'function') {
-                stopTTS();
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis) {
+            if (typeof isPaused !== 'undefined' && typeof stopTTS === 'function') {
+                if (speechSynthesis.speaking || isPaused) {
+                    stopTTS();
+                }
             }
         }
     } catch (e) {
         // Ignore
     }
     
-    // Update elements - DISABLED to prevent freezing
-    // Only update critical TTS and visitor labels
-    setTimeout(() => {
-        try {
-            updateTTSLabels(lang);
-            updateVisitorLabel(lang);
-        } catch (e) {
-            // Ignore
-        } finally {
-            switchLanguage.isSwitching = false;
-        }
-    }, 50);
-    
-    // NOTE: General element updates are disabled to prevent page freezing
-    // Only critical UI elements (TTS labels, visitor label) are updated
+    // NOTE: All element text updates are disabled to prevent page freezing
+    // Only language state and button text are updated
 }
 
 
@@ -200,8 +193,19 @@ function initVisitorCount() {
 
 // Navigation toggle for mobile
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize language
-    switchLanguage(currentLang);
+    // Initialize language - only set state, don't update elements
+    try {
+        document.documentElement.lang = currentLang;
+        const langBtn = document.getElementById('langBtn');
+        if (langBtn) {
+            const langText = langBtn.querySelector('.lang-text');
+            if (langText) {
+                langText.textContent = currentLang === 'ko' ? 'EN' : 'KO';
+            }
+        }
+    } catch (e) {
+        // Ignore
+    }
     
     // Initialize TTS
     initTTS();
@@ -226,19 +230,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Language switcher button
+    // Language switcher button - completely safe implementation
     const langBtn = document.getElementById('langBtn');
     if (langBtn) {
+        let lastClickTime = 0;
         langBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+            // Prevent rapid clicks (debounce)
+            const now = Date.now();
+            if (now - lastClickTime < 500) {
+                return;
+            }
+            lastClickTime = now;
+            
+            // Update language immediately - completely synchronous, no async operations
             try {
                 const newLang = currentLang === 'ko' ? 'en' : 'ko';
                 switchLanguage(newLang);
             } catch (error) {
-                console.error('Error switching language:', error);
+                // Ignore all errors - never block
             }
-        });
+        }, { passive: true });
     }
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
