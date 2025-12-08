@@ -412,6 +412,8 @@ let speechSynthesis = null;
 let currentUtterance = null;
 let isPaused = false;
 let ttsSpeed = 1.0;
+let currentTTSText = ''; // Store current text being spoken
+let currentTTSLang = 'ko'; // Store current language
 
 function initTTS() {
     // Check if browser supports Web Speech API
@@ -449,16 +451,25 @@ function initTTS() {
         // Speed control
         if (speedSlider && speedValue) {
             speedSlider.addEventListener('input', function() {
-                ttsSpeed = parseFloat(this.value);
+                const newSpeed = parseFloat(this.value);
+                const wasSpeaking = speechSynthesis.speaking || speechSynthesis.pending;
+                const wasPaused = isPaused;
+                
+                ttsSpeed = newSpeed;
                 speedValue.textContent = ttsSpeed.toFixed(1) + 'x';
                 
-                // Update current utterance speed if speaking
-                if (currentUtterance && speechSynthesis.speaking && !isPaused) {
-                    // Note: Rate cannot be changed while speaking, need to restart
-                    // For better UX, we'll update it for next utterance
-                    if (currentUtterance) {
-                        currentUtterance.rate = ttsSpeed;
-                    }
+                // If currently speaking, restart with new speed
+                if (wasSpeaking && currentTTSText && !wasPaused) {
+                    console.log('Speed changed during playback, restarting with new speed:', ttsSpeed);
+                    // Cancel current speech
+                    speechSynthesis.cancel();
+                    isPaused = false;
+                    currentUtterance = null;
+                    
+                    // Restart with new speed after a short delay
+                    setTimeout(() => {
+                        restartTTSWithCurrentText();
+                    }, 100);
                 }
             });
         }
@@ -490,11 +501,93 @@ function getMaleVoice(lang) {
     
     if (langVoices.length === 0) return null;
     
-    // Try to find male voice (usually lower pitch or specific name patterns)
-    const maleVoice = langVoices.find(voice => {
-        const name = voice.name.toLowerCase();
-        // English male voices
-        if (lang === 'en') {
+    // For Korean: STRICT filtering - exclude ALL known female voices
+    if (lang === 'ko') {
+        const femaleIndicators = [
+            'female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung',
+            'yeona', 'hyeri', 'jiyeon', 'eunji', 'sohee', 'jisoo', 'jennie', 'rose', 'lisa',
+            '아름', '수진', '지은', '미나', '소영', '지현', '서연', '유나', '소라', '나라'
+        ];
+        
+        // First pass: Find voices with explicit male indicators
+        const explicitMaleVoices = langVoices.filter(voice => {
+            const name = voice.name.toLowerCase();
+            const maleIndicators = ['male', '남성', 'man', '남자', 'male voice', '남성 음성'];
+            return maleIndicators.some(indicator => name.includes(indicator));
+        });
+        
+        if (explicitMaleVoices.length > 0) {
+            // Prefer Google/Microsoft/Samsung male voices
+            const preferred = explicitMaleVoices.find(voice => {
+                const name = voice.name.toLowerCase();
+                return (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
+            });
+            const selected = preferred || explicitMaleVoices[0];
+            console.log('Selected explicit male Korean voice:', selected.name);
+            return selected;
+        }
+        
+        // Second pass: Exclude ALL known female voices
+        const nonFemaleVoices = langVoices.filter(voice => {
+            const name = voice.name.toLowerCase();
+            // Exclude if contains ANY female indicator
+            for (const indicator of femaleIndicators) {
+                if (name.includes(indicator)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        
+        console.log('Korean voices filtered:', {
+            total: langVoices.length,
+            nonFemale: nonFemaleVoices.length,
+            allVoices: langVoices.map(v => v.name),
+            filteredVoices: nonFemaleVoices.map(v => v.name)
+        });
+        
+        if (nonFemaleVoices.length > 0) {
+            // Priority order: Google > Microsoft > Samsung > Others
+            // But ONLY if they don't contain female indicators
+            const preferred = nonFemaleVoices.find(voice => {
+                const name = voice.name.toLowerCase();
+                const isPreferred = (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
+                if (isPreferred) {
+                    // Double check: make sure it's not a female voice
+                    for (const indicator of femaleIndicators) {
+                        if (name.includes(indicator)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            });
+            
+            const selected = preferred || nonFemaleVoices[0];
+            console.log('Selected Korean voice (filtered):', selected.name, 'Lang:', selected.lang);
+            return selected;
+        } else {
+            console.warn('No non-female Korean voices found after filtering');
+            // Last resort: try to find any voice that might be male based on name patterns
+            const fallback = langVoices.find(voice => {
+                const name = voice.name.toLowerCase();
+                // Look for patterns that might indicate male (default voices are often male)
+                return name.includes('default') || name.includes('standard') || 
+                       (name.includes('google') && !name.includes('female')) ||
+                       (name.includes('microsoft') && !name.includes('female'));
+            });
+            if (fallback) {
+                console.log('Using fallback Korean voice:', fallback.name);
+                return fallback;
+            }
+        }
+    }
+    
+    // English male voices
+    if (lang === 'en') {
+        const maleVoice = langVoices.find(voice => {
+            const name = voice.name.toLowerCase();
             return name.includes('male') || 
                    name.includes('man') || 
                    name.includes('david') || 
@@ -506,115 +599,20 @@ function getMaleVoice(lang) {
                    name.includes('thomas') ||
                    (name.includes('google') && name.includes('male')) ||
                    (name.includes('microsoft') && (name.includes('david') || name.includes('mark')));
-        }
-        // Korean male voices
-        else {
-            const nameLower = name.toLowerCase();
-            
-            // First, exclude known female voices explicitly
-            const femaleIndicators = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'];
-            for (const indicator of femaleIndicators) {
-                if (nameLower.includes(indicator)) {
-                    return false;
-                }
-            }
-            
-            // Prioritize explicit male indicators
-            const maleIndicators = ['male', '남성', 'man', '남자'];
-            for (const indicator of maleIndicators) {
-                if (nameLower.includes(indicator)) {
-                    return true;
-                }
-            }
-            
-            // Google Korean voices - check for specific patterns
-            if (nameLower.includes('google')) {
-                // Google Korean voices: usually "Google 한국어" is male, "Google 한국어 (여성)" is female
-                if (nameLower.includes('korean') || nameLower.includes('한국어')) {
-                    // If it doesn't explicitly say female, assume male
-                    if (!nameLower.includes('female') && !nameLower.includes('여성')) {
-                        return true;
-                    }
-                }
-            }
-            
-            // Microsoft Korean voices
-            if (nameLower.includes('microsoft')) {
-                if (nameLower.includes('korean') || nameLower.includes('한국어')) {
-                    // Microsoft usually has male as default
-                    if (!nameLower.includes('female') && !nameLower.includes('여성')) {
-                        return true;
-                    }
-                }
-            }
-            
-            // Samsung Korean voices (often male)
-            if (nameLower.includes('samsung')) {
-                if (nameLower.includes('korean') || nameLower.includes('한국어')) {
-                    return true;
-                }
-            }
-            
-            // Exclude if contains any female indicator
-            return false;
-        }
-    });
-    
-    // If no specific male voice found, try fallback strategies
-    if (!maleVoice) {
-        if (lang === 'ko') {
-            // For Korean: exclude ALL known female voices
-            const femaleIndicators = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'];
-            const nonFemaleVoices = langVoices.filter(voice => {
-                const name = voice.name.toLowerCase();
-                // Check if voice name contains any female indicator
-                for (const indicator of femaleIndicators) {
-                    if (name.includes(indicator)) {
-                        return false;
-                    }
-                }
-                return true;
-            });
-            
-            console.log('Korean voices filtered:', {
-                total: langVoices.length,
-                nonFemale: nonFemaleVoices.length,
-                voices: nonFemaleVoices.map(v => v.name)
-            });
-            
-            if (nonFemaleVoices.length > 0) {
-                // Priority order: Google > Microsoft > Samsung > Others
-                const preferred = nonFemaleVoices.find(voice => {
-                    const name = voice.name.toLowerCase();
-                    return (name.includes('google') && (name.includes('korean') || name.includes('한국어'))) ||
-                           (name.includes('microsoft') && (name.includes('korean') || name.includes('한국어'))) ||
-                           (name.includes('samsung') && (name.includes('korean') || name.includes('한국어')));
-                });
-                
-                const selected = preferred || nonFemaleVoices[0];
-                console.log('Selected Korean voice (fallback):', selected.name);
-                return selected;
-            } else {
-                console.warn('No non-female Korean voices found, using first available');
-            }
-        }
-        
-        // Fallback: use first available voice
-        return langVoices[0];
+        });
+        if (maleVoice) return maleVoice;
     }
     
-    return maleVoice;
+    // Final fallback: use first available voice
+    return langVoices[0];
 }
 
 function playTTS() {
     const aboutTextContent = document.getElementById('aboutTextContent');
-    const playBtn = document.getElementById('ttsPlayBtn');
-    const pauseBtn = document.getElementById('ttsPauseBtn');
-    const stopBtn = document.getElementById('ttsStopBtn');
     
     if (!speechSynthesis || !aboutTextContent) return;
     
-    // Check if currently paused
+    // Check current state
     const actuallyPaused = speechSynthesis.paused === true;
     const isCurrentlyPaused = isPaused || actuallyPaused;
     const isCurrentlySpeaking = speechSynthesis.speaking || speechSynthesis.pending;
@@ -622,14 +620,17 @@ function playTTS() {
     console.log('playTTS called - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isCurrentlySpeaking:', isCurrentlySpeaking);
     
     // If paused, resume
-    if (isCurrentlyPaused && isCurrentlySpeaking) {
+    if (isCurrentlyPaused && isCurrentlySpeaking && currentUtterance) {
         try {
             console.log('Attempting to resume TTS...');
             speechSynthesis.resume();
             isPaused = false;
-            // Update buttons immediately
-            updateTTSButtons(true);
+            // Update buttons after a short delay to ensure state is updated
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
             console.log('TTS resumed from playTTS, isPaused:', isPaused);
+            return;
         } catch (e) {
             console.error('Resume error:', e);
             // If resume fails, restart from beginning
@@ -638,8 +639,8 @@ function playTTS() {
             setTimeout(() => {
                 playTTS();
             }, 100);
+            return;
         }
-        return;
     }
     
     // If already speaking and not paused, do nothing
@@ -648,8 +649,15 @@ function playTTS() {
         return;
     }
     
+    // Stop any current speech before starting new
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+        isPaused = false;
+    }
+    
     // Get current language
     const lang = currentLang || 'ko';
+    currentTTSLang = lang;
     
     // Get text content based on current language
     let text = '';
@@ -667,6 +675,9 @@ function playTTS() {
     
     if (!text) return;
     
+    // Store current text for potential restart
+    currentTTSText = text;
+    
     // Function to speak with voice selection
     function speakWithVoice() {
         // Create utterance
@@ -681,8 +692,8 @@ function playTTS() {
         
         currentUtterance.rate = ttsSpeed;
         // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
-        // For Korean, use much lower pitch (0.75-0.8) to ensure more masculine sound
-        currentUtterance.pitch = lang === 'ko' ? 0.75 : 0.9; // Much lower pitch for Korean male voice
+        // For Korean, use much lower pitch (0.7) to ensure more masculine sound
+        currentUtterance.pitch = lang === 'ko' ? 0.7 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
         
         // Get male voice
@@ -703,23 +714,40 @@ function playTTS() {
         // Event handlers
         currentUtterance.onstart = function() {
             isPaused = false;
-            updateTTSButtons(true);
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
         };
         
         currentUtterance.onend = function() {
             isPaused = false;
-            updateTTSButtons(false);
+            currentUtterance = null;
+            currentTTSText = ''; // Clear stored text when finished
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
         };
         
         currentUtterance.onerror = function(event) {
             console.error('TTS Error:', event.error);
             isPaused = false;
-            updateTTSButtons(false);
+            currentUtterance = null;
+            currentTTSText = ''; // Clear stored text on error
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
         };
+        
+        // Reset state before speaking
+        isPaused = false;
         
         // Speak
         speechSynthesis.speak(currentUtterance);
-        updateTTSButtons(true);
+        
+        // Update buttons after a short delay to ensure state is set
+        setTimeout(() => {
+            updateTTSButtons();
+        }, 100);
     }
     
     // Check if voices are loaded
@@ -736,20 +764,110 @@ function playTTS() {
     }
 }
 
+// Function to restart TTS with stored text and new speed
+function restartTTSWithCurrentText() {
+    if (!speechSynthesis || !currentTTSText) return;
+    
+    const lang = currentTTSLang || 'ko';
+    
+    // Function to speak with voice selection
+    function speakWithVoiceRestart() {
+        // Create utterance
+        currentUtterance = new SpeechSynthesisUtterance(currentTTSText);
+        
+        // Set language
+        if (lang === 'ko') {
+            currentUtterance.lang = 'ko-KR';
+        } else {
+            currentUtterance.lang = 'en-US';
+        }
+        
+        currentUtterance.rate = ttsSpeed; // Use updated speed
+        currentUtterance.pitch = lang === 'ko' ? 0.7 : 0.9;
+        currentUtterance.volume = 1.0;
+        
+        // Get male voice
+        const maleVoice = getMaleVoice(lang);
+        if (maleVoice) {
+            currentUtterance.voice = maleVoice;
+            console.log('Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name);
+        }
+        
+        // Event handlers
+        currentUtterance.onstart = function() {
+            isPaused = false;
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+        };
+        
+        currentUtterance.onend = function() {
+            isPaused = false;
+            currentUtterance = null;
+            currentTTSText = '';
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+        };
+        
+        currentUtterance.onerror = function(event) {
+            console.error('TTS Error:', event.error);
+            isPaused = false;
+            currentUtterance = null;
+            currentTTSText = '';
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+        };
+        
+        // Reset state before speaking
+        isPaused = false;
+        
+        // Speak
+        speechSynthesis.speak(currentUtterance);
+        
+        // Update buttons after a short delay
+        setTimeout(() => {
+            updateTTSButtons();
+        }, 100);
+    }
+    
+    // Check if voices are loaded
+    const availableVoices = speechSynthesis.getVoices();
+    if (availableVoices.length > 0) {
+        speakWithVoiceRestart();
+    } else {
+        // Wait for voices to load
+        const voicesChangedHandler = function() {
+            speakWithVoiceRestart();
+            speechSynthesis.removeEventListener('voiceschanged', voicesChangedHandler);
+        };
+        speechSynthesis.addEventListener('voiceschanged', voicesChangedHandler);
+    }
+}
+
 function pauseTTS() {
     if (!speechSynthesis) return;
     
     // Check actual paused state from speechSynthesis
-    const actuallyPaused = speechSynthesis.paused !== undefined ? speechSynthesis.paused : isPaused;
+    const actuallyPaused = speechSynthesis.paused === true;
+    const isCurrentlyPaused = isPaused || actuallyPaused;
+    const isCurrentlySpeaking = speechSynthesis.speaking || speechSynthesis.pending;
+    
+    console.log('pauseTTS called - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isCurrentlySpeaking:', isCurrentlySpeaking);
     
     // If paused, resume
-    if ((isPaused || actuallyPaused) && (speechSynthesis.speaking || speechSynthesis.pending)) {
+    if (isCurrentlyPaused && isCurrentlySpeaking && currentUtterance) {
         try {
+            console.log('Resuming TTS from pauseTTS...');
             speechSynthesis.resume();
             isPaused = false;
-            // Immediately update buttons
-            updateTTSButtons(true);
+            // Update buttons after a short delay
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
             console.log('TTS resumed from pauseTTS, isPaused:', isPaused);
+            return;
         } catch (e) {
             console.error('Resume error:', e);
             // If resume fails, restart from beginning
@@ -758,40 +876,42 @@ function pauseTTS() {
             setTimeout(() => {
                 playTTS();
             }, 100);
+            return;
         }
-        return;
     }
     
     // If speaking and not paused, pause
-    if ((speechSynthesis.speaking || speechSynthesis.pending) && !isPaused && !actuallyPaused) {
+    if (isCurrentlySpeaking && !isCurrentlyPaused) {
         try {
+            console.log('Pausing TTS...');
             speechSynthesis.pause();
             isPaused = true;
-            // Force update buttons after a tiny delay to ensure state is set
+            // Update buttons after a short delay
             setTimeout(() => {
-                updateTTSButtons(true);
-            }, 10);
+                updateTTSButtons();
+            }, 50);
             console.log('TTS paused, isPaused:', isPaused, 'speaking:', speechSynthesis.speaking, 'paused:', speechSynthesis.paused);
         } catch (e) {
             console.error('Pause error:', e);
         }
-    } else if (isPaused && !speechSynthesis.speaking && !speechSynthesis.pending) {
-        // If marked as paused but not actually speaking, reset state
+    } else if (!isCurrentlySpeaking) {
+        // If not speaking, reset state
         isPaused = false;
-        updateTTSButtons(false);
+        updateTTSButtons();
     }
 }
 
 function stopTTS() {
-    if (speechSynthesis.speaking || isPaused) {
+    if (speechSynthesis.speaking || isPaused || speechSynthesis.pending) {
         speechSynthesis.cancel();
         isPaused = false;
         currentUtterance = null;
-        updateTTSButtons(false);
+        currentTTSText = ''; // Clear stored text when stopped
+        updateTTSButtons();
     }
 }
 
-function updateTTSButtons(isPlaying) {
+function updateTTSButtons() {
     const playBtn = document.getElementById('ttsPlayBtn');
     const pauseBtn = document.getElementById('ttsPauseBtn');
     const stopBtn = document.getElementById('ttsStopBtn');
@@ -804,16 +924,25 @@ function updateTTSButtons(isPlaying) {
         return;
     }
     
-    // Check actual paused state from speechSynthesis API
+    // Check actual state from speechSynthesis API
     const actuallyPaused = speechSynthesis.paused === true;
     const isActuallyPaused = isPaused || actuallyPaused;
     const isActuallySpeaking = speechSynthesis.speaking || speechSynthesis.pending;
     
-    console.log('updateTTSButtons - isPlaying:', isPlaying, 'isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isActuallySpeaking:', isActuallySpeaking);
+    console.log('updateTTSButtons - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isActuallySpeaking:', isActuallySpeaking, 'hasUtterance:', !!currentUtterance);
     
     // Priority 1: If paused (but utterance exists), show play button to resume
-    if (isActuallyPaused && isActuallySpeaking) {
-        if (playBtn) playBtn.style.display = 'flex';
+    if (isActuallyPaused && (isActuallySpeaking || currentUtterance)) {
+        if (playBtn) {
+            playBtn.style.display = 'flex';
+            // Update button text from span element
+            const playSpan = playBtn.querySelector('.tts-button-text');
+            if (playSpan) {
+                const playTextKo = playSpan.getAttribute('data-ko') || '재생';
+                const playTextEn = playSpan.getAttribute('data-en') || 'Play';
+                playSpan.textContent = currentLang === 'ko' ? playTextKo : playTextEn;
+            }
+        }
         if (pauseBtn) pauseBtn.style.display = 'none';
         if (stopBtn) stopBtn.style.display = 'flex';
         console.log('Buttons updated: Paused state - showing play button for resume');
@@ -823,14 +952,32 @@ function updateTTSButtons(isPlaying) {
     // Priority 2: If playing (not paused), show pause button
     if (isActuallySpeaking && !isActuallyPaused) {
         if (playBtn) playBtn.style.display = 'none';
-        if (pauseBtn) pauseBtn.style.display = 'flex';
+        if (pauseBtn) {
+            pauseBtn.style.display = 'flex';
+            // Update button text from span element
+            const pauseSpan = pauseBtn.querySelector('.tts-button-text');
+            if (pauseSpan) {
+                const pauseTextKo = pauseSpan.getAttribute('data-ko') || '일시정지';
+                const pauseTextEn = pauseSpan.getAttribute('data-en') || 'Pause';
+                pauseSpan.textContent = currentLang === 'ko' ? pauseTextKo : pauseTextEn;
+            }
+        }
         if (stopBtn) stopBtn.style.display = 'flex';
         console.log('Buttons updated: Playing state - showing pause button');
         return;
     }
     
     // Priority 3: Not playing - show play button only
-    if (playBtn) playBtn.style.display = 'flex';
+    if (playBtn) {
+        playBtn.style.display = 'flex';
+        // Update button text from span element
+        const playSpan = playBtn.querySelector('.tts-button-text');
+        if (playSpan) {
+            const playTextKo = playSpan.getAttribute('data-ko') || '재생';
+            const playTextEn = playSpan.getAttribute('data-en') || 'Play';
+            playSpan.textContent = currentLang === 'ko' ? playTextKo : playTextEn;
+        }
+    }
     if (pauseBtn) pauseBtn.style.display = 'none';
     if (stopBtn) stopBtn.style.display = 'none';
     console.log('Buttons updated: Stopped state - showing play button only');

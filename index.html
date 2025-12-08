@@ -247,7 +247,7 @@
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">Android/Kotlin</div>
+                            <div class="skill-name">Android/Java & Kotlin</div>
                             <div class="skill-bar">
                                 <div class="skill-progress" data-progress="90"></div>
                             </div>
@@ -785,6 +785,201 @@
                             <span class="tag">Spring Data JPA</span>
                             <span class="tag">Spring AI</span>
                             <span class="tag">Oracle</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">자세히 보기</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Productivity Hub</h3>
+                        <div class="project-detail">
+                            <div class="detail-row">
+                                <span class="detail-label">고객사:</span>
+                                <span class="detail-value">개인 프로젝트</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">기간:</span>
+                                <span class="detail-value">2025.12.04 오후 (4시간)</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">개발환경:</span>
+                                <span class="detail-value">Flutter, Dart, Provider, SQLite, Open-Meteo API, RSS Feed, Geolocator</span>
+                            </div>
+                        </div>
+                        <div class="project-data" style="display: none;">
+                            <div data-field="introduction">Flutter 기반의 통합 생산성 앱으로 할 일 관리, 아이디어 기록, 독서 카드, 날씨 정보, 뉴스 피드를 제공하는 크로스 플랫폼 애플리케이션입니다.</div>
+                            <div data-field="role">1인 총괄 개발</div>
+                            <div data-field="review">
+                                <h4>📋 프로젝트 개요</h4>
+                                <p><strong>Productivity Hub</strong>는 Flutter 기반의 통합 생산성 앱으로, 다음과 같은 핵심 기능을 제공합니다:</p>
+                                <ul>
+                                    <li><strong>할 일 관리 (Todo)</strong>: 할 일 추가/수정/삭제, 완료 상태 토글</li>
+                                    <li><strong>아이디어 기록</strong>: 카테고리별 아이디어 관리</li>
+                                    <li><strong>독서 카드</strong>: 독서 진행 관리, 키워드/요약 기록</li>
+                                    <li><strong>날씨 정보</strong>: 현재 위치 및 도시별 날씨 조회</li>
+                                    <li><strong>뉴스 피드</strong>: AI/양자컴퓨팅 관련 최신 뉴스</li>
+                                </ul>
+                                
+                                <h4>🎯 구현된 주요 기능</h4>
+                                <h5>1. 할 일 관리 (Todo)</h5>
+                                <ul>
+                                    <li>할 일 추가/수정/삭제, 완료 상태 토글</li>
+                                    <li>완료일 타임스탬프 자동 기록</li>
+                                    <li>스와이프 삭제 기능</li>
+                                </ul>
+                                
+                                <h5>2. 아이디어 기록</h5>
+                                <ul>
+                                    <li>카테고리별 아이디어 관리 (기술, 비즈니스, 디자인, 기타)</li>
+                                    <li>아이디어 추가/수정/삭제</li>
+                                </ul>
+                                
+                                <h5>3. 독서 카드</h5>
+                                <ul>
+                                    <li>독서 진행 관리 (진행중/완료/일시정지)</li>
+                                    <li>핵심 키워드 5개 저장</li>
+                                    <li>단문 요약 기록</li>
+                                    <li>목표 종료일 및 실제 완료일 관리</li>
+                                </ul>
+                                
+                                <h5>4. 날씨 정보</h5>
+                                <ul>
+                                    <li>현재 위치 기반 날씨 조회 (Geolocator)</li>
+                                    <li>도시 이름으로 날씨 검색 (Geocoding API)</li>
+                                    <li>24시간 시간별 예보</li>
+                                    <li>7일 일별 예보</li>
+                                    <li>WMO 날씨 코드를 한글 설명/이모지로 변환</li>
+                                </ul>
+                                
+                                <h5>5. 뉴스 피드</h5>
+                                <ul>
+                                    <li>AI/양자컴퓨팅 관련 최신 뉴스</li>
+                                    <li>다중 RSS 피드 파싱 (Google News, Reddit, ArXiv)</li>
+                                    <li>카테고리 필터링 (전체/AI/양자컴퓨팅)</li>
+                                    <li>뉴스 상세 화면 및 URL 실행</li>
+                                </ul>
+                                
+                                <h4>🛠 기술 스택</h4>
+                                <h5>핵심 프레임워크</h5>
+                                <ul>
+                                    <li><strong>Flutter</strong>: 3.x</li>
+                                    <li><strong>Dart SDK</strong>: >=3.0.0 <4.0.0</li>
+                                </ul>
+                                
+                                <h5>주요 패키지</h5>
+                                <ul>
+                                    <li><strong>상태 관리</strong>: Provider (^6.1.1) - ChangeNotifier 기반</li>
+                                    <li><strong>데이터 저장</strong>: sqflite (^2.3.0), path (^1.8.3), shared_preferences (^2.2.2)</li>
+                                    <li><strong>네트워크</strong>: http (^1.1.0), dio (^5.4.0)</li>
+                                    <li><strong>위치 서비스</strong>: geolocator (^13.0.1), permission_handler (^12.0.1)</li>
+                                    <li><strong>유틸리티</strong>: intl (^0.20.2), url_launcher (^6.2.2), xml (^6.4.2), cached_network_image (^3.3.1), flutter_tts (^4.0.2)</li>
+                                </ul>
+                                
+                                <h4>🏗 아키텍처 패턴</h4>
+                                <p><strong>Provider 패턴 (MVVM 기반)</strong>을 사용하여 상태 관리를 구현했습니다:</p>
+                                <ul>
+                                    <li><strong>UI Layer</strong>: Screens (Views) - HomeScreen, TodoScreen, IdeaScreen, ReadingCardScreen, WeatherScreen, NewsScreen</li>
+                                    <li><strong>State Management</strong>: Providers (ViewModels) - TodoProvider, IdeaProvider, ReadingCardProvider, WeatherProvider, NewsProvider</li>
+                                    <li><strong>Data Layer</strong>: Models (Data Classes), DatabaseHelper (SQLite/SharedPreferences), HTTP APIs (Open-Meteo, RSS Feeds)</li>
+                                </ul>
+                                
+                                <h4>📊 데이터 흐름</h4>
+                                <h5>로컬 데이터 (Todo, Idea, ReadingCard)</h5>
+                                <p>Screen → Provider → DatabaseHelper → SQLite/SharedPreferences</p>
+                                
+                                <h5>원격 데이터 (Weather, News)</h5>
+                                <p>Screen → Provider → HTTP GET → External API</p>
+                                
+                                <h4>🌐 외부 API 연동</h4>
+                                <h5>날씨 API (Open-Meteo)</h5>
+                                <ul>
+                                    <li><strong>완전 무료, API 키 불필요</strong></li>
+                                    <li><strong>Geocoding API</strong>: 도시명 → 좌표 변환</li>
+                                    <li><strong>Weather Forecast API</strong>: 현재 날씨, 시간별 예보, 일별 예보</li>
+                                </ul>
+                                
+                                <h5>뉴스 API (RSS 피드)</h5>
+                                <ul>
+                                    <li><strong>완전 무료, API 키 불필요</strong></li>
+                                    <li><strong>Google News RSS</strong>: AI, Quantum Computing 관련 최신 뉴스</li>
+                                    <li><strong>Reddit RSS</strong>: r/QuantumComputing, r/artificial, r/MachineLearning</li>
+                                    <li><strong>ArXiv RSS</strong>: cs.AI, quant-ph 학술 논문</li>
+                                    <li><strong>CORS 처리</strong>: Web에서는 CORS 프록시 사용 (api.allorigins.win)</li>
+                                </ul>
+                                
+                                <h4>💾 데이터베이스 스키마</h4>
+                                <p><strong>DatabaseHelper (싱글톤 패턴)</strong> - 플랫폼별 자동 처리:</p>
+                                <ul>
+                                    <li><strong>Mobile (Android/iOS)</strong>: SQLite (sqflite 패키지)</li>
+                                    <li><strong>Web</strong>: SharedPreferences (JSON 형식)</li>
+                                </ul>
+                                
+                                <h5>주요 테이블</h5>
+                                <ul>
+                                    <li><strong>todos</strong>: id, title, description, is_completed, created_at, updated_at, completed_at</li>
+                                    <li><strong>ideas</strong>: id, title, content, category, created_at, updated_at</li>
+                                    <li><strong>reading_cards</strong>: id, title, author, total_pages, start_date, target_end_date, actual_end_date, keywords, summary, status</li>
+                                </ul>
+                                
+                                <h4>📱 플랫폼 지원</h4>
+                                <ul>
+                                    <li><strong>Android</strong>: ✅ SQLite, 위치 서비스 완전 지원</li>
+                                    <li><strong>iOS</strong>: ✅ SQLite, 위치 서비스 완전 지원</li>
+                                    <li><strong>Web</strong>: ✅ SharedPreferences 폴백, 위치 서비스 제한, CORS 프록시 필요</li>
+                                    <li><strong>Windows</strong>: ✅ SQLite 지원</li>
+                                </ul>
+                                
+                                <h4>✨ 주요 특징</h4>
+                                <ul>
+                                    <li><strong>완전 무료</strong>: 모든 API가 무료이며 API 키 설정 불필요</li>
+                                    <li><strong>크로스 플랫폼</strong>: Android, iOS, Web, Windows 지원</li>
+                                    <li><strong>오프라인 지원</strong>: 로컬 데이터베이스를 통한 오프라인 데이터 저장</li>
+                                    <li><strong>Material Design 3</strong>: 최신 디자인 시스템 적용</li>
+                                    <li><strong>한국어 로케일</strong>: 날짜/시간 포맷팅 한국어 지원</li>
+                                </ul>
+                                
+                                <h4>📂 프로젝트 구조</h4>
+                                <p>계층형 구조로 설계:</p>
+                                <ul>
+                                    <li><strong>lib/database/</strong>: 데이터베이스 계층 (DatabaseHelper - 싱글톤)</li>
+                                    <li><strong>lib/models/</strong>: 데이터 모델 (Todo, Idea, ReadingCard, Weather, NewsArticle)</li>
+                                    <li><strong>lib/providers/</strong>: 상태 관리 (Provider 패턴 - ChangeNotifier)</li>
+                                    <li><strong>lib/screens/</strong>: UI 화면 (HomeScreen, TodoScreen, IdeaScreen, ReadingCardScreen, WeatherScreen, NewsScreen, NewsDetailScreen)</li>
+                                </ul>
+                                
+                                <h4>🔧 앱 초기화 흐름</h4>
+                                <ol>
+                                    <li>한국어 로케일 초기화 (initializeDateFormatting)</li>
+                                    <li>데이터베이스 초기화 (DatabaseHelper.instance.initialize)</li>
+                                    <li>MultiProvider 구성 (5개 Provider 등록)</li>
+                                    <li>앱 실행 (MaterialApp)</li>
+                                </ol>
+                                
+                                <h4>📈 향후 개선 사항</h4>
+                                <ul>
+                                    <li>할 일 알림 기능 (Local Notifications)</li>
+                                    <li>아이디어 검색 기능</li>
+                                    <li>날씨 예보 그래프</li>
+                                    <li>뉴스 즐겨찾기</li>
+                                    <li>다크 모드 지원</li>
+                                    <li>데이터 백업/복원 (Cloud Sync)</li>
+                                    <li>테스트 코드 추가 (Unit, Widget, Integration)</li>
+                                    <li>Freezed 패키지로 immutable 모델 리팩토링</li>
+                                    <li>Repository 패턴 도입</li>
+                                    <li>Clean Architecture 적용</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="project-tags">
+                            <span class="tag">Flutter</span>
+                            <span class="tag">Dart</span>
+                            <span class="tag">Provider</span>
+                            <span class="tag">SQLite</span>
+                            <span class="tag">REST API</span>
                         </div>
                     </div>
                 </div>
