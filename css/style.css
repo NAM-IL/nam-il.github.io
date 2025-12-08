@@ -343,13 +343,73 @@ body {
     animation: float 6s ease-in-out infinite;
     z-index: 10;
     opacity: 0.9;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
 }
 
 .floating-profile-image:hover {
     opacity: 1;
-    transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(99, 102, 241, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+    animation: float 3s ease-in-out infinite, profileHoverPulse 2s ease-in-out infinite;
+}
+
+.floating-profile-image:active {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(99, 102, 241, 0.4);
+    animation: profileClickPulse 0.3s ease-out;
+}
+
+.floating-profile-image.clicked {
+    animation: profileClickSpin 0.6s ease-out;
+}
+
+@keyframes profileHoverPulse {
+    0%, 100% {
+        box-shadow: 
+            0 20px 50px rgba(0, 0, 0, 0.4),
+            0 0 30px rgba(99, 102, 241, 0.5);
+    }
+    50% {
+        box-shadow: 
+            0 25px 60px rgba(0, 0, 0, 0.5),
+            0 0 40px rgba(99, 102, 241, 0.7);
+    }
+}
+
+@keyframes profileClickPulse {
+    0% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    50% {
+        transform: scale(0.95) rotate(-10deg);
+    }
+    100% {
+        transform: scale(1.15) rotate(5deg);
+    }
+}
+
+@keyframes profileClickSpin {
+    0% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    25% {
+        transform: scale(1.2) rotate(90deg);
+    }
+    50% {
+        transform: scale(1.15) rotate(180deg);
+    }
+    75% {
+        transform: scale(1.2) rotate(270deg);
+    }
+    100% {
+        transform: scale(1.15) rotate(360deg);
+    }
 }
 
 @media (max-width: 768px) {

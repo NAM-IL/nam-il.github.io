@@ -70,6 +70,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize TTS
     initTTS();
     
+    // Profile image click animation
+    const profileImage = document.querySelector('.floating-profile-image');
+    if (profileImage) {
+        profileImage.addEventListener('click', function() {
+            // Add clicked class for spin animation
+            this.classList.add('clicked');
+            
+            // Remove class after animation completes
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 600);
+        });
+    }
+    
     // Language switcher button
     const langBtn = document.getElementById('langBtn');
     if (langBtn) {
