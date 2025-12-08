@@ -16,13 +16,18 @@
         <div class="nav-container">
             <div class="nav-logo">Portfolio</div>
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#experience" class="nav-link">Experience</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#home" class="nav-link" data-ko="홈" data-en="Home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-ko="소개" data-en="About">About</a></li>
+                <li><a href="#skills" class="nav-link" data-ko="기술" data-en="Skills">Skills</a></li>
+                <li><a href="#experience" class="nav-link" data-ko="경력" data-en="Experience">Experience</a></li>
+                <li><a href="#projects" class="nav-link" data-ko="프로젝트" data-en="Projects">Projects</a></li>
+                <li><a href="#contact" class="nav-link" data-ko="연락처" data-en="Contact">Contact</a></li>
             </ul>
+            <div class="language-switcher">
+                <button id="langBtn" class="lang-btn" aria-label="Language switcher">
+                    <span class="lang-text">EN</span>
+                </button>
+            </div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -39,13 +44,13 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">
-                    <span class="greeting">안녕하세요,</span>
-                    <span class="name">Full-Stack 개발자</span>입니다
+                    <span class="greeting" data-ko="안녕하세요," data-en="Hello,">안녕하세요,</span>
+                    <span class="name" data-ko="Full-Stack 개발자" data-en="Full-Stack Developer">Full-Stack 개발자</span><span data-ko="입니다" data-en="">입니다</span>
                 </h1>
-                <p class="hero-subtitle">Java, Spring Framework, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가</p>
+                <p class="hero-subtitle" data-ko="Java, Spring Framework, Kotlin, Swift/SwiftUI, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가" data-en="Expert in web and mobile application development using Java, Spring Framework, Kotlin, Swift/SwiftUI, and Flutter">Java, Spring Framework, Kotlin, Swift/SwiftUI, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가</p>
                 <div class="hero-buttons">
-                    <a href="#contact" class="btn btn-primary">연락하기</a>
-                    <a href="#projects" class="btn btn-secondary">프로젝트 보기</a>
+                    <a href="#contact" class="btn btn-primary" data-ko="연락하기" data-en="Contact">연락하기</a>
+                    <a href="#projects" class="btn btn-secondary" data-ko="프로젝트 보기" data-en="View Projects">프로젝트 보기</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -70,8 +75,8 @@
     <section id="about" class="section about-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">저에 대해 알아보세요</p>
+                <h2 class="section-title" data-ko="소개" data-en="About Me">About Me</h2>
+                <p class="section-subtitle" data-ko="저에 대해 알아보세요" data-en="Get to know me">저에 대해 알아보세요</p>
             </div>
             <div class="about-content">
                 <div class="about-text">
@@ -111,15 +116,15 @@
                     <div class="about-stats">
                         <div class="stat-item" data-target="#projects">
                             <div class="stat-number">15+</div>
-                            <div class="stat-label">프로젝트</div>
+                            <div class="stat-label" data-ko="프로젝트" data-en="Projects">프로젝트</div>
                         </div>
                         <div class="stat-item" data-target="#experience">
                             <div class="stat-number">6+</div>
-                            <div class="stat-label">년 프리랜서 경력</div>
+                            <div class="stat-label" data-ko="년 프리랜서 경력" data-en="Years Freelance">년 프리랜서 경력</div>
                         </div>
                         <div class="stat-item" data-target="#contact">
                             <div class="stat-number">4</div>
-                            <div class="stat-label">자격증</div>
+                            <div class="stat-label" data-ko="자격증" data-en="Certifications">자격증</div>
                         </div>
                     </div>
                 </div>
@@ -131,8 +136,8 @@
     <section id="skills" class="section skills-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Skills</h2>
-                <p class="section-subtitle">보유 기술 스택</p>
+                <h2 class="section-title" data-ko="기술" data-en="Skills">Skills</h2>
+                <p class="section-subtitle" data-ko="보유 기술 스택" data-en="Technical Skills">보유 기술 스택</p>
             </div>
             <div class="skills-grid">
                 <div class="skill-category">
@@ -272,8 +277,8 @@
     <section id="experience" class="section experience-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Experience</h2>
-                <p class="section-subtitle">경력 및 경험</p>
+                <h2 class="section-title" data-ko="경력" data-en="Experience">Experience</h2>
+                <p class="section-subtitle" data-ko="경력 및 경험" data-en="Career & Experience">경력 및 경험</p>
             </div>
             <div class="timeline">
                 <div class="timeline-item">
@@ -464,16 +469,6 @@
                                 <span class="detail-value">Java, JSP, HTML5, CSS, JavaScript, jQuery(Ajax), Spring Boot, Spring AI, Oracle 23 AI, Ollama, Docker, Jira, Git</span>
                             </div>
                         </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                독서활동 동기부여를 통한 자기주도적 학습역량을 다지는데 도움을 주는 서비스 제공
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <p class="project-description">1인 총괄 개발</p>
-                        </div>
                         <div class="project-tags">
                             <span class="tag">Java</span>
                             <span class="tag">Spring Boot</span>
@@ -505,29 +500,6 @@
                                 <span class="detail-value">Android, Kotlin, Java, Android Studio, Figma, 로컬 CI/CD 환경구축(gitLab, Jenkins)</span>
                             </div>
                         </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                우리은행 WON뱅킹관련 고객사 요청 대응 처리
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>우리은행 WON뱅킹</li>
-                                <li>만보기 기능 추가</li>
-                                <li>이체기능 네이티브 → 웹 서비스(고령자모드)</li>
-                                <li>로컬 CI/CD 환경 구축</li>
-                                <li>Jenkins을 이용한 빌드 시스템 구성</li>
-                                <li>docker를 이용한 Gitlab 환경 구축</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                개발 과정 중 새로운 기술을 익힐 수 있는 기회를 가질 수 있었으며, 동료들에게 공유했습니다.
-                            </p>
-                        </div>
                         <div class="project-tags">
                             <span class="tag">Kotlin</span>
                             <span class="tag">Android</span>
@@ -557,27 +529,6 @@
                                 <span class="detail-label">개발환경:</span>
                                 <span class="detail-value">Android, Kotlin, Mavericks Framework & Epoxy lib., Android Studio, Figma, Confluence</span>
                             </div>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                땡겨요 음식주문중계 O2O 플랫폼 구축
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>Pull refresh 확장기능 구현</li>
-                                <li>땡기기 기능 구현</li>
-                                <li>WebView 설계</li>
-                                <li>Docker를 이용한 암호화/빌드 시스템 관리</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                앱 암호화, 빌드&패키징 시스템 서버 관련 협력 업체와의 협업을 통해 이슈들을 해결하였으며, docker의 유용함을 알게 되었습니다.
-                            </p>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Kotlin</span>
@@ -609,25 +560,6 @@
                                 <span class="detail-value">Android, Java, Kotlin, Android Studio, Zeplin</span>
                             </div>
                         </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                KB 국민카드 표준API기반 MyData 기능 추가
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>표준API기반 MyData 기능 적용</li>
-                                <li>전체메뉴 > 메뉴검색 기능 추가</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                별다른 이슈 발생 없이 주어진 기능 구현을 완료하였습니다. MyData 기능구현 관련 iOS 개발 담당자에게 정보공유
-                            </p>
-                        </div>
                         <div class="project-tags">
                             <span class="tag">Java</span>
                             <span class="tag">Kotlin</span>
@@ -656,28 +588,6 @@
                                 <span class="detail-label">개발환경:</span>
                                 <span class="detail-value">Android, Kotlin, Android Studio, Python, Django</span>
                             </div>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                인도네시아 하나은행 Linebank 앱 개발
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>인도네시아 Linebank 안드로이드 앱 개발</li>
-                                <li>네이버 라인에서 1차 개발한 소스를 인수 후 이슈 대응</li>
-                                <li>MVVM 패턴 설계</li>
-                                <li>보안 키패드 이슈 해결을 위해 솔루션 업체와 협업을 통해 해결</li>
-                                <li>Django & Bootstrap을 활용한 내부용 앱 배포 사이트 구축</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                Kotlin 언어를 이용한 안드로이드 앱 개발에 대한 경험을 할 수 있었습니다. 앱 내부 배포를 위해 Django를 활용한 앱 배포 사이트를 구축 하였습니다.
-                            </p>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Kotlin</span>
@@ -709,25 +619,6 @@
                                 <span class="detail-value">Embedded Linux, C++, Qt QML, Qt Quick</span>
                             </div>
                         </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                자동차용 AVN 시스템 개발
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>자동차 AVN HMI 개발 이슈 대응</li>
-                                <li>AVN FOTA 업데이트 시스템 개발 이슈 대응</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                개발도 중요하지만 테스트 단계의 중요성을 알게되었습니다.
-                            </p>
-                        </div>
                         <div class="project-tags">
                             <span class="tag">C++</span>
                             <span class="tag">Qt QML</span>
@@ -758,27 +649,6 @@
                                 <span class="detail-value">Android, Java, Android Studio</span>
                             </div>
                         </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                KB국민은행 마이머니 Android App 고도화 작업
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>안드로이드 네이티브 앱 개발</li>
-                                <li>인트로 화면, 프로그레스바 고도화 등 요구사항 처리</li>
-                                <li>지문인증 솔루션 업데이트</li>
-                                <li>androidX 컨버팅</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                지문인증 솔루션 제공사와 협업을 통해 이슈를 해결하였습니다. 개발 완료 후 KB여의도 본점에서의 이행보고를 하는 경험을 할 수 있었습니다.
-                            </p>
-                        </div>
                         <div class="project-tags">
                             <span class="tag">Java</span>
                             <span class="tag">Android</span>
@@ -807,25 +677,6 @@
                                 <span class="detail-label">개발환경:</span>
                                 <span class="detail-value">Android OS, C++, Java JNI, Javascript, Platform Builder</span>
                             </div>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                키움증권 영웅문S MTS 고도화 프로젝트
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>관심종목 C++ 공통 플랫폼 개발</li>
-                                <li>Javascript를 이용한 MTS 화면개발</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                C++ 11 STL, Boost.Asio C++ 네트워크 프로그래밍 경험을 할 수 있었습니다. ECMAScript 6를 화면개발에 활용할 수 있는 기회를 가질 수 있었습니다. Android Native 개발을 하고싶다는 목표가 생겼습니다.
-                            </p>
                         </div>
                         <div class="project-tags">
                             <span class="tag">C++</span>
@@ -857,25 +708,6 @@
                                 <span class="detail-value">Android OS, Windows, Javascript, JQuery, Spring Framework, Mybatis</span>
                             </div>
                         </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 소개</h4>
-                            <p class="project-description">
-                                도시가스 검침원용 휴대단말기 앱(Android OS) 개발
-                            </p>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">역할</h4>
-                            <ul class="role-list">
-                                <li>Spring 서버단 Mybatis Mapper 작성</li>
-                                <li>Javascript, JQuery를 활용한 기능구현</li>
-                            </ul>
-                        </div>
-                        <div class="project-section">
-                            <h4 class="section-heading">프로젝트 후기</h4>
-                            <p class="project-description">
-                                자바스크립트를 이용한 화면개발과 Spring SQL Mapper 작성을 수행하였습니다.
-                            </p>
-                        </div>
                         <div class="project-tags">
                             <span class="tag">Spring</span>
                             <span class="tag">MyBatis</span>
@@ -892,8 +724,8 @@
     <section id="contact" class="section contact-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Contact</h2>
-                <p class="section-subtitle">연락 주시면 빠르게 답변드리겠습니다</p>
+                <h2 class="section-title" data-ko="연락처" data-en="Contact">Contact</h2>
+                <p class="section-subtitle" data-ko="연락 주시면 빠르게 답변드리겠습니다" data-en="Feel free to reach out">연락 주시면 빠르게 답변드리겠습니다</p>
             </div>
             <div class="contact-content">
                 <div class="contact-info">

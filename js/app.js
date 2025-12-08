@@ -2,8 +2,41 @@
  * Portfolio Website JavaScript
  */
 
+// Language Management
+let currentLang = localStorage.getItem('language') || 'ko';
+
+function switchLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    
+    // Update all elements with data-ko and data-en attributes
+    document.querySelectorAll('[data-ko][data-en]').forEach(element => {
+        element.textContent = element.getAttribute(`data-${lang}`);
+    });
+    
+    // Update language button
+    const langBtn = document.getElementById('langBtn');
+    if (langBtn) {
+        langBtn.querySelector('.lang-text').textContent = lang === 'ko' ? 'EN' : 'KO';
+    }
+    
+    // Update HTML lang attribute
+    document.documentElement.lang = lang;
+}
+
 // Navigation toggle for mobile
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize language
+    switchLanguage(currentLang);
+    
+    // Language switcher button
+    const langBtn = document.getElementById('langBtn');
+    if (langBtn) {
+        langBtn.addEventListener('click', function() {
+            const newLang = currentLang === 'ko' ? 'en' : 'ko';
+            switchLanguage(newLang);
+        });
+    }
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
 
