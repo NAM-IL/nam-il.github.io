@@ -1096,10 +1096,53 @@ body {
 
 .tag {
     padding: 0.25rem 0.75rem;
-    background: var(--bg-light);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
     border-radius: 1rem;
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.tag:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.3),
+        0 2px 8px rgba(139, 92, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px) scale(1.05);
+    color: var(--primary-color);
+}
+
+.tag:hover::before {
+    left: 100%;
+}
+
+.tag:active {
+    transform: translateY(0) scale(1.02);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.2),
+        0 1px 4px rgba(139, 92, 246, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* ===== Project Modal ===== */
@@ -1261,16 +1304,19 @@ body {
 #modalRole ul,
 #modalRole .modal-role-list {
     margin: 0;
-    padding-left: 1.5rem;
+    margin-left: 1.5rem;
+    padding-left: 0;
     color: var(--text-secondary);
     line-height: 1.8;
     list-style-type: disc;
+    list-style-position: outside;
 }
 
 #modalRole ul li,
 #modalRole .modal-role-list li {
     margin-bottom: 0.5rem;
     padding-left: 1.5rem;
+    list-style-type: disc;
 }
 
 #modalRole ul li:last-child,
@@ -1473,14 +1519,18 @@ body {
 
 .modal-role-list {
     margin: 0;
-    padding-left: 1.5rem;
+    margin-left: 1.5rem;
+    padding-left: 0;
     color: var(--text-secondary);
     line-height: 1.8;
+    list-style-type: disc;
+    list-style-position: outside;
 }
 
 .modal-role-list li {
     margin-bottom: 0.5rem;
     padding-left: 1.5rem;
+    list-style-type: disc;
 }
 
 .modal-role-list li:last-child {
@@ -1498,11 +1548,53 @@ body {
 
 .modal-tags .tag {
     padding: 0.5rem 1rem;
-    background: var(--bg-light);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
     border-radius: 1rem;
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-weight: 500;
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-tags .tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.modal-tags .tag:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.3),
+        0 2px 8px rgba(139, 92, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px) scale(1.05);
+    color: var(--primary-color);
+}
+
+.modal-tags .tag:hover::before {
+    left: 100%;
+}
+
+.modal-tags .tag:active {
+    transform: translateY(0) scale(1.02);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.2),
+        0 1px 4px rgba(139, 92, 246, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Modal scrollbar styling */
