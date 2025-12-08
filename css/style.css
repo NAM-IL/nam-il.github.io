@@ -1018,6 +1018,115 @@ body {
 .portfolio-content::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
 }
+
+/* Project Review Section Styles */
+.project-review-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.project-review-section h5 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.project-review-section h5:first-of-type {
+    margin-top: 0;
+}
+
+.project-review-section h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.review-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.review-item:last-of-type {
+    margin-bottom: 1rem;
+}
+
+.review-item h6 {
+    margin-top: 0;
+    padding-top: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.review-item ul {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.review-item li {
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+}
+
+.review-item li:last-child {
+    margin-bottom: 0;
+}
+
+.review-summary {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.review-summary ul {
+    margin-bottom: 0;
+}
+
+.review-summary li {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+}
+
+.review-summary li:last-child {
+    margin-bottom: 0;
+}
+
+.review-summary strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.review-conclusion {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background: var(--bg-light);
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--accent-color);
+}
+
+.review-conclusion p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.review-conclusion p:last-child {
+    margin-bottom: 0;
+}
     line-height: 1.8;
     font-size: 1rem;
     padding-left: 1.5rem;
