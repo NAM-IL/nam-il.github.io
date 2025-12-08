@@ -1315,7 +1315,7 @@ body {
 #modalRole ul li,
 #modalRole .modal-role-list li {
     margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
+    padding-left: 0.5rem;
     list-style-type: disc;
 }
 
@@ -1512,10 +1512,6 @@ body {
 .review-conclusion p:last-child {
     margin-bottom: 0;
 }
-    line-height: 1.8;
-    font-size: 1rem;
-    padding-left: 1.5rem;
-}
 
 .modal-role-list {
     margin: 0;
@@ -1529,7 +1525,7 @@ body {
 
 .modal-role-list li {
     margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
+    padding-left: 0.5rem;
     list-style-type: disc;
 }
 
