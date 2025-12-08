@@ -6,18 +6,40 @@
 let currentLang = localStorage.getItem('language') || 'ko';
 
 function switchLanguage(lang) {
-    // Stop TTS if speaking
-    if (speechSynthesis && (speechSynthesis.speaking || isPaused)) {
-        stopTTS();
+    try {
+        // Stop TTS if speaking (check if variables are defined)
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
+            if (typeof stopTTS === 'function') {
+                stopTTS();
+            }
+        }
+        
+        currentLang = lang;
+        localStorage.setItem('language', lang);
+        
+        // Update all elements with data-ko and data-en attributes
+        const elements = document.querySelectorAll('[data-ko][data-en]');
+        elements.forEach(element => {
+            try {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text !== null && text !== undefined && text !== '') {
+                    // Only update text content, don't modify structure
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.value = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            } catch (e) {
+                console.warn('Error updating element:', e, element);
+            }
+        });
+    } catch (e) {
+        console.error('Error in switchLanguage:', e);
+        // Ensure language state is still updated even if there's an error
+        currentLang = lang;
+        localStorage.setItem('language', lang);
     }
-    
-    currentLang = lang;
-    localStorage.setItem('language', lang);
-    
-    // Update all elements with data-ko and data-en attributes
-    document.querySelectorAll('[data-ko][data-en]').forEach(element => {
-        element.textContent = element.getAttribute(`data-${lang}`);
-    });
     
     // Update language button
     const langBtn = document.getElementById('langBtn');
@@ -28,9 +50,11 @@ function switchLanguage(lang) {
     // Update HTML lang attribute
     document.documentElement.lang = lang;
     
-    // Stop TTS if speaking when language changes
-    if (speechSynthesis && (speechSynthesis.speaking || isPaused)) {
-        stopTTS();
+    // Stop TTS if speaking when language changes (check if variables are defined)
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis && typeof isPaused !== 'undefined' && (speechSynthesis.speaking || isPaused)) {
+        if (typeof stopTTS === 'function') {
+            stopTTS();
+        }
     }
     
     // Update TTS button texts
@@ -178,9 +202,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Language switcher button
     const langBtn = document.getElementById('langBtn');
     if (langBtn) {
-        langBtn.addEventListener('click', function() {
-            const newLang = currentLang === 'ko' ? 'en' : 'ko';
-            switchLanguage(newLang);
+        langBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            try {
+                const newLang = currentLang === 'ko' ? 'en' : 'ko';
+                switchLanguage(newLang);
+            } catch (error) {
+                console.error('Error switching language:', error);
+            }
         });
     }
     const hamburger = document.querySelector('.hamburger');
@@ -213,12 +243,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const offsetTop = rect.top + scrollTop - 80;
                 
-                // Use requestAnimationFrame for smoother scrolling
-                requestAnimationFrame(() => {
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
+                // Direct scroll without requestAnimationFrame for immediate response
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
                 });
             }
         });
@@ -227,7 +255,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Navbar background on scroll (throttled for performance)
     const navbar = document.querySelector('.navbar');
     let scrollTimeout = null;
+    let lastScrollY = window.scrollY;
     window.addEventListener('scroll', function() {
+        const currentScrollY = window.scrollY;
+        
+        // Only update if scroll position changed significantly
+        if (Math.abs(currentScrollY - lastScrollY) < 5) {
+            return;
+        }
+        lastScrollY = currentScrollY;
+        
         if (scrollTimeout) {
             cancelAnimationFrame(scrollTimeout);
         }
@@ -240,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 navbar.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
             }
         });
-    });
+    }, { passive: true });
 
     // Animate skill bars on scroll
     const skillBars = document.querySelectorAll('.skill-progress');
@@ -474,22 +511,37 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show/hide scroll top button based on scroll position (throttled for performance)
     let scrollTopTimeout = null;
+    let lastScrollTopY = window.scrollY;
+    let isScrollTopVisible = false;
     window.addEventListener('scroll', function() {
+        const currentScrollY = window.scrollY;
+        
+        // Only update if scroll position changed significantly
+        if (Math.abs(currentScrollY - lastScrollTopY) < 10) {
+            return;
+        }
+        lastScrollTopY = currentScrollY;
+        
         if (scrollTopTimeout) {
             cancelAnimationFrame(scrollTopTimeout);
         }
         scrollTopTimeout = requestAnimationFrame(() => {
-            if (window.scrollY > 300) {
-                scrollTopBtn.classList.add('visible');
-            } else {
-                scrollTopBtn.classList.remove('visible');
+            const shouldBeVisible = window.scrollY > 300;
+            if (shouldBeVisible !== isScrollTopVisible) {
+                if (shouldBeVisible) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+                isScrollTopVisible = shouldBeVisible;
             }
         });
-    });
+    }, { passive: true });
 
     // Smooth scroll to top when button is clicked
     if (scrollTopBtn) {
         scrollTopBtn.addEventListener('click', function() {
+            // Cancel any ongoing scroll animations
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
@@ -510,12 +562,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const offsetTop = rect.top + scrollTop - 80;
                 
-                // Use requestAnimationFrame for smoother scrolling
-                requestAnimationFrame(() => {
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
+                // Direct scroll without requestAnimationFrame for immediate response
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
                 });
             }
         });
