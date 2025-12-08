@@ -62,6 +62,52 @@ function switchLanguage(lang) {
     }
 }
 
+// Skill tooltip descriptions
+const skillTooltips = {
+    'Java': '객체지향 프로그래밍 언어, 엔터프라이즈 애플리케이션 개발',
+    'Spring Framework': 'Java 기반 엔터프라이즈 애플리케이션 개발 프레임워크',
+    'Spring Boot': 'Spring Framework 기반 빠른 애플리케이션 개발 도구',
+    'Spring AI': 'Spring 기반 AI 통합 프레임워크, LLM 연동',
+    'JSP/Servlet': 'Java 웹 애플리케이션 개발 기술',
+    'MyBatis': 'Java 영속성 프레임워크, SQL 매퍼',
+    'Python': '고수준 프로그래밍 언어, 데이터 분석 및 웹 개발',
+    'HTML5/CSS3': '웹 표준 마크업 및 스타일링 언어',
+    'Bootstrap': '반응형 웹 디자인 CSS 프레임워크',
+    'JavaScript/jQuery': '웹 클라이언트 사이드 스크립팅 및 DOM 조작',
+    'Flutter/Dart': '크로스 플랫폼 모바일 앱 개발 프레임워크',
+    'Android/Java & Kotlin': '안드로이드 네이티브 앱 개발',
+    'iOS/Swift & SwiftUI': 'iOS 네이티브 앱 개발, SwiftUI 프레임워크',
+    'Oracle': '관계형 데이터베이스 관리 시스템',
+    'Git/GitHub & GitLab & Bitbucket': '버전 관리 시스템 및 협업 플랫폼',
+    'CI/CD (Jenkins)': '지속적 통합 및 배포 자동화 도구',
+    'Docker': '컨테이너 기반 가상화 플랫폼',
+    'Figma': 'UI/UX 디자인 및 프로토타이핑 도구'
+};
+
+// Initialize skill tooltips
+function initSkillTooltips() {
+    const skillNames = document.querySelectorAll('.skill-name');
+    skillNames.forEach(skillName => {
+        const skillText = skillName.textContent.trim();
+        const tooltip = skillTooltips[skillText];
+        if (tooltip) {
+            skillName.setAttribute('data-tooltip', tooltip);
+        }
+    });
+}
+
+// Initialize tag tooltips (for project tags and modal tags)
+function initTagTooltips() {
+    const tags = document.querySelectorAll('.tag');
+    tags.forEach(tag => {
+        const tagText = tag.textContent.trim();
+        const tooltip = skillTooltips[tagText];
+        if (tooltip) {
+            tag.setAttribute('data-tooltip', tooltip);
+        }
+    });
+}
+
 // Navigation toggle for mobile
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize language
@@ -69,6 +115,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize TTS
     initTTS();
+    
+    // Initialize skill tooltips
+    initSkillTooltips();
+    
+    // Initialize tag tooltips
+    initTagTooltips();
+    
+    // Re-initialize tag tooltips when modal is opened (for dynamically created tags)
+    const projectLinks = document.querySelectorAll('.project-link');
+    projectLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Re-initialize tag tooltips after modal content is populated
+            setTimeout(() => {
+                initTagTooltips();
+            }, 100);
+        });
+    });
     
     // Profile image click animation
     const profileImage = document.querySelector('.floating-profile-image');
@@ -341,6 +405,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show modal
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // Re-initialize tag tooltips after modal is shown
+            setTimeout(() => {
+                initTagTooltips();
+            }, 100);
         });
     });
 

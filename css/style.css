@@ -828,6 +828,56 @@ body {
     font-weight: 500;
     color: var(--text-primary);
     font-size: 1rem;
+    position: relative;
+    cursor: help;
+    display: inline-block;
+}
+
+/* Tooltip styles */
+.skill-name[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
+    color: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skill-name[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-2px);
+    border: 6px solid transparent;
+    border-top-color: rgba(30, 30, 30, 0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1001;
+}
+
+.skill-name[data-tooltip]:hover::after,
+.skill-name[data-tooltip]:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+.skill-name[data-tooltip]:hover::before {
+    transform: translateX(-50%) translateY(-6px);
 }
 
 .skill-bar {
@@ -1108,10 +1158,60 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    cursor: help;
 }
 
-.tag::before {
+/* Tag tooltip styles */
+.tag[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
+    color: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+}
+
+.tag[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-2px);
+    border: 6px solid transparent;
+    border-top-color: rgba(30, 30, 30, 0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1001;
+}
+
+.tag[data-tooltip]:hover::after,
+.tag[data-tooltip]:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+.tag[data-tooltip]:hover::before {
+    transform: translateX(-50%) translateY(-6px);
+}
+
+/* Shine effect - only for tags without tooltip */
+.tag:not([data-tooltip])::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1120,6 +1220,7 @@ body {
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: left 0.5s;
+    z-index: 1;
 }
 
 .tag:hover {
@@ -1133,7 +1234,7 @@ body {
     color: var(--primary-color);
 }
 
-.tag:hover::before {
+.tag:not([data-tooltip]):hover::before {
     left: 100%;
 }
 
@@ -1556,10 +1657,60 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    cursor: help;
 }
 
-.modal-tags .tag::before {
+/* Modal tag tooltip styles */
+.modal-tags .tag[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
+    color: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 3000;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+}
+
+.modal-tags .tag[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-2px);
+    border: 6px solid transparent;
+    border-top-color: rgba(30, 30, 30, 0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 3001;
+}
+
+.modal-tags .tag[data-tooltip]:hover::after,
+.modal-tags .tag[data-tooltip]:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+.modal-tags .tag[data-tooltip]:hover::before {
+    transform: translateX(-50%) translateY(-6px);
+}
+
+/* Shine effect for modal tags without tooltip */
+.modal-tags .tag:not([data-tooltip])::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1568,6 +1719,7 @@ body {
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: left 0.5s;
+    z-index: 1;
 }
 
 .modal-tags .tag:hover {
@@ -1581,7 +1733,7 @@ body {
     color: var(--primary-color);
 }
 
-.modal-tags .tag:hover::before {
+.modal-tags .tag:not([data-tooltip]):hover::before {
     left: 100%;
 }
 
