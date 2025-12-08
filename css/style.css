@@ -1182,18 +1182,28 @@ body {
     margin-top: 0;
 }
 
+.portfolio-content h4 + p {
+    padding-left: 1.5rem;
+}
+
 .portfolio-content h5 {
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.portfolio-content h5 + ul {
+    padding-left: 3rem;
 }
 
 .portfolio-content ul {
     margin-left: 1.5rem;
     margin-bottom: 1rem;
     list-style-type: disc;
+    padding-left: 1.5rem;
 }
 
 .portfolio-content li {
@@ -1204,6 +1214,7 @@ body {
 .portfolio-content p {
     margin-bottom: 1rem;
     line-height: 1.6;
+    padding-left: 1.5rem;
 }
 
 .portfolio-content strong {
