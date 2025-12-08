@@ -1174,60 +1174,10 @@ body {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: visible;
-    cursor: help;
+    cursor: default;
 }
 
-/* Tag tooltip styles */
-.tag[data-tooltip] {
-    position: relative;
-}
-
-.tag[data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
-    color: #ffffff;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 10000;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 4px;
-}
-
-.tag[data-tooltip]::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 2px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: rgba(30, 30, 30, 0.95);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 10001;
-}
-
-.tag[data-tooltip]:hover::after,
-.tag[data-tooltip]:hover::before {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-4px);
-}
-
-.tag[data-tooltip]:hover::before {
-    transform: translateX(-50%) translateY(0);
-}
+/* Tag tooltip styles - removed for project tags, only for skill names */
 
 /* Shine effect - only for tags without tooltip */
 .tag:not([data-tooltip])::before {
@@ -1677,60 +1627,10 @@ body {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: visible;
-    cursor: help;
+    cursor: default;
 }
 
-/* Modal tag tooltip styles */
-.modal-tags .tag[data-tooltip] {
-    position: relative;
-}
-
-.modal-tags .tag[data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
-    color: #ffffff;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 10000;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 4px;
-}
-
-.modal-tags .tag[data-tooltip]::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 2px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: rgba(30, 30, 30, 0.95);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 10001;
-}
-
-.modal-tags .tag[data-tooltip]:hover::after,
-.modal-tags .tag[data-tooltip]:hover::before {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-4px);
-}
-
-.modal-tags .tag[data-tooltip]:hover::before {
-    transform: translateX(-50%) translateY(0);
-}
+/* Modal tag tooltip styles - removed for project tags */
 
 /* Shine effect for modal tags without tooltip */
 .modal-tags .tag:not([data-tooltip])::before {

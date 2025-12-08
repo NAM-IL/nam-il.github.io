@@ -520,6 +520,7 @@ let isPaused = false;
 let ttsSpeed = 1.0;
 let currentTTSText = ''; // Store current text being spoken
 let currentTTSLang = 'ko'; // Store current language
+let ttsCharIndex = 0; // Track current character index during playback
 
 function initTTS() {
     // Check if browser supports Web Speech API
@@ -856,15 +857,24 @@ function playTTS() {
         // Event handlers
         currentUtterance.onstart = function() {
             isPaused = false;
+            ttsCharIndex = 0; // Reset character index on start
             setTimeout(() => {
                 updateTTSButtons();
             }, 50);
+        };
+        
+        // Track character position during playback
+        currentUtterance.onboundary = function(event) {
+            if (event.name === 'word' || event.name === 'sentence') {
+                ttsCharIndex = event.charIndex;
+            }
         };
         
         currentUtterance.onend = function() {
             isPaused = false;
             currentUtterance = null;
             currentTTSText = ''; // Clear stored text when finished
+            ttsCharIndex = 0; // Reset character index
             setTimeout(() => {
                 updateTTSButtons();
             }, 50);
@@ -877,6 +887,7 @@ function playTTS() {
                 isPaused = false;
                 currentUtterance = null;
                 currentTTSText = ''; // Clear stored text on error
+                ttsCharIndex = 0; // Reset character index
                 setTimeout(() => {
                     updateTTSButtons();
                 }, 50);
@@ -918,6 +929,16 @@ function restartTTSWithCurrentText() {
     
     const lang = currentTTSLang || 'ko';
     
+    // Get remaining text from current position
+    const remainingText = currentTTSText.substring(ttsCharIndex);
+    const charOffset = ttsCharIndex; // Store offset for boundary tracking
+    
+    if (!remainingText || remainingText.trim().length === 0) {
+        // If we've reached the end, just stop
+        stopTTS();
+        return;
+    }
+    
     // Cancel any current speech immediately
     if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
@@ -929,8 +950,8 @@ function restartTTSWithCurrentText() {
     
     // Function to speak with voice selection
     function speakWithVoiceRestart() {
-        // Create utterance
-        currentUtterance = new SpeechSynthesisUtterance(currentTTSText);
+        // Create utterance with remaining text
+        currentUtterance = new SpeechSynthesisUtterance(remainingText);
         
         // Set language
         if (lang === 'ko') {
@@ -965,16 +986,26 @@ function restartTTSWithCurrentText() {
         // Event handlers
         currentUtterance.onstart = function() {
             isPaused = false;
-            console.log('✅ TTS restarted successfully');
+            // Keep the current character index (don't reset)
+            console.log('✅ TTS restarted successfully from position:', charOffset, 'remaining text length:', remainingText.length);
             setTimeout(() => {
                 updateTTSButtons();
             }, 50);
+        };
+        
+        // Track character position during playback (adjust for offset)
+        currentUtterance.onboundary = function(event) {
+            if (event.name === 'word' || event.name === 'sentence') {
+                // event.charIndex is relative to current utterance, so add offset
+                ttsCharIndex = charOffset + event.charIndex;
+            }
         };
         
         currentUtterance.onend = function() {
             isPaused = false;
             currentUtterance = null;
             currentTTSText = '';
+            ttsCharIndex = 0; // Reset character index
             setTimeout(() => {
                 updateTTSButtons();
             }, 50);
@@ -987,6 +1018,7 @@ function restartTTSWithCurrentText() {
                 isPaused = false;
                 currentUtterance = null;
                 currentTTSText = '';
+                ttsCharIndex = 0; // Reset character index
                 setTimeout(() => {
                     updateTTSButtons();
                 }, 50);
@@ -1089,6 +1121,7 @@ function stopTTS() {
         isPaused = false;
         currentUtterance = null;
         currentTTSText = ''; // Clear stored text when stopped
+        ttsCharIndex = 0; // Reset character index
         updateTTSButtons();
     }
 }
