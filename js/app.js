@@ -159,42 +159,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const period = projectContent.querySelectorAll('.detail-row .detail-value')[1]?.textContent || '';
             const environment = projectContent.querySelectorAll('.detail-row .detail-value')[2]?.textContent || '';
             
-            // Find introduction
+            // Get data from hidden project-data div
+            const projectData = projectContent.querySelector('.project-data');
             let introduction = '';
-            const sections = projectContent.querySelectorAll('.project-section');
-            sections.forEach(section => {
-                const heading = section.querySelector('.section-heading');
-                if (heading && heading.textContent === '프로젝트 소개') {
-                    const desc = section.querySelector('.project-description');
-                    if (desc) introduction = desc.textContent.trim();
-                }
-            });
-            
-            // Find role
             let role = '';
-            sections.forEach(section => {
-                const heading = section.querySelector('.section-heading');
-                if (heading && heading.textContent === '역할') {
-                    const roleList = section.querySelector('.role-list');
-                    if (roleList) {
-                        const items = roleList.querySelectorAll('li');
-                        role = Array.from(items).map(li => li.textContent.trim()).join('|');
-                    } else {
-                        const desc = section.querySelector('.project-description');
-                        if (desc) role = desc.textContent.trim();
-                    }
-                }
-            });
-            
-            // Find review
             let review = '';
-            sections.forEach(section => {
-                const heading = section.querySelector('.section-heading');
-                if (heading && heading.textContent === '프로젝트 후기') {
-                    const desc = section.querySelector('.project-description');
-                    if (desc) review = desc.textContent.trim();
-                }
-            });
+            
+            if (projectData) {
+                const introEl = projectData.querySelector('[data-field="introduction"]');
+                const roleEl = projectData.querySelector('[data-field="role"]');
+                const reviewEl = projectData.querySelector('[data-field="review"]');
+                
+                if (introEl) introduction = introEl.textContent.trim();
+                if (roleEl) role = roleEl.textContent.trim();
+                if (reviewEl) review = reviewEl.textContent.trim();
+            }
             
             // Get tags
             const tags = [];
@@ -221,6 +200,29 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             document.getElementById('modalReview').textContent = review || '프로젝트 후기 정보가 없습니다.';
+            
+            // Show/hide sections based on content
+            const introSection = document.querySelector('.modal-section:has(#modalIntroduction)');
+            const roleSection = document.querySelector('.modal-section:has(#modalRole)');
+            const reviewSection = document.querySelector('.modal-section:has(#modalReview)');
+            
+            if (introduction) {
+                document.getElementById('modalIntroduction').parentElement.parentElement.style.display = 'block';
+            } else {
+                document.getElementById('modalIntroduction').parentElement.parentElement.style.display = 'none';
+            }
+            
+            if (role) {
+                document.getElementById('modalRole').parentElement.parentElement.style.display = 'block';
+            } else {
+                document.getElementById('modalRole').parentElement.parentElement.style.display = 'none';
+            }
+            
+            if (review) {
+                document.getElementById('modalReview').parentElement.parentElement.style.display = 'block';
+            } else {
+                document.getElementById('modalReview').parentElement.parentElement.style.display = 'none';
+            }
             
             // Populate tags
             const tagsContainer = document.getElementById('modalTags');
