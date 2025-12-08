@@ -1159,6 +1159,13 @@ body {
     z-index: 10;
 }
 
+/* Ensure project tags don't show help cursor */
+.project-tags .tag,
+.project-tags .tag:hover,
+.project-tags .tag:active {
+    cursor: default !important;
+}
+
 .tag {
     padding: 0.25rem 0.75rem;
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
@@ -1174,7 +1181,7 @@ body {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: visible;
-    cursor: default;
+    cursor: default !important;
 }
 
 /* Tag tooltip styles - removed for project tags, only for skill names */
@@ -1201,6 +1208,7 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-2px) scale(1.05);
     color: var(--primary-color);
+    cursor: default !important;
 }
 
 .tag:not([data-tooltip]):hover::before {
@@ -1627,7 +1635,7 @@ body {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: visible;
-    cursor: default;
+    cursor: default !important;
 }
 
 /* Modal tag tooltip styles - removed for project tags */
@@ -1654,6 +1662,7 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-2px) scale(1.05);
     color: var(--primary-color);
+    cursor: default !important;
 }
 
 .modal-tags .tag:not([data-tooltip]):hover::before {
