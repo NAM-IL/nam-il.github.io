@@ -176,18 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize visitor count
     initVisitorCount();
     
-    // Re-initialize tag tooltips when modal is opened (for dynamically created tags)
-    const projectLinks = document.querySelectorAll('.project-link');
-    projectLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Re-initialize tag tooltips after modal content is populated
-            setTimeout(() => {
-                initTagTooltips();
-            }, 100);
-        });
-    });
-    
     // Profile image click animation
     const profileImage = document.querySelector('.floating-profile-image');
     if (profileImage) {
