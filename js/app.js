@@ -125,6 +125,12 @@ function updateLanguageElements(lang) {
         // Update modal labels
         updateModalLabels(lang);
         
+        // Update skill tooltips
+        updateSkillTooltips(lang);
+        
+        // Update skill category titles
+        updateSkillCategories(lang);
+        
     } catch (e) {
         console.error('Error in updateLanguageElements:', e);
     }
@@ -223,26 +229,26 @@ function initProjectLinkLanguage() {
     }
 }
 
-// Skill tooltip descriptions
+// Skill tooltip descriptions (both Korean and English)
 const skillTooltips = {
-    'Java': '객체지향 프로그래밍 언어, 엔터프라이즈 애플리케이션 개발',
-    'Spring Framework': 'Java 기반 엔터프라이즈 애플리케이션 개발 프레임워크',
-    'Spring Boot': 'Spring Framework 기반 빠른 애플리케이션 개발 도구',
-    'Spring AI': 'Spring 기반 AI 통합 프레임워크, LLM 연동',
-    'JSP/Servlet': 'Java 웹 애플리케이션 개발 기술',
-    'MyBatis': 'Java 영속성 프레임워크, SQL 매퍼',
-    'Python': '고수준 프로그래밍 언어, 데이터 분석 및 웹 개발',
-    'HTML5/CSS3': '웹 표준 마크업 및 스타일링 언어',
-    'Bootstrap': '반응형 웹 디자인 CSS 프레임워크',
-    'JavaScript/jQuery': '웹 클라이언트 사이드 스크립팅 및 DOM 조작',
-    'Flutter/Dart': '크로스 플랫폼 모바일 앱 개발 프레임워크',
-    'Android/Java & Kotlin': '안드로이드 네이티브 앱 개발',
-    'iOS/Swift & SwiftUI': 'iOS 네이티브 앱 개발, SwiftUI 프레임워크',
-    'Oracle': '관계형 데이터베이스 관리 시스템',
-    'Git/GitHub & GitLab & Bitbucket': '버전 관리 시스템 및 협업 플랫폼',
-    'CI/CD (Jenkins)': '지속적 통합 및 배포 자동화 도구',
-    'Docker': '컨테이너 기반 가상화 플랫폼',
-    'Figma': 'UI/UX 디자인 및 프로토타이핑 도구'
+    'Java': { ko: '객체지향 프로그래밍 언어, 엔터프라이즈 애플리케이션 개발', en: 'Object-oriented programming language for enterprise applications' },
+    'Spring Framework': { ko: 'Java 기반 엔터프라이즈 애플리케이션 개발 프레임워크', en: 'Java-based framework for enterprise application development' },
+    'Spring Boot': { ko: 'Spring Framework 기반 빠른 애플리케이션 개발 도구', en: 'Tool for rapid application development on Spring Framework' },
+    'Spring AI': { ko: 'Spring 기반 AI 통합 프레임워크, LLM 연동', en: 'Spring-based AI integration framework with LLM support' },
+    'JSP/Servlet': { ko: 'Java 웹 애플리케이션 개발 기술', en: 'Java web application development technology' },
+    'MyBatis': { ko: 'Java 영속성 프레임워크, SQL 매퍼', en: 'Java persistence framework and SQL mapper' },
+    'Python': { ko: '고수준 프로그래밍 언어, 데이터 분석 및 웹 개발', en: 'High-level language for data analysis and web development' },
+    'HTML5/CSS3': { ko: '웹 표준 마크업 및 스타일링 언어', en: 'Web standard markup and styling languages' },
+    'Bootstrap': { ko: '반응형 웹 디자인 CSS 프레임워크', en: 'Responsive web design CSS framework' },
+    'JavaScript/jQuery': { ko: '웹 클라이언트 사이드 스크립팅 및 DOM 조작', en: 'Client-side scripting and DOM manipulation for the web' },
+    'Flutter/Dart': { ko: '크로스 플랫폼 모바일 앱 개발 프레임워크', en: 'Cross-platform mobile app framework' },
+    'Android/Java & Kotlin': { ko: '안드로이드 네이티브 앱 개발', en: 'Android native application development' },
+    'iOS/Swift & SwiftUI': { ko: 'iOS 네이티브 앱 개발, SwiftUI 프레임워크', en: 'iOS native development with Swift and SwiftUI' },
+    'Oracle': { ko: '관계형 데이터베이스 관리 시스템', en: 'Relational database management system' },
+    'Git/GitHub & GitLab & Bitbucket': { ko: '버전 관리 시스템 및 협업 플랫폼', en: 'Version control systems and collaboration platforms' },
+    'CI/CD (Jenkins)': { ko: '지속적 통합 및 배포 자동화 도구', en: 'Continuous integration and delivery automation tool' },
+    'Docker': { ko: '컨테이너 기반 가상화 플랫폼', en: 'Container-based virtualization platform' },
+    'Figma': { ko: 'UI/UX 디자인 및 프로토타이핑 도구', en: 'UI/UX design and prototyping tool' }
 };
 
 // Initialize skill tooltips
@@ -255,14 +261,56 @@ function initSkillTooltips() {
         const skillNames = document.querySelectorAll('.skill-name');
         skillNames.forEach(skillName => {
             const skillText = skillName.textContent.trim();
-            const tooltip = skillTooltips[skillText];
-            if (tooltip) {
-                skillName.setAttribute('data-tooltip', tooltip);
+            const tooltipObj = skillTooltips[skillText];
+            if (tooltipObj) {
+                // store both language variants on the element for reference
+                skillName.setAttribute('data-tooltip-ko', tooltipObj.ko);
+                skillName.setAttribute('data-tooltip-en', tooltipObj.en);
+                // set initial title based on current language
+                const initial = tooltipObj[currentLang] || tooltipObj.ko;
+                skillName.setAttribute('title', initial);
             }
         });
     } catch (e) {
         console.error('Error in initSkillTooltips:', e);
         isSkillTooltipsInitialized = false; // Reset on error
+    }
+}
+
+// Update skill tooltips when language changes
+function updateSkillTooltips(lang) {
+    try {
+        const skillNames = document.querySelectorAll('.skill-name');
+        skillNames.forEach(skillName => {
+            const skillText = skillName.textContent.trim();
+            const tooltipObj = skillTooltips[skillText];
+            let text = null;
+            // prefer stored data attributes if present
+            if (skillName.hasAttribute(`data-tooltip-${lang}`)) {
+                text = skillName.getAttribute(`data-tooltip-${lang}`);
+            } else if (tooltipObj && tooltipObj[lang]) {
+                text = tooltipObj[lang];
+            }
+            if (text) {
+                skillName.setAttribute('title', text);
+            }
+        });
+    } catch (e) {
+        console.warn('Error updating skill tooltips:', e);
+    }
+}
+
+// Update skill category titles when language changes
+function updateSkillCategories(lang) {
+    try {
+        const categoryTitles = document.querySelectorAll('.category-title');
+        categoryTitles.forEach(title => {
+            if (title.hasAttribute(`data-${lang}`)) {
+                title.textContent = title.getAttribute(`data-${lang}`);
+            }
+        });
+    } catch (e) {
+        console.warn('Error updating skill categories:', e);
     }
 }
 
@@ -601,20 +649,30 @@ function initializePage() {
             const period = detailRows[1] ? detailRows[1].textContent : '';
             const environment = detailRows[2] ? detailRows[2].textContent : '';
             
-            // Get data from hidden project-data div
+            // Get data from hidden project-data div (prefer language-specific attributes)
             const projectData = projectContent.querySelector('.project-data');
             let introduction = '';
             let role = '';
             let review = '';
-            
+
             if (projectData) {
                 const introEl = projectData.querySelector('[data-field="introduction"]');
                 const roleEl = projectData.querySelector('[data-field="role"]');
                 const reviewEl = projectData.querySelector('[data-field="review"]');
-                
-                if (introEl) introduction = introEl.textContent.trim();
-                if (roleEl) role = roleEl.textContent.trim();
-                if (reviewEl) review = reviewEl.textContent.trim();
+
+                // Prefer attributes like data-en or data-ko if present
+                if (introEl) {
+                    const attr = introEl.getAttribute(`data-${currentLang}`);
+                    introduction = (attr !== null && attr !== undefined && attr !== '') ? attr.trim() : introEl.textContent.trim();
+                }
+                if (roleEl) {
+                    const attr = roleEl.getAttribute(`data-${currentLang}`);
+                    role = (attr !== null && attr !== undefined && attr !== '') ? attr.trim() : roleEl.textContent.trim();
+                }
+                if (reviewEl) {
+                    const attr = reviewEl.getAttribute(`data-${currentLang}`);
+                    review = (attr !== null && attr !== undefined && attr !== '') ? attr.trim() : reviewEl.textContent.trim();
+                }
             } else {
                 console.warn('Project data not found for:', title);
             }

@@ -1,0 +1,119 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About",
+        "skills": "Skills",
+        "experience": "Experience",
+        "projects": "Projects",
+        "contact": "Contact"
+    },
+    "hero": {
+        "greeting": "Hello,",
+        "title": "Full-Stack Developer",
+        "iam": "",
+        "subtitle": "Expert in web and mobile application development using Java, Spring Framework, Kotlin, Swift/SwiftUI, and Flutter",
+        "contactBtn": "Contact",
+        "projectsBtn": "View Projects"
+    },
+    "about": {
+        "title": "About Me",
+        "subtitle": "Get to know me",
+        "jobTitle": "Full-Stack Developer",
+        "p1": "I am a developer who creates web and mobile applications using various technology stacks such as Java, Spring Framework, and Flutter. I have experience in financial sector projects including Woori Bank, Shinhan Bank, and KB Kookmin Card, and possess comprehensive development capabilities from Android native app development to backend server development.",
+        "p2": "I strive to become a better developer through continuous learning and growth, and recently completed a Spring Framework-based Java Full-Stack developer training course to acquire the latest technologies.",
+        "intlExpTitle": "International Experience",
+        "intlExpDesc": "2010.07 ~ 2011.05 - Participation in World Job Training Program (Canadagate IT Business Practice Course) by Korea Human Resources Development Service",
+        "intlExpItem1": "Completed approximately 4 months of Advanced course (Toefl) classes after level test",
+        "intlExpItem2": "Self-development for acquiring local English skills and developing potential abilities",
+        "intlExpItem3": "Attended Brain-based Speed Reading seminars in USA and Canada",
+        "studyTitle": "Study Activities",
+        "studyDesc": "2017.05 ~ 2017.11 - IAMROOT Offline System SW Study Group",
+        "studyItem1": "3-hour weekly meetings on 'Artificial Intelligence' as a sub-group",
+        "studyItem2": "Studied machine learning, deep learning, and reinforcement learning basics using video lectures",
+        "studyItem3": "Hands-on practice with Tensorflow, PyTorch & Keras",
+        "statsProjects": "Projects",
+        "statsFreelance": "Years Freelance",
+        "statsCerts": "Certifications"
+    },
+    "skills": {
+        "title": "Skills",
+        "subtitle": "Technical Skills",
+        "backend": "Backend",
+        "frontend": "Frontend",
+        "dbTools": "Database & Tools"
+    },
+    "experience": {
+        "title": "Experience",
+        "subtitle": "Career & Experience",
+        "timeline1_period": "2025.05.12 - 2025.11.12 (6 months)",
+        "timeline1_title": "Java Full-Stack Developer Training (Spring Framework based)",
+        "timeline1_company": "Ssangyong Gangbuk Training Center (944 hours / 118 days)",
+        "timeline1_desc": "Smart Web & Content Development course. Strengthened full-stack development skills with Java, Spring Framework, Flutter/Dart, Oracle",
+        "timeline2_period": "2022.07 - 2023.07 (12 months)",
+        "timeline2_title": "Freelance Developer",
+        "timeline2_company": "Woori Bank - WON Banking Re-Modeling",
+        "timeline2_desc": "Woori Bank personal non-face-to-face channel re-modeling project. Added pedometer feature, migrated native transfer function to web service, set up local CI/CD environment",
+        "timeline3_period": "2021.10 - 2022.02 (5 months)",
+        "timeline3_title": "Freelance Developer",
+        "timeline3_company": "Shinhan Bank - Food Ordering O2O Platform",
+        "timeline3_desc": "Built a food-ordering O2O intermediary platform. Implemented pull-to-refresh extensions, custom pull features, WebView design, and managed encryption/build systems with Docker"
+    },
+    "projects": {
+        "title": "Projects",
+        "subtitle": "Major Projects",
+        "client": "Client:",
+        "period": "Period:",
+        "env": "Environment:",
+        "intro": "Project Introduction",
+        "role": "Role",
+        "review": "Project Review",
+        "proj1_title": "Miracle Reading System",
+        "proj1_client": "Personal Project",
+        "proj1_period": "2025.11.10 - 2025.12.10 (1 month)",
+        "proj2_title": "Productivity Hub",
+        "proj2_client": "Personal Project",
+        "proj3_title": "Woori Bank Personal Non-Face-to-Face Channel Re-Modeling Project",
+        "proj3_client": "Woori Bank",
+        "proj3_period": "2022.07.13 - 2023.07.12 (12 months)",
+        "proj3_intro": "Handled customer requests related to Woori Bank WON Banking",
+        "proj3_role": "Woori Bank WON Banking|Added pedometer feature|Migrated native transfer function to web service (senior mode)|Set up local CI/CD environment|Configured build system using Jenkins|Established GitLab environment with Docker",
+        "proj3_review": "I had the opportunity to learn new technologies during development and shared them with colleagues."
+    },
+    "contact": {
+        "title": "Contact",
+        "subtitle": "Feel free to reach out",
+        "education_title": "Education",
+        "education_master": "Master's, Gwangju Institute of Science and Technology (2005.03 ~ 2007.08)",
+        "education_bachelor": "Bachelor's, Kangwon National University (1995.03 ~ 2004.02)",
+        "cert_title": "Certifications",
+        "cert1": "Engineer Information Processing (2025.09)",
+        "cert2": "RFID-GL (2013.11)",
+        "cert3": "SCJP (2010.04)",
+        "cert4": "Electrical Engineer (2004.08)",
+        "exp_title": "Experience",
+        "exp_wizard": "Manager (2014.04 ~ 2014.09, 6 months)",
+        "exp_smartek": "Senior Researcher (2008.04 ~ 2010.02, 23 months)",
+        "exp_total": "9+ years of development experience",
+        "exp_financial": "Multiple financial industry projects",
+        "linkedin_title": "Contact via LinkedIn",
+        "linkedin_desc": "Please send me a message via LinkedIn and I will respond quickly.",
+        "linkedin_btn": "View LinkedIn Profile"
+    },
+    "footer": {
+        "visitors": "Visitors:"
+    },
+    "modal": {
+        "client": "Client:",
+        "period": "Period:",
+        "env": "Environment:",
+        "intro": "Project Introduction",
+        "role": "Role",
+        "review": "Project Review"
+    },
+    "tts": {
+        "play": "Play",
+        "pause": "Pause",
+        "stop": "Stop",
+        "speed": "Speed"
+    }
+}

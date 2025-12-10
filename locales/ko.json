@@ -1,0 +1,119 @@
+{
+    "nav": {
+        "home": "홈",
+        "about": "소개",
+        "skills": "기술",
+        "experience": "경력",
+        "projects": "프로젝트",
+        "contact": "연락처"
+    },
+    "hero": {
+        "greeting": "안녕하세요,",
+        "title": "Full-Stack 개발자",
+        "iam": "입니다",
+        "subtitle": "Java, Spring Framework, Kotlin, Swift/SwiftUI, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가",
+        "contactBtn": "연락하기",
+        "projectsBtn": "프로젝트 보기"
+    },
+    "about": {
+        "title": "소개",
+        "subtitle": "저에 대해 알아보세요",
+        "jobTitle": "Full-Stack 개발자",
+        "p1": "Java, Spring Framework, Flutter 등 다양한 기술 스택을 활용하여 웹 및 모바일 애플리케이션을 개발하는 개발자입니다. 우리은행, 신한은행, KB국민카드 등 금융권 프로젝트 경험을 보유하고 있으며, 안드로이드 네이티브 앱 개발부터 백엔드 서버 개발까지 전반적인 개발 역량을 갖추고 있습니다.",
+        "p2": "지속적인 학습과 성장을 통해 더 나은 개발자가 되기 위해 노력하고 있으며, 최근에는 Spring Framework 기반 Java Full-Stack 개발자 양성과정을 수료하여 최신 기술을 습득했습니다.",
+        "intlExpTitle": "해외 경험",
+        "intlExpDesc": "2010.07 ~ 2011.05 - 산업인력공단 월드잡 연수 프로그램(Canadagate IT 비즈니스 실무 과정) 참여",
+        "intlExpItem1": "레벨테스트 후 Advanced 과정(Toefl) 수업 약 4개월 수강",
+        "intlExpItem2": "현지영어기술습득과 잠재능력 활용을 위한 자기계발",
+        "intlExpItem3": "미국, 캐나다 Brain-based Speed Reading 세미나 참석",
+        "studyTitle": "스터디 활동",
+        "studyDesc": "2017.05 ~ 2017.11 - IAMROOT 오프라인 시스템 SW스터디 그룹",
+        "studyItem1": "서브 모임으로 '인공지능' 주제로 매주 3시간 모임",
+        "studyItem2": "동영상 강의를 활용하여 머신러닝, 딥러닝, 강화학습 개론 학습",
+        "studyItem3": "Tensorflow 실습, PyTorch & Keras 실습",
+        "statsProjects": "프로젝트",
+        "statsFreelance": "년 프리랜서 경력",
+        "statsCerts": "자격증"
+    },
+    "skills": {
+        "title": "기술",
+        "subtitle": "보유 기술 스택",
+        "backend": "Backend",
+        "frontend": "Frontend",
+        "dbTools": "Database & Tools"
+    },
+    "experience": {
+        "title": "경력",
+        "subtitle": "경력 및 경험",
+        "timeline1_period": "2025.05.12 - 2025.11.12 (6개월)",
+        "timeline1_title": "Spring Framework 기반 Java Full-Stack 개발자 양성과정",
+        "timeline1_company": "쌍용강북교육센터 (944시간 / 118일)",
+        "timeline1_desc": "스마트웹&콘텐츠개발 과정. Java, Spring Framework, Flutter/Dart, Oracle 등 Full-Stack 개발 역량 강화",
+        "timeline2_period": "2022.07 - 2023.07 (12개월)",
+        "timeline2_title": "프리랜서 개발자",
+        "timeline2_company": "우리은행 - WON뱅킹 Re-Modeling",
+        "timeline2_desc": "우리은행 개인비대면 채널 Re-Modeling 추진사업. 만보기 기능 추가, 이체기능 네이티브 → 웹 서비스 전환, 로컬 CI/CD 환경 구축",
+        "timeline3_period": "2021.10 - 2022.02 (5개월)",
+        "timeline3_title": "프리랜서 개발자",
+        "timeline3_company": "신한은행 - 땡겨요 O2O 플랫폼",
+        "timeline3_desc": "음식주문중개 O2O 플랫폼 구축. Pull refresh 확장기능, 땡기기 기능, WebView 설계, Docker를 이용한 암호화/빌드 시스템 관리"
+    },
+    "projects": {
+        "title": "프로젝트",
+        "subtitle": "주요 프로젝트",
+        "client": "고객사:",
+        "period": "기간:",
+        "env": "개발환경:",
+        "intro": "프로젝트 소개",
+        "role": "역할",
+        "review": "프로젝트 후기",
+        "proj1_title": "미라클 리딩 시스템",
+        "proj1_client": "개인 프로젝트",
+        "proj1_period": "2025.11.10 - 2025.12.10 (1개월)",
+        "proj2_title": "Productivity Hub",
+        "proj2_client": "개인 프로젝트",
+        "proj3_title": "우리은행 개인비대면 채널 Re-Modeling 추진사업",
+        "proj3_client": "우리은행",
+        "proj3_period": "2022.07.13 - 2023.07.12 (12개월)",
+        "proj3_intro": "우리은행 WON뱅킹관련 고객사 요청 대응 처리",
+        "proj3_role": "우리은행 WON뱅킹|만보기 기능 추가|이체기능 네이티브 → 웹 서비스(고령자모드)|로컬 CI/CD 환경 구축|Jenkins을 이용한 빌드 시스템 구성|docker를 이용한 Gitlab 환경 구축",
+        "proj3_review": "개발 과정 중 새로운 기술을 익힐 수 있는 기회를 가질 수 있었으며, 동료들에게 공유했습니다."
+    },
+    "contact": {
+        "title": "연락처",
+        "subtitle": "연락 주시면 빠르게 답변드리겠습니다",
+        "education_title": "학력",
+        "education_master": "광주과학기술원 기전공학과 석사(2005.03 ~ 2007.08)",
+        "education_bachelor": "강원대학교 전기전자공학과 학사(1995.03 ~ 2004.02)",
+        "cert_title": "자격증",
+        "cert1": "정보처리기사 (2025.09)",
+        "cert2": "RFID-GL (2013.11)",
+        "cert3": "SCJP (2010.04)",
+        "cert4": "전기공사 (2004.08)",
+        "exp_title": "경력",
+        "exp_wizard": "대리 (2014.04 ~ 2014.09, 6개월)",
+        "exp_smartek": "선임연구원 (2008.04 ~ 2010.02, 23개월)",
+        "exp_total": "9년 이상 개발 경력",
+        "exp_financial": "금융권 프로젝트 다수 참여",
+        "linkedin_title": "LinkedIn으로 연락하기",
+        "linkedin_desc": "LinkedIn을 통해 메시지를 보내주시면 빠르게 답변드리겠습니다.",
+        "linkedin_btn": "LinkedIn 프로필 보기"
+    },
+    "footer": {
+        "visitors": "방문자 수:"
+    },
+    "modal": {
+        "client": "고객사:",
+        "period": "기간:",
+        "env": "개발환경:",
+        "intro": "프로젝트 소개",
+        "role": "역할",
+        "review": "프로젝트 후기"
+    },
+    "tts": {
+        "play": "재생",
+        "pause": "일시정지",
+        "stop": "정지",
+        "speed": "속도"
+    }
+}
