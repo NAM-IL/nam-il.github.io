@@ -122,6 +122,9 @@ function updateLanguageElements(lang) {
         // Update visitor label
         updateVisitorLabel(lang);
         
+        // Update modal labels
+        updateModalLabels(lang);
+        
     } catch (e) {
         console.error('Error in updateLanguageElements:', e);
     }
@@ -176,6 +179,47 @@ function updateVisitorLabel(lang) {
         }
     } catch (e) {
         console.warn('Error updating visitor label:', e);
+    }
+}
+
+// Update modal labels based on language
+function updateModalLabels(lang) {
+    try {
+        const labels = {
+            'client': lang === 'ko' ? '고객사:' : 'Client:',
+            'period': lang === 'ko' ? '기간:' : 'Period:',
+            'environment': lang === 'ko' ? '개발환경:' : 'Environment:',
+            'introduction': lang === 'ko' ? '프로젝트 소개' : 'Introduction',
+            'role': lang === 'ko' ? '역할' : 'Role',
+            'review': lang === 'ko' ? '프로젝트 후기' : 'Project Review'
+        };
+        
+        const clientLabel = document.querySelector('.modal-details .modal-detail-item:nth-child(1) .modal-label');
+        const periodLabel = document.querySelector('.modal-details .modal-detail-item:nth-child(2) .modal-label');
+        const environmentLabel = document.querySelector('.modal-details .modal-detail-item:nth-child(3) .modal-label');
+        
+        if (clientLabel) clientLabel.textContent = labels.client;
+        if (periodLabel) periodLabel.textContent = labels.period;
+        if (environmentLabel) environmentLabel.textContent = labels.environment;
+    } catch (e) {
+        console.warn('Error updating modal labels:', e);
+    }
+}
+
+// Initialize project links with language data attributes
+function initProjectLinkLanguage() {
+    try {
+        const projectLinks = document.querySelectorAll('.project-link');
+        projectLinks.forEach(link => {
+            if (!link.hasAttribute('data-ko')) {
+                link.setAttribute('data-ko', '자세히 보기');
+            }
+            if (!link.hasAttribute('data-en')) {
+                link.setAttribute('data-en', 'View Details');
+            }
+        });
+    } catch (e) {
+        console.warn('Error initializing project link language:', e);
     }
 }
 
@@ -328,6 +372,13 @@ function initializePage() {
             initSkillTooltips();
         } catch (e) {
             console.error('Error initializing skill tooltips:', e);
+        }
+        
+        // Initialize project links with language attributes
+        try {
+            initProjectLinkLanguage();
+        } catch (e) {
+            console.error('Error initializing project links:', e);
         }
         
         // Initialize visitor count (wrapped in try-catch to prevent blocking)
