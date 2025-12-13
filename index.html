@@ -14,18 +14,18 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">Portfolio</div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link" data-ko="홈" data-en="Home">Home</a></li>
-                <li><a href="#about" class="nav-link" data-ko="소개" data-en="About">About</a></li>
-                <li><a href="#skills" class="nav-link" data-ko="기술" data-en="Skills">Skills</a></li>
-                <li><a href="#experience" class="nav-link" data-ko="경력" data-en="Experience">Experience</a></li>
-                <li><a href="#projects" class="nav-link" data-ko="프로젝트" data-en="Projects">Projects</a></li>
-                <li><a href="#contact" class="nav-link" data-ko="연락처" data-en="Contact">Contact</a></li>
+            <div class="nav-container">
+            <div class="nav-logo" data-i18n="nav.logo">Portfolio</div>
+                <ul class="nav-menu">
+                <li><a href="#home" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
+                <li><a href="#skills" class="nav-link" data-i18n="nav.skills">Skills</a></li>
+                <li><a href="#experience" class="nav-link" data-i18n="nav.experience">Experience</a></li>
+                <li><a href="#projects" class="nav-link" data-i18n="nav.projects">Projects</a></li>
+                <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a></li>
             </ul>
             <div class="language-switcher">
-                <button id="langBtn" class="lang-btn" aria-label="Language switcher">
+                <button id="langBtn" class="lang-btn" aria-label="Language switcher" data-i18n-attr="aria-label:nav.langSwitcher">
                     <span class="lang-text">EN</span>
                 </button>
             </div>
@@ -45,13 +45,13 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">
-                    <span class="greeting" data-ko="안녕하세요," data-en="Hello,">안녕하세요,</span>
-                    <span class="name" data-ko="Full-Stack 개발자" data-en="Full-Stack Developer">Full-Stack 개발자</span><span data-ko="입니다" data-en=" "></span>
+                    <span class="greeting" data-i18n="hero.greeting">안녕하세요,</span>
+                    <span class="name" data-i18n="hero.title">Full-Stack 개발자</span>
                 </h1>
-                <p class="hero-subtitle" data-ko="Java, Spring Framework, Kotlin, Swift/SwiftUI, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가" data-en="Expert in web and mobile application development using Java, Spring Framework, Kotlin, Swift/SwiftUI, and Flutter">Java, Spring Framework, Kotlin, Swift/SwiftUI, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가</p>
+                <p class="hero-subtitle" data-i18n="hero.subtitle">Java, Spring Framework, Kotlin, Swift/SwiftUI, Flutter를 활용한 웹 및 모바일 애플리케이션 개발 전문가</p>
                 <div class="hero-buttons">
-                    <a href="#contact" class="btn btn-primary" data-ko="연락하기" data-en="Contact">연락하기</a>
-                    <a href="#projects" class="btn btn-secondary" data-ko="프로젝트 보기" data-en="View Projects">프로젝트 보기</a>
+                    <a href="#contact" class="btn btn-primary" data-i18n="hero.contactBtn">연락하기</a>
+                    <a href="#projects" class="btn btn-secondary" data-i18n="hero.projectsBtn">프로젝트 보기</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -61,7 +61,7 @@
                         <div class="shape shape-1"></div>
                         <div class="shape shape-2"></div>
                         <div class="shape shape-3"></div>
-                        <img src="doc/profile_2010.jpg" alt="Profile Photo 2010" class="floating-profile-image">
+                        <img src="doc/profile_2010.jpg" alt="Profile Photo 2010" class="floating-profile-image" data-i18n-attr="alt:hero.profileImageAlt">
                     </div>
                 </div>
             </div>
@@ -77,86 +77,86 @@
     <section id="about" class="section about-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-ko="소개" data-en="About Me">About Me</h2>
-                <p class="section-subtitle" data-ko="저에 대해 알아보세요" data-en="Get to know me">저에 대해 알아보세요</p>
+                <h2 class="section-title" data-i18n="about.title">About Me</h2>
+            <p class="section-subtitle" data-i18n="about.subtitle">저에 대해 알아보세요</p>
             </div>
             <div class="about-content">
                 <div class="about-text">
                     <div class="about-header">
-                        <h3 data-ko="Full-Stack 개발자" data-en="Full-Stack Developer"></h3>
+                        <h3 data-i18n="about.jobTitle"></h3>
                         <div class="tts-controls">
-                            <button id="ttsPlayBtn" class="tts-button tts-play-btn" aria-label="음성으로 읽기" title="음성으로 읽기">
+                            <button id="ttsPlayBtn" class="tts-button tts-play-btn" aria-label="음성으로 읽기" title="음성으로 읽기" data-i18n-attr="aria-label:tts.play;title:tts.play">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
                                 </svg>
-                                <span class="tts-button-text" data-ko="재생" data-en="Play">재생</span>
+                                <span class="tts-button-text" data-i18n="tts.play">재생</span>
                             </button>
-                            <button id="ttsPauseBtn" class="tts-button tts-pause-btn" aria-label="일시정지" title="일시정지" style="display: none;">
+                            <button id="ttsPauseBtn" class="tts-button tts-pause-btn" aria-label="일시정지" title="일시정지" style="display: none;" data-i18n-attr="aria-label:tts.pause;title:tts.pause">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 4H10V20H6V4Z" fill="currentColor"/>
                                     <path d="M14 4H18V20H14V4Z" fill="currentColor"/>
                                 </svg>
-                                <span class="tts-button-text" data-ko="일시정지" data-en="Pause">일시정지</span>
+                                <span class="tts-button-text" data-i18n="tts.pause">일시정지</span>
                             </button>
-                            <button id="ttsStopBtn" class="tts-button tts-stop-btn" aria-label="정지" title="정지" style="display: none;">
+                            <button id="ttsStopBtn" class="tts-button tts-stop-btn" aria-label="정지" title="정지" style="display: none;" data-i18n-attr="aria-label:tts.stop;title:tts.stop">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 6H18V18H6V6Z" fill="currentColor"/>
                                 </svg>
-                                <span class="tts-button-text" data-ko="정지" data-en="Stop">정지</span>
+                                <span class="tts-button-text" data-i18n="tts.stop">정지</span>
                             </button>
                             <div class="tts-speed-control">
-                                <label for="ttsSpeed" class="tts-speed-label" data-ko="속도" data-en="Speed">속도:</label>
+                                <label for="ttsSpeed" class="tts-speed-label" data-i18n="tts.speed">속도:</label>
                                 <input type="range" id="ttsSpeed" min="0.5" max="2" step="0.1" value="1" class="tts-speed-slider">
                                 <span id="ttsSpeedValue" class="tts-speed-value">1.0x</span>
                             </div>
                         </div>
                     </div>
                     <div id="aboutTextContent">
-                        <p data-ko="Java, Spring Framework, Flutter 등 다양한 기술 스택을 활용하여 웹 및 모바일 애플리케이션을 개발하는 개발자입니다. 우리은행, 신한은행, KB국민카드 등 금융권 프로젝트 경험을 보유하고 있으며, 안드로이드 네이티브 앱 개발부터 백엔드 서버 개발까지 전반적인 개발 역량을 갖추고 있습니다." data-en="I am a developer who creates web and mobile applications using various technology stacks such as Java, Spring Framework, and Flutter. I have experience in financial sector projects including Woori Bank, Shinhan Bank, and KB Kookmin Card, and possess comprehensive development capabilities from Android native app development to backend server development.">
+                        <p data-i18n="about.p1">
                             Java, Spring Framework, Flutter 등 다양한 기술 스택을 활용하여 웹 및 모바일 애플리케이션을 개발하는 개발자입니다.
                             우리은행, 신한은행, KB국민카드 등 금융권 프로젝트 경험을 보유하고 있으며, 
                             안드로이드 네이티브 앱 개발부터 백엔드 서버 개발까지 전반적인 개발 역량을 갖추고 있습니다.
                         </p>
-                        <p data-ko="지속적인 학습과 성장을 통해 더 나은 개발자가 되기 위해 노력하고 있으며, 최근에는 Spring Framework 기반 Java Full-Stack 개발자 양성과정을 수료하여 최신 기술을 습득했습니다." data-en="I strive to become a better developer through continuous learning and growth, and recently completed a Spring Framework-based Java Full-Stack developer training course to acquire the latest technologies.">
+                        <p data-i18n="about.p2">
                             지속적인 학습과 성장을 통해 더 나은 개발자가 되기 위해 노력하고 있으며,
                             최근에는 Spring Framework 기반 Java Full-Stack 개발자 양성과정을 수료하여 최신 기술을 습득했습니다.
                         </p>
                     </div>
                     
                     <div class="additional-info">
-                        <h4 data-ko="해외 경험" data-en="International Experience">해외 경험</h4>
-                        <p data-ko="2010.07 ~ 2011.05 - 산업인력공단 월드잡 연수 프로그램(Canadagate IT 비즈니스 실무 과정) 참여" data-en="2010.07 ~ 2011.05 - Participation in World Job Training Program (Canadagate IT Business Practice Course) by Korea Human Resources Development Service">
+                        <h4 data-i18n="about.intlExpTitle">해외 경험</h4>
+                        <p data-i18n="about.intlExpDesc">
                             <strong>2010.07 ~ 2011.05</strong> - 산업인력공단 월드잡 연수 프로그램(Canadagate IT 비즈니스 실무 과정) 참여
                         </p>
                         <ul>
-                            <li data-ko="레벨테스트 후 Advanced 과정(Toefl) 수업 약 4개월 수강" data-en="Completed approximately 4 months of Advanced course (Toefl) classes after level test">레벨테스트 후 Advanced 과정(Toefl) 수업 약 4개월 수강</li>
-                            <li data-ko="현지영어기술습득과 잠재능력 활용을 위한 자기계발" data-en="Self-development for acquiring local English skills and developing potential abilities">현지영어기술습득과 잠재능력 활용을 위한 자기계발</li>
-                            <li data-ko="미국, 캐나다 Brain-based Speed Reading 세미나 참석" data-en="Attended Brain-based Speed Reading seminars in USA and Canada">미국, 캐나다 Brain-based Speed Reading 세미나 참석</li>
+                            <li data-i18n="about.intlExpItem1">레벨테스트 후 Advanced 과정(Toefl) 수업 약 4개월 수강</li>
+                            <li data-i18n="about.intlExpItem2">현지영어기술습득과 잠재능력 활용을 위한 자기계발</li>
+                            <li data-i18n="about.intlExpItem3">미국, 캐나다 Brain-based Speed Reading 세미나 참석</li>
                         </ul>
                         
-                        <h4 data-ko="스터디 활동" data-en="Study Activities">스터디 활동</h4>
-                        <p data-ko="2017.05 ~ 2017.11 - IAMROOT 오프라인 시스템 SW스터디 그룹" data-en="2017.05 ~ 2017.11 - IAMROOT Offline System SW Study Group">
+                        <h4 data-i18n="about.studyTitle">스터디 활동</h4>
+                        <p data-i18n="about.studyDesc">
                             <strong>2017.05 ~ 2017.11</strong> - IAMROOT 오프라인 시스템 SW스터디 그룹
                         </p>
                         <ul>
-                            <li data-ko="서브 모임으로 '인공지능' 주제로 매주 3시간 모임" data-en="3-hour weekly meetings on 'Artificial Intelligence' as a sub-group">서브 모임으로 '인공지능' 주제로 매주 3시간 모임</li>
-                            <li data-ko="동영상 강의를 활용하여 머신러닝, 딥러닝, 강화학습 개론 학습" data-en="Studied machine learning, deep learning, and reinforcement learning basics using video lectures">동영상 강의를 활용하여 머신러닝, 딥러닝, 강화학습 개론 학습</li>
-                            <li data-ko="Tensorflow 실습, PyTorch & Keras 실습" data-en="Hands-on practice with Tensorflow, PyTorch & Keras">Tensorflow 실습, PyTorch & Keras 실습</li>
+                            <li data-i18n="about.studyItem1">서브 모임으로 '인공지능' 주제로 매주 3시간 모임</li>
+                            <li data-i18n="about.studyItem2">동영상 강의를 활용하여 머신러닝, 딥러닝, 강화학습 개론 학습</li>
+                            <li data-i18n="about.studyItem3">Tensorflow 실습, PyTorch & Keras 실습</li>
                         </ul>
                     </div>
                     
                     <div class="about-stats">
                         <div class="stat-item" data-target="#projects">
                             <div class="stat-number">15+</div>
-                            <div class="stat-label" data-ko="프로젝트" data-en="Projects">프로젝트</div>
+                            <div class="stat-label" data-i18n="about.statsProjects">프로젝트</div>
                         </div>
                         <div class="stat-item" data-target="#experience">
                             <div class="stat-number">6+</div>
-                            <div class="stat-label" data-ko="년 프리랜서 경력" data-en="Years Freelance">년 프리랜서 경력</div>
+                            <div class="stat-label" data-i18n="about.statsFreelance">년 프리랜서 경력</div>
                         </div>
                         <div class="stat-item" data-target="#contact">
                             <div class="stat-number">4</div>
-                            <div class="stat-label" data-ko="자격증" data-en="Certifications">자격증</div>
+                            <div class="stat-label" data-i18n="about.statsCerts">자격증</div>
                         </div>
                     </div>
                 </div>
@@ -167,13 +167,13 @@
     <!-- Skills Section -->
     <section id="skills" class="section skills-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-ko="기술" data-en="Skills">Skills</h2>
-                <p class="section-subtitle" data-ko="보유 기술 스택" data-en="Technical Skills">보유 기술 스택</p>
+                <div class="section-header">
+                <h2 class="section-title" data-i18n="skills.title">Skills</h2>
+                <p class="section-subtitle" data-i18n="skills.subtitle">보유 기술 스택</p>
             </div>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3 class="category-title" data-ko="Backend" data-en="Backend">Backend</h3>
+                    <h3 class="category-title" data-i18n="skills.backend">Backend</h3>
                     <div class="skill-items">
                         <div class="skill-item">
                             <div class="skill-name">Java</div>
@@ -220,7 +220,7 @@
                     </div>
                 </div>
                 <div class="skill-category">
-                    <h3 class="category-title" data-ko="Frontend" data-en="Frontend">Frontend</h3>
+                    <h3 class="category-title" data-i18n="skills.frontend">Frontend</h3>
                     <div class="skill-items">
                         <div class="skill-item">
                             <div class="skill-name">HTML5/CSS3</div>
@@ -267,7 +267,7 @@
                     </div>
                 </div>
                 <div class="skill-category">
-                    <h3 class="category-title" data-ko="데이터베이스 & 도구" data-en="Database & Tools">Database & Tools</h3>
+                    <h3 class="category-title" data-i18n="skills.dbTools">Database & Tools</h3>
                     <div class="skill-items">
                         <div class="skill-item">
                             <div class="skill-name">Oracle</div>
@@ -309,17 +309,17 @@
     <section id="experience" class="section experience-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-ko="경력" data-en="Experience">Experience</h2>
-                <p class="section-subtitle" data-ko="경력 및 경험" data-en="Career & Experience">경력 및 경험</p>
+                <h2 class="section-title" data-i18n="experience.title">Experience</h2>
+                <p class="section-subtitle" data-i18n="experience.subtitle">경력 및 경험</p>
             </div>
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2025.05.12 - 2025.11.12 (6개월)" data-en="2025.05.12 - 2025.11.12 (6 months)">2025.05.12 - 2025.11.12 (6개월)</div>
-                        <h3 class="timeline-title" data-ko="Spring Framework 기반 Java Full-Stack 개발자 양성과정" data-en="Java Full-Stack Developer Training (Spring Framework based)">Spring Framework 기반 Java Full-Stack 개발자 양성과정</h3>
-                        <h4 class="timeline-company" data-ko="쌍용강북교육센터 (944시간 / 118일)" data-en="Ssangyong Gangbuk Training Center (944 hours / 118 days)">쌍용강북교육센터 (944시간 / 118일)</h4>
-                        <p class="timeline-description" data-ko="스마트웹&콘텐츠개발 과정. Java, Spring Framework, Flutter/Dart, Oracle 등 Full-Stack 개발 역량 강화" data-en="Smart Web & Content Development course. Strengthened full-stack development skills with Java, Spring Framework, Flutter/Dart, Oracle"> 
+                        <div class="timeline-date" data-i18n="experience.timeline1_period">2025.05.12 - 2025.11.12 (6개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline1_title">Spring Framework 기반 Java Full-Stack 개발자 양성과정</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline1_company">쌍용강북교육센터 (944시간 / 118일)</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline1_desc"> 
                             스마트웹&콘텐츠개발 과정. Java, Spring Framework, Flutter/Dart, Oracle 등 Full-Stack 개발 역량 강화
                         </p>
                     </div>
@@ -327,10 +327,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2022.07 - 2023.07 (12개월)" data-en="2022.07 - 2023.07 (12 months)">2022.07 - 2023.07 (12개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="우리은행 - WON뱅킹 Re-Modeling" data-en="Woori Bank - WON Banking Re-Modeling">우리은행 - WON뱅킹 Re-Modeling</h4>
-                        <p class="timeline-description" data-ko="우리은행 개인비대면 채널 Re-Modeling 추진사업. 만보기 기능 추가, 이체기능 네이티브 → 웹 서비스 전환, 로컬 CI/CD 환경 구축" data-en="Woori Bank personal non-face-to-face channel re-modeling project. Added pedometer feature, migrated native transfer function to web service, set up local CI/CD environment">
+                        <div class="timeline-date" data-i18n="experience.timeline2_period">2022.07 - 2023.07 (12개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline2_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline2_company">우리은행 - WON뱅킹 Re-Modeling</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline2_desc">
                             우리은행 개인비대면 채널 Re-Modeling 추진사업. 만보기 기능 추가, 이체기능 네이티브 → 웹 서비스 전환, 로컬 CI/CD 환경 구축
                         </p>
                     </div>
@@ -338,10 +338,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2021.10 - 2022.02 (5개월)" data-en="2021.10 - 2022.02 (5 months)">2021.10 - 2022.02 (5개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="신한은행 - 땡겨요 O2O 플랫폼" data-en="Shinhan Bank - Food Ordering O2O Platform">신한은행 - 땡겨요 O2O 플랫폼</h4>
-                        <p class="timeline-description" data-ko="음식주문중개 O2O 플랫폼 구축. Pull refresh 확장기능, 땡기기 기능, WebView 설계, Docker를 이용한 암호화/빌드 시스템 관리" data-en="Built a food-ordering O2O intermediary platform. Implemented pull-to-refresh extensions, custom pull features, WebView design, and managed encryption/build systems with Docker">
+                        <div class="timeline-date" data-i18n="experience.timeline3_period">2021.10 - 2022.02 (5개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline3_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline3_company">신한은행 - 땡겨요 O2O 플랫폼</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline3_desc">
                             음식주문중개 O2O 플랫폼 구축. Pull refresh 확장기능, 땡기기 기능, WebView 설계, Docker를 이용한 암호화/빌드 시스템 관리
                         </p>
                     </div>
@@ -349,10 +349,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2021.04 - 2021.08 (5개월)" data-en="2021.04 - 2021.08 (5 months)">2021.04 - 2021.08 (5개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="KB 국민카드 - MyData 플랫폼" data-en="KB Kookmin Card - MyData Platform">KB 국민카드 - MyData 플랫폼</h4>
-                        <p class="timeline-description" data-ko="KB 국민카드 표준API기반 MyData 플랫폼 개편 프로젝트. 표준API기반 MyData 기능 적용, 전체메뉴 &gt; 메뉴검색 기능 추가" data-en="KB Kookmin Card MyData platform revamp based on standard APIs. Implemented MyData features and added global menu > menu search">
+                        <div class="timeline-date" data-i18n="experience.timeline4_period">2021.04 - 2021.08 (5개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline4_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline4_company">KB 국민카드 - MyData 플랫폼</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline4_desc">
                             KB 국민카드 표준API기반 MyData 플랫폼 개편 프로젝트. 표준API기반 MyData 기능 적용, 전체메뉴 > 메뉴검색 기능 추가
                         </p>
                     </div>
@@ -360,10 +360,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2020.08 - 2021.03 (8개월)" data-en="2020.08 - 2021.03 (8 months)">2020.08 - 2021.03 (8개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="하나은행 - Line Bank Indonesia" data-en="Hana Bank - Line Bank Indonesia">하나은행 - Line Bank Indonesia</h4>
-                        <p class="timeline-description" data-ko="인도네시아 하나은행 Linebank 앱 개발. MVVM 패턴 설계, 보안 키패드 이슈 해결, Django &amp; Bootstrap을 활용한 내부용 앱 배포 사이트 구축" data-en="Developed Linebank Android app for Hana Bank Indonesia. Designed MVVM pattern, resolved secure keypad issues, and built an internal app deployment site using Django & Bootstrap">
+                        <div class="timeline-date" data-i18n="experience.timeline5_period">2020.08 - 2021.03 (8개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline5_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline5_company">하나은행 - Line Bank Indonesia</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline5_desc">
                             인도네시아 하나은행 Linebank 앱 개발. MVVM 패턴 설계, 보안 키패드 이슈 해결, Django &amp; Bootstrap을 활용한 내부용 앱 배포 사이트 구축
                         </p>
                     </div>
@@ -371,10 +371,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2020.02 - 2020.03 (2개월)" data-en="2020.02 - 2020.03 (2 months)">2020.02 - 2020.03 (2개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="제일기획 - 4D Video Player" data-en="Cheil Worldwide - 4D Video Player">제일기획 - 4D Video Player</h4>
-                        <p class="timeline-description" data-ko="삼성Galaxy 5G Unpacked 2020 앱 개발. 4D Media player 구현, 4D Streaming Video player 구현" data-en="Developed app for Samsung Galaxy 5G Unpacked 2020. Implemented 4D media player and 4D streaming video player">
+                        <div class="timeline-date" data-i18n="experience.timeline6_period">2020.02 - 2020.03 (2개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline6_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline6_company">제일기획 - 4D Video Player</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline6_desc">
                             삼성Galaxy 5G Unpacked 2020 앱 개발. 4D Media player 구현, 4D Streaming Video player 구현
                         </p>
                     </div>
@@ -382,10 +382,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2019.08 - 2019.11 (4개월)" data-en="2019.08 - 2019.11 (4 months)">2019.08 - 2019.11 (4개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="KB국민은행 - 마이머니 App 고도화" data-en="KB Kookmin Bank - MyMoney App Enhancement">KB국민은행 - 마이머니 App 고도화</h4>
-                        <p class="timeline-description" data-ko="KB국민은행 마이머니 Android App 고도화 작업. 안드로이드 네이티브 앱 개발, 인트로 화면/프로그레스바 고도화, 지문인증 솔루션 업데이트, androidX 컨버팅" data-en="KB Kookmin Bank MyMoney Android app enhancement. Android native development, intro/progress bar improvements, fingerprint auth updates, AndroidX migration">
+                        <div class="timeline-date" data-i18n="experience.timeline7_period">2019.08 - 2019.11 (4개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline7_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline7_company">KB국민은행 - 마이머니 App 고도화</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline7_desc">
                             KB국민은행 마이머니 Android App 고도화 작업. 안드로이드 네이티브 앱 개발, 인트로 화면/프로그레스바 고도화, 지문인증 솔루션 업데이트, androidX 컨버팅
                         </p>
                     </div>
@@ -393,10 +393,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2019.05 - 2019.07 (3개월)" data-en="2019.05 - 2019.07 (3 months)">2019.05 - 2019.07 (3개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="LG전자 - 자동차용 AVN 개발" data-en="LG Electronics - Automotive AVN Development">LG전자 - 자동차용 AVN 개발</h4>
-                        <p class="timeline-description" data-ko="자동차용 AVN 개발(P-IVI HMI). 자동차 AVN HMI 개발 이슈 대응, AVN FOTA 업데이트 시스템 개발 이슈 대응" data-en="Automotive AVN (P-IVI HMI) development. Addressed AVN HMI issues and worked on AVN FOTA update system"> 
+                        <div class="timeline-date" data-i18n="experience.timeline8_period">2019.05 - 2019.07 (3개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline8_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline8_company">LG전자 - 자동차용 AVN 개발</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline8_desc"> 
                             자동차용 AVN 개발(P-IVI HMI). 자동차 AVN HMI 개발 이슈 대응, AVN FOTA 업데이트 시스템 개발 이슈 대응
                         </p>
                     </div>
@@ -404,10 +404,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2018.05 - 2018.12 (8개월)" data-en="2018.05 - 2018.12 (8 months)">2018.05 - 2018.12 (8개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="키움증권 - 영웅문S MTS 개발" data-en="Kiwoom Securities - HeroMoonS MTS Development">키움증권 - 영웅문S MTS 개발</h4>
-                        <p class="timeline-description" data-ko="키움증권 영웅문S MTS 고도화 프로젝트. 관심종목 C++ 공통 플랫폼 개발, Javascript를 이용한 MTS 화면개발" data-en="Kiwoom Securities HeroMoonS MTS enhancement. Developed common C++ platform for watchlists and used JavaScript for MTS UI development">
+                        <div class="timeline-date" data-i18n="experience.timeline9_period">2018.05 - 2018.12 (8개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline9_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline9_company">키움증권 - 영웅문S MTS 개발</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline9_desc">
                             키움증권 영웅문S MTS 고도화 프로젝트. 관심종목 C++ 공통 플랫폼 개발, Javascript를 이용한 MTS 화면개발
                         </p>
                     </div>
@@ -415,10 +415,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2016.09 - 2017.01 (5개월)" data-en="2016.09 - 2017.01 (5 months)">2016.09 - 2017.01 (5개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="인천 도시가스 / 미래엔서해에너지" data-en="Incheon City Gas / MiraeN Seohae Energy">인천 도시가스 / 미래엔서해에너지</h4>
-                        <p class="timeline-description" data-ko="도시가스 검침원용 휴대단말기 앱(Android OS) 개발. Spring 서버단 Mybatis Mapper 작성, Javascript, JQuery를 활용한 기능구현" data-en="Developed handheld terminal app (Android OS) for city gas meter readers. Implemented Spring server MyBatis mappers and features using JavaScript and jQuery">
+                        <div class="timeline-date" data-i18n="experience.timeline10_period">2016.09 - 2017.01 (5개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline10_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline10_company">인천 도시가스 / 미래엔서해에너지</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline10_desc">
                             도시가스 검침원용 휴대단말기 앱(Android OS) 개발. Spring 서버단 Mybatis Mapper 작성, Javascript, JQuery를 활용한 기능구현
                         </p>
                     </div>
@@ -426,10 +426,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2015.11 - 2015.12 (2개월)" data-en="2015.11 - 2015.12 (2 months)">2015.11 - 2015.12 (2개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="롯데 이노베이션랩 - 요우커 모바일 앱" data-en="Lotte Innovation Lab - Youker Mobile App">롯데 이노베이션랩 - 요우커 모바일 앱</h4>
-                        <p class="timeline-description" data-ko="중국인 관광객을 타겟으로 한 종합 관광안내서비스 모바일 앱 개발. Spring Framework를 이용한 서버단 개발, Spring Boot/Bootstrap을 이용한 관리자 페이지 개발" data-en="Developed comprehensive travel guide mobile app targeting Chinese tourists. Backend built with Spring Framework, admin pages with Spring Boot/Bootstrap">
+                        <div class="timeline-date" data-i18n="experience.timeline11_period">2015.11 - 2015.12 (2개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline11_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline11_company">롯데 이노베이션랩 - 요우커 모바일 앱</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline11_desc">
                             중국인 관광객을 타겟으로 한 종합 관광안내서비스 모바일 앱 개발. Spring Framework를 이용한 서버단 개발, Spring Boot/Bootstrap을 이용한 관리자 페이지 개발
                         </p>
                     </div>
@@ -437,10 +437,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2015.02 - 2015.07 (6개월)" data-en="2015.02 - 2015.07 (6 months)">2015.02 - 2015.07 (6개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="한국스마트카드 - 고속버스 현장발권 시스템" data-en="Korea Smart Card - Express Bus On-site Ticketing System">한국스마트카드 - 고속버스 현장발권 시스템</h4>
-                        <p class="timeline-description" data-ko="고속버스 티켓 현장발권 시스템 개발. 고속버스 현장 발권 시스템 단말기 이슈대응, 음성출력 등 추가기능 구현" data-en="Developed on-site ticketing system for express buses. Addressed terminal issues and implemented additional features like voice output">
+                        <div class="timeline-date" data-i18n="experience.timeline12_period">2015.02 - 2015.07 (6개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline12_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline12_company">한국스마트카드 - 고속버스 현장발권 시스템</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline12_desc">
                             고속버스 티켓 현장발권 시스템 개발. 고속버스 현장 발권 시스템 단말기 이슈대응, 음성출력 등 추가기능 구현
                         </p>
                     </div>
@@ -448,10 +448,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2014.10.15 - 2014.12.16 (2개월)" data-en="2014.10.15 - 2014.12.16 (2 months)">2014.10.15 - 2014.12.16 (2개월)</div>
-                        <h3 class="timeline-title" data-ko="신입사원양성교육" data-en="New Employee Training">신입사원양성교육</h3>
-                        <h4 class="timeline-company" data-ko="(주)트리키교육" data-en="Tricky Education Co., Ltd.">(주)트리키교육</h4>
-                        <p class="timeline-description" data-ko="3Key인지코칭, 알마인드 맵핑 코칭, 도서 요약기법 등" data-en="3Key cognitive coaching, Al-mind mapping coaching, book summarization techniques, etc."> 
+                        <div class="timeline-date" data-i18n="experience.timeline13_period">2014.10.15 - 2014.12.16 (2개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline13_title">신입사원양성교육</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline13_company">(주)트리키교육</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline13_desc"> 
                             3Key인지코칭, 알마인드 맵핑 코칭, 도서 요약기법 등
                         </p>
                     </div>
@@ -459,10 +459,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2014.04 - 2014.09 (6개월)" data-en="2014.04 - 2014.09 (6 months)">2014.04 - 2014.09 (6개월)</div>
-                        <h3 class="timeline-title" data-ko="대리" data-en="Assistant Manager">대리</h3>
-                        <h4 class="timeline-company" data-ko="위자드랩" data-en="WizardLab">위자드랩</h4>
-                        <p class="timeline-description" data-ko="안드로이드 앱 개발 담당" data-en="Responsible for Android app development">
+                        <div class="timeline-date" data-i18n="experience.timeline14_period">2014.04 - 2014.09 (6개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline14_title">대리</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline14_company">위자드랩</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline14_desc">
                             안드로이드 앱 개발 담당
                         </p>
                     </div>
@@ -470,10 +470,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2013.03 - 2013.12 (10개월)" data-en="2013.03 - 2013.12 (10 months)">2013.03 - 2013.12 (10개월)</div>
-                        <h3 class="timeline-title" data-ko="프리랜서 개발자" data-en="Freelance Developer">프리랜서 개발자</h3>
-                        <h4 class="timeline-company" data-ko="LG전자 - Mobile Router 개발" data-en="LG Electronics - Mobile Router Development">LG전자 - Mobile Router 개발</h4>
-                        <p class="timeline-description" data-ko="일본 NTT Docomo 향 모바일 라우터 개발. WI-FI Manager 개발 담당, AP & STA 기능 구현(Hostapd & WPA Supplicant 활용)" data-en="Developed mobile routers for NTT Docomo Japan. Responsible for Wi-Fi Manager development and implemented AP & STA features using hostapd & WPA Supplicant">
+                        <div class="timeline-date" data-i18n="experience.timeline15_period">2013.03 - 2013.12 (10개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline15_title">프리랜서 개발자</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline15_company">LG전자 - Mobile Router 개발</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline15_desc">
                             일본 NTT Docomo 향 모바일 라우터 개발. WI-FI Manager 개발 담당, AP &amp; STA 기능 구현(Hostapd &amp; WPA Supplicant 활용)
                         </p>
                     </div>
@@ -481,10 +481,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2012.06.25 - 2012.12.12 (6개월)" data-en="2012.06.25 - 2012.12.12 (6 months)">2012.06.25 - 2012.12.12 (6개월)</div>
-                        <h3 class="timeline-title" data-ko="소음진동평가모니터링시스템개발 과정" data-en="Noise & Vibration Monitoring System Development Course">소음진동평가모니터링시스템개발 과정</h3>
-                        <h4 class="timeline-company" data-ko="경영기술개발원교육센터 (960시간 / 120일)" data-en="Korea Institute of Management Technology (960 hours / 120 days)">경영기술개발원교육센터 (960시간 / 120일)</h4>
-                        <p class="timeline-description" data-ko="데이터베이스, 안드로이드, JSP/Servlet, Java, Spring 등" data-en="Covered database, Android, JSP/Servlet, Java, Spring, etc.">
+                        <div class="timeline-date" data-i18n="experience.timeline16_period">2012.06.25 - 2012.12.12 (6개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline16_title">소음진동평가모니터링시스템개발 과정</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline16_company">경영기술개발원교육센터 (960시간 / 120일)</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline16_desc">
                             데이터베이스, 안드로이드, JSP/Servlet, Java, Spring 등
                         </p>
                     </div>
@@ -492,10 +492,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2008.04 - 2010.02 (23개월)" data-en="2008.04 - 2010.02 (23 months)">2008.04 - 2010.02 (23개월)</div>
-                        <h3 class="timeline-title" data-ko="선임연구원" data-en="Senior Researcher">선임연구원</h3>
-                        <h4 class="timeline-company" data-ko="스마텍" data-en="SmarTek">스마텍</h4>
-                        <p class="timeline-description" data-ko="시스템 S/W 개발연구 담당 (현대중공업/ADD 지게차 변속기 제어 유닛 개발 프로젝트 수행)" data-en="Responsible for system S/W research and development (performed project: Hyundai Heavy Industries/ADD forklift transmission control unit development)">
+                        <div class="timeline-date" data-i18n="experience.timeline17_period">2008.04 - 2010.02 (23개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline17_title">선임연구원</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline17_company">스마텍</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline17_desc">
                             시스템 S/W 개발연구 담당 (현대중공업/ADD 지게차 변속기 제어 유닛 개발 프로젝트 수행)
                         </p>
                     </div>
@@ -503,10 +503,10 @@
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date" data-ko="2007.10.08 - 2008.03.31 (6개월)" data-en="2007.10.08 - 2008.03.31 (6 months)">2007.10.08 - 2008.03.31 (6개월)</div>
-                        <h3 class="timeline-title" data-ko="임베디드 SW 전문가 과정" data-en="Embedded SW Expert Course">임베디드 SW 전문가 과정</h3>
-                        <h4 class="timeline-company" data-ko="한국정보기술연구원 (KITRI) (960시간 / 120일)" data-en="Korea Information Technology Research Institute (KITRI) (960 hours / 120 days)">한국정보기술연구원 (KITRI) (960시간 / 120일)</h4>
-                        <p class="timeline-description" data-ko="Embedded Linux OS, C & C++, Linux Network 등" data-en="Embedded Linux OS, C & C++, Linux Networking, etc.">
+                        <div class="timeline-date" data-i18n="experience.timeline18_period">2007.10.08 - 2008.03.31 (6개월)</div>
+                        <h3 class="timeline-title" data-i18n="experience.timeline18_title">임베디드 SW 전문가 과정</h3>
+                        <h4 class="timeline-company" data-i18n="experience.timeline18_company">한국정보기술연구원 (KITRI) (960시간 / 120일)</h4>
+                        <p class="timeline-description" data-i18n="experience.timeline18_desc">
                             Embedded Linux OS, C &amp; C++, Linux Network 등
                         </p>
                     </div>
@@ -518,37 +518,37 @@
     <!-- Projects Section -->
     <section id="projects" class="section projects-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-ko="프로젝트" data-en="Projects">Projects</h2>
-                <p class="section-subtitle" data-ko="주요 프로젝트" data-en="Major Projects">주요 프로젝트</p>
+                <div class="section-header">
+                <h2 class="section-title" data-i18n="projects.title">Projects</h2>
+                <p class="section-subtitle" data-i18n="projects.subtitle">주요 프로젝트</p>
             </div>
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-image">
-                        <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <div class="project-overlay">
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="미라클 리딩 시스템" data-en="Miracle Reading System">미라클 리딩 시스템</h3>
+                        <h3 class="project-title" data-i18n="projects.proj1_title">미라클 리딩 시스템</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="개인 프로젝트" data-en="Personal Project">개인 프로젝트</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj1_client">개인 프로젝트</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2025.11.10 - 2025.12.10 (1개월)" data-en="2025.11.10 - 2025.12.10 (1 month)">2025.11.10 - 2025.12.10 (1개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj1_period">2025.11.10 - 2025.12.10 (1개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Java, JSP, HTML5, CSS, JavaScript, jQuery(Ajax), Spring Boot, Spring AI, Oracle 23 AI, Ollama, Docker, Jira, Git</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction">독서활동 동기부여를 통한 자기주도적 학습역량을 다지는데 도움을 주는 서비스 제공</div>
-                            <div data-field="role">1인 총괄 개발</div>
-                            <div data-field="review" data-type="portfolio">
+                            <div data-field="introduction" data-i18n="projects.proj1_intro">독서활동 동기부여를 통한 자기주도적 학습역량을 다지는데 도움을 주는 서비스 제공</div>
+                            <div data-field="role" data-i18n="projects.proj1_role">1인 총괄 개발</div>
+                            <div data-field="review" data-type="portfolio" data-i18n-html="projects.proj1_review">
                                 <div class="portfolio-content">
                                     <h4>📚 프로젝트 개요</h4>
                                     <p><strong>Miracle Reading System</strong>은 독서 습관 형성과 도서 관리를 위한 종합적인 웹 애플리케이션입니다. AI 기반 도서 요약, 독서 계획 관리, 속독 훈련, 소셜 기능 등을 제공하는 풀스택 독서 플랫폼입니다.</p>
@@ -791,29 +791,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="Productivity Hub" data-en="Productivity Hub">Productivity Hub</h3>
+                        <h3 class="project-title" data-i18n="projects.proj2_title">Productivity Hub</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="개인 프로젝트" data-en="Personal Project">개인 프로젝트</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj2_client">개인 프로젝트</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2025.12.04 오후 (4시간)" data-en="2025.12.04 PM (4 hours)">2025.12.04 오후 (4시간)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj2_period">2025.12.04 오후 (4시간)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Flutter, Dart, Provider, SQLite, Open-Meteo API, RSS Feed, Geolocator</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction">Flutter 기반의 통합 생산성 앱으로 할 일 관리, 아이디어 기록, 독서 카드, 날씨 정보, 뉴스 피드를 제공하는 크로스 플랫폼 애플리케이션입니다.</div>
-                            <div data-field="role">1인 총괄 개발</div>
-                            <div data-field="review" data-type="portfolio">
+                            <div data-field="introduction" data-i18n="projects.proj2_intro">Flutter 기반의 통합 생산성 앱으로 할 일 관리, 아이디어 기록, 독서 카드, 날씨 정보, 뉴스 피드를 제공하는 크로스 플랫폼 애플리케이션입니다.</div>
+                            <div data-field="role" data-i18n="projects.proj2_role">1인 총괄 개발</div>
+                            <div data-field="review" data-type="portfolio" data-i18n-html="projects.proj2_review">
                                 <div class="portfolio-content">
                                     <h4>📋 프로젝트 개요</h4>
                                     <p><strong>Productivity Hub</strong>는 Flutter 기반의 통합 생산성 앱으로, 다음과 같은 핵심 기능을 제공합니다:</p>
@@ -868,7 +868,7 @@
                                     <h5>핵심 프레임워크</h5>
                                     <ul>
                                         <li><strong>Flutter</strong>: 3.x</li>
-                                        <li><strong>Dart SDK</strong>: >=3.0.0 <4.0.0</li>
+                                        <li><strong>Dart SDK</strong>: >=3.0.0 &lt;4.0.0</li>
                                     </ul>
                                     
                                     <h5>주요 패키지</h5>
@@ -988,29 +988,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="우리은행 개인비대면 채널 Re-Modeling 추진사업" data-en="Woori Bank Personal Non-Face-to-Face Channel Re-Modeling Project">우리은행 개인비대면 채널 Re-Modeling 추진사업</h3>
+                        <h3 class="project-title" data-i18n="projects.proj3_title">우리은행 개인비대면 채널 Re-Modeling 추진사업</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="우리은행" data-en="Woori Bank">우리은행</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj3_client">우리은행</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2022.07.13 - 2023.07.12 (12개월)" data-en="2022.07.13 - 2023.07.12 (12 months)">2022.07.13 - 2023.07.12 (12개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj3_period">2022.07.13 - 2023.07.12 (12개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
-                                <span class="detail-value">Android, Kotlin, Java, Android Studio, Figma, 로컬 CI/CD 환경구축(gitLab, Jenkins)</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
+                                <span class="detail-value" data-i18n="projects.proj3_env">Android, Kotlin, Java, Android Studio, Figma, 로컬 CI/CD 환경구축(gitLab, Jenkins)</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="우리은행 WON뱅킹관련 고객사 요청 대응 처리" data-en="Handled customer requests related to Woori Bank WON Banking">우리은행 WON뱅킹관련 고객사 요청 대응 처리</div>
-                            <div data-field="role" data-ko="우리은행 WON뱅킹|만보기 기능 추가|이체기능 네이티브 → 웹 서비스(고령자모드)|로컬 CI/CD 환경 구축|Jenkins을 이용한 빌드 시스템 구성|docker를 이용한 Gitlab 환경 구축" data-en="Woori Bank WON Banking|Added pedometer feature|Migrated native transfer function to web service (senior mode)|Set up local CI/CD environment|Configured build system using Jenkins|Established GitLab environment with Docker">우리은행 WON뱅킹|만보기 기능 추가|이체기능 네이티브 → 웹 서비스(고령자모드)|로컬 CI/CD 환경 구축|Jenkins을 이용한 빌드 시스템 구성|docker를 이용한 Gitlab 환경 구축</div>
-                            <div data-field="review" data-ko="개발 과정 중 새로운 기술을 익힐 수 있는 기회를 가질 수 있었으며, 동료들에게 공유했습니다." data-en="I had the opportunity to learn new technologies during development and shared them with colleagues.">개발 과정 중 새로운 기술을 익힐 수 있는 기회를 가질 수 있었으며, 동료들에게 공유했습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj3_intro">우리은행 WON뱅킹관련 고객사 요청 대응 처리</div>
+                            <div data-field="role" data-i18n="projects.proj3_role">우리은행 WON뱅킹|만보기 기능 추가|이체기능 네이티브 → 웹 서비스(고령자모드)|로컬 CI/CD 환경 구축|Jenkins을 이용한 빌드 시스템 구성|docker를 이용한 Gitlab 환경 구축</div>
+                            <div data-field="review" data-i18n="projects.proj3_review">개발 과정 중 새로운 기술을 익힐 수 있는 기회를 가질 수 있었으며, 동료들에게 공유했습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Kotlin</span>
@@ -1023,29 +1023,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="신한은행 음식주문중개 O2O 플랫폼구축" data-en="Shinhan Bank Food Ordering O2O Platform">신한은행 음식주문중개 O2O 플랫폼구축</h3>
+                        <h3 class="project-title" data-i18n="projects.proj4_title">신한은행 음식주문중개 O2O 플랫폼구축</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="신한은행" data-en="Shinhan Bank">신한은행</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj4_client">신한은행</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2021.10 - 2022.02 (5개월)" data-en="2021.10 - 2022.02 (5 months)">2021.10 - 2022.02 (5개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj4_period">2021.10 - 2022.02 (5개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Android, Java, Kotlin, Android Studio, WebView, Docker, Gitlab</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="음식주문중개 O2O 플랫폼 구축" data-en="Built a food-ordering O2O intermediary platform">음식주문중개 O2O 플랫폼 구축</div>
-                            <div data-field="role" data-ko="음식주문중개 O2O 플랫폼 구축|Pull refresh 확장기능|땡기기 기능|WebView 설계|Docker를 이용한 암호화/빌드 시스템 관리" data-en="Built a food-ordering O2O intermediary platform|Implemented pull-to-refresh extensions|Custom pull features|WebView design|Managed encryption/build systems with Docker">음식주문중개 O2O 플랫폼 구축|Pull refresh 확장기능|땡기기 기능|WebView 설계|Docker를 이용한 암호화/빌드 시스템 관리</div>
-                            <div data-field="review" data-ko="새로운 기술 스택을 학습하며 프로젝트를 수행했고, 팀원들과 개발 경험을 공유했습니다." data-en="Learned new technology stacks while executing the project and shared development experiences with team members.">새로운 기술 스택을 학습하며 프로젝트를 수행했고, 팀원들과 개발 경험을 공유했습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj4_intro">음식주문중개 O2O 플랫폼 구축</div>
+                            <div data-field="role" data-i18n="projects.proj4_role">음식주문중개 O2O 플랫폼 구축|Pull refresh 확장기능|땡기기 기능|WebView 설계|Docker를 이용한 암호화/빌드 시스템 관리</div>
+                            <div data-field="review" data-i18n="projects.proj4_review">새로운 기술 스택을 학습하며 프로젝트를 수행했고, 팀원들과 개발 경험을 공유했습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Android</span>
@@ -1057,29 +1057,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="KB 국민카드 표준API기반 MyData 플랫폼 개편 프로젝트" data-en="KB Kookmin Card MyData Platform Revamp">KB 국민카드 표준API기반 MyData 플랫폼 개편 프로젝트</h3>
+                        <h3 class="project-title" data-i18n="projects.proj5_title">KB 국민카드 표준API기반 MyData 플랫폼 개편 프로젝트</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="KB 국민카드" data-en="KB Kookmin Card">KB 국민카드</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj5_client">KB 국민카드</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2021.04 - 2021.08 (5개월)" data-en="2021.04 - 2021.08 (5 months)">2021.04 - 2021.08 (5개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj5_period">2021.04 - 2021.08 (5개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Android, Java, Kotlin, Android Studio, Zeplin</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="KB 국민카드 표준API기반 MyData 기능 추가" data-en="Added MyData feature based on standard APIs for KB Kookmin Card">KB 국민카드 표준API기반 MyData 기능 추가</div>
-                            <div data-field="role" data-ko="표준API기반 MyData 기능 적용|전체메뉴 > 메뉴검색 기능 추가" data-en="Applied MyData feature based on standard APIs|Added global menu > menu search functionality">표준API기반 MyData 기능 적용|전체메뉴 > 메뉴검색 기능 추가</div>
-                            <div data-field="review" data-ko="별다른 이슈 발생 없이 주어진 기능 구현을 완료하였습니다. MyData 기능구현 관련 iOS 개발 담당자에게 정보공유" data-en="Completed the assigned features without any issues. Shared MyData implementation information with iOS developers.">별다른 이슈 발생 없이 주어진 기능 구현을 완료하였습니다. MyData 기능구현 관련 iOS 개발 담당자에게 정보공유</div>
+                            <div data-field="introduction" data-i18n="projects.proj5_intro">KB 국민카드 표준API기반 MyData 기능 추가</div>
+                            <div data-field="role" data-i18n="projects.proj5_role">표준API기반 MyData 기능 적용|전체메뉴 &gt; 메뉴검색 기능 추가</div>
+                            <div data-field="review" data-i18n="projects.proj5_review">별다른 이슈 발생 없이 주어진 기능 구현을 완료하였습니다. MyData 기능구현 관련 iOS 개발 담당자에게 정보공유</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Java</span>
@@ -1091,29 +1091,30 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="하나은행 Line Financial Plus Indonesia Bank 앱 개발 프로젝트" data-en="Hana Bank Line Financial Plus Indonesia App Development Project">하나은행 Line Financial Plus Indonesia Bank 앱 개발 프로젝트</h3>
+                        <h3 class="project-title" data-i18n="projects.proj6_title">하나은행 Line Financial Plus Indonesia Bank 앱 개발 프로젝트</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="하나은행" data-en="Hana Bank">하나은행</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj6_client">하나은행</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2020.08 - 2021.03 (8개월)" data-en="2020.08 - 2021.03 (8 months)">2020.08 - 2021.03 (8개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj6_period">2020.08 - 2021.03 (8개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
-                                <span class="detail-value">Android, Kotlin, Android Studio, Python, Django</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
+                                <span class="detail-value" data-i18n="projects.proj6_env">Android, Kotlin, Android Studio, Figma, Python, Django, Bootstrap</span>
                             </div>
                         </div>
+                        
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="인도네시아 하나은행 Linebank 앱 개발" data-en="Developed Linebank Android app for Hana Bank Indonesia">인도네시아 하나은행 Linebank 앱 개발</div>
-                            <div data-field="role" data-ko="인도네시아 Linebank 안드로이드 앱 개발|네이버 라인에서 1차 개발한 소스를 인수 후 이슈 대응|MVVM 패턴 설계|보안 키패드 이슈 해결을 위해 솔루션 업체와 협업을 통해 해결|Django & Bootstrap을 활용한 내부용 앱 배포 사이트 구축" data-en="Indonesia Linebank Android app development|Took over and managed issues from Naver Line's initial development|Designed MVVM pattern|Resolved secure keypad issues through vendor collaboration|Built internal app deployment site using Django & Bootstrap">인도네시아 Linebank 안드로이드 앱 개발|네이버 라인에서 1차 개발한 소스를 인수 후 이슈 대응|MVVM 패턴 설계|보안 키패드 이슈 해결을 위해 솔루션 업체와 협업을 통해 해결|Django & Bootstrap을 활용한 내부용 앱 배포 사이트 구축</div>
-                            <div data-field="review" data-ko="Kotlin 언어를 이용한 안드로이드 앱 개발에 대한 경험을 할 수 있었습니다. 앱 내부 배포를 위해 Django를 활용한 앱 배포 사이트를 구축 하였습니다." data-en="Gained experience developing Android apps using Kotlin. Built an app deployment site using Django for internal distribution.">Kotlin 언어를 이용한 안드로이드 앱 개발에 대한 경험을 할 수 있었습니다. 앱 내부 배포를 위해 Django를 활용한 앱 배포 사이트를 구축 하였습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj6_intro">인도네시아 하나은행 Linebank 앱 개발</div>
+                            <div data-field="role" data-i18n="projects.proj6_role">인도네시아 Linebank 안드로이드 앱 개발|네이버 라인에서 1차 개발한 소스를 인수 후 이슈 대응|MVVM 패턴 설계|보안 키패드 이슈 해결을 위해 솔루션 업체와 협업을 통해 해결|Django &amp; Bootstrap을 활용한 내부용 앱 배포 사이트 구축</div>
+                            <div data-field="review" data-i18n="projects.proj6_review">Kotlin 언어를 이용한 안드로이드 앱 개발에 대한 경험을 할 수 있었습니다. 앱 내부 배포를 위해 Django를 활용한 앱 배포 사이트를 구축 하였습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Kotlin</span>
@@ -1126,29 +1127,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="자동차용 AVN 개발(P-IVI HMI)" data-en="Automotive AVN Development (P-IVI HMI)">자동차용 AVN 개발(P-IVI HMI)</h3>
+                        <h3 class="project-title" data-i18n="projects.proj7_title">자동차용 AVN 개발(P-IVI HMI)</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="LG전자" data-en="LG Electronics">LG전자</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj7_client">LG전자</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2019.05 - 2019.07 (3개월)" data-en="2019.05 - 2019.07 (3 months)">2019.05 - 2019.07 (3개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj7_period">2019.05 - 2019.07 (3개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Embedded Linux, C++, Qt QML, Qt Quick</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="자동차용 AVN 시스템 개발" data-en="Developed automotive AVN system">자동차용 AVN 시스템 개발</div>
-                            <div data-field="role" data-ko="자동차 AVN HMI 개발 이슈 대응|AVN FOTA 업데이트 시스템 개발 이슈 대응" data-en="Addressed automotive AVN HMI development issues|Handled AVN FOTA update system development issues">자동차 AVN HMI 개발 이슈 대응|AVN FOTA 업데이트 시스템 개발 이슈 대응</div>
-                            <div data-field="review" data-ko="개발도 중요하지만 테스트 단계의 중요성을 알게되었습니다." data-en="Learned that testing is as important as development.">개발도 중요하지만 테스트 단계의 중요성을 알게되었습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj7_intro">자동차용 AVN 시스템 개발</div>
+                            <div data-field="role" data-i18n="projects.proj7_role">자동차 AVN HMI 개발 이슈 대응|AVN FOTA 업데이트 시스템 개발 이슈 대응</div>
+                            <div data-field="review" data-i18n="projects.proj7_review">개발도 중요하지만 테스트 단계의 중요성을 알게되었습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">C++</span>
@@ -1161,29 +1162,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="KB국민은행 마이머니 Android App 고도화" data-en="KB Kookmin Bank MyMoney Android App Enhancement">KB국민은행 마이머니 Android App 고도화</h3>
+                        <h3 class="project-title" data-i18n="projects.proj8_title">KB국민은행 마이머니 Android App 고도화</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="KB국민은행" data-en="KB Kookmin Bank">KB국민은행</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj8_client">KB국민은행</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2019.08 - 2019.11 (4개월)" data-en="2019.08 - 2019.11 (4 months)">2019.08 - 2019.11 (4개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj8_period">2019.08 - 2019.11 (4개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Android, Java, Android Studio</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="KB국민은행 마이머니 Android App 고도화 작업" data-en="Enhanced KB Kookmin Bank MyMoney Android App">KB국민은행 마이머니 Android App 고도화 작업</div>
-                            <div data-field="role" data-ko="안드로이드 네이티브 앱 개발|인트로 화면, 프로그레스바 고도화 등 요구사항 처리|지문인증 솔루션 업데이트|androidX 컨버팅" data-en="Android native app development|Handled requirements including intro screen and progress bar enhancements|Updated fingerprint authentication solution|AndroidX migration">안드로이드 네이티브 앱 개발|인트로 화면, 프로그레스바 고도화 등 요구사항 처리|지문인증 솔루션 업데이트|androidX 컨버팅</div>
-                            <div data-field="review" data-ko="지문인증 솔루션 제공사와 협업을 통해 이슈를 해결하였습니다. 개발 완료 후 KB여의도 본점에서의 이행보고를 하는 경험을 할 수 있었습니다." data-en="Resolved issues through collaboration with fingerprint authentication vendors. Had the experience of presenting completion report at KB Yeouido headquarters.">지문인증 솔루션 제공사와 협업을 통해 이슈를 해결하였습니다. 개발 완료 후 KB여의도 본점에서의 이행보고를 하는 경험을 할 수 있었습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj8_intro">KB국민은행 마이머니 Android App 고도화 작업</div>
+                            <div data-field="role" data-i18n="projects.proj8_role">안드로이드 네이티브 앱 개발|인트로 화면, 프로그레스바 고도화 등 요구사항 처리|지문인증 솔루션 업데이트|androidX 컨버팅</div>
+                            <div data-field="review" data-i18n="projects.proj8_review">지문인증 솔루션 제공사와 협업을 통해 이슈를 해결하였습니다. 개발 완료 후 KB여의도 본점에서의 이행보고를 하는 경험을 할 수 있었습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Java</span>
@@ -1195,29 +1196,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="키움증권 영웅문S MTS 개발" data-en="Kiwoom Securities HeroMoonS MTS Development">키움증권 영웅문S MTS 개발</h3>
+                        <h3 class="project-title" data-i18n="projects.proj9_title">키움증권 영웅문S MTS 개발</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="키움증권(다우기술)" data-en="Kiwoom Securities (Daou Technology)">키움증권(다우기술)</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj9_client">키움증권(다우기술)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2018.05 - 2018.12 (8개월)" data-en="2018.05 - 2018.12 (8 months)">2018.05 - 2018.12 (8개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj9_period">2018.05 - 2018.12 (8개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Android OS, C++, Java JNI, Javascript, Platform Builder</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="키움증권 영웅문S MTS 고도화 프로젝트" data-en="Kiwoom Securities HeroMoonS MTS Enhancement Project">키움증권 영웅문S MTS 고도화 프로젝트</div>
-                            <div data-field="role" data-ko="관심종목 C++ 공통 플랫폼 개발|Javascript를 이용한 MTS 화면개발" data-en="Developed C++ common platform for watchlists|Developed MTS UI using JavaScript">관심종목 C++ 공통 플랫폼 개발|Javascript를 이용한 MTS 화면개발</div>
-                            <div data-field="review" data-ko="C++ 11 STL, Boost.Asio C++ 네트워크 프로그래밍 경험을 할 수 있었습니다. ECMAScript 6를 화면개발에 활용할 수 있는 기회를 가질 수 있었습니다. Android Native 개발을 하고싶다는 목표가 생겼습니다." data-en="Gained experience with C++ 11 STL and Boost.Asio network programming. Had opportunity to utilize ECMAScript 6 for UI development. Developed goal to pursue Android native development.">C++ 11 STL, Boost.Asio C++ 네트워크 프로그래밍 경험을 할 수 있었습니다. ECMAScript 6를 화면개발에 활용할 수 있는 기회를 가질 수 있었습니다. Android Native 개발을 하고싶다는 목표가 생겼습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj9_intro">키움증권 영웅문S MTS 고도화 프로젝트</div>
+                            <div data-field="role" data-i18n="projects.proj9_role">관심종목 C++ 공통 플랫폼 개발|Javascript를 이용한 MTS 화면개발</div>
+                            <div data-field="review" data-i18n="projects.proj9_review">C++ 11 STL, Boost.Asio C++ 네트워크 프로그래밍 경험을 할 수 있었습니다. ECMAScript 6를 화면개발에 활용할 수 있는 기회를 가질 수 있었습니다. Android Native 개발을 하고싶다는 목표가 생겼습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">C++</span>
@@ -1230,29 +1231,29 @@
                 <div class="project-card">
                     <div class="project-image">
                         <div class="project-overlay">
-                            <a href="#" class="project-link">자세히 보기</a>
+                            <a href="#" class="project-link" data-i18n="projects.viewMore">자세히 보기</a>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title" data-ko="인천 도시가스 / 서해 도시가스 검침원용 앱 개발" data-en="Incheon City Gas / Seohae Energy Meter Reader App Development">인천 도시가스 / 서해 도시가스 검침원용 앱 개발</h3>
+                        <h3 class="project-title" data-i18n="projects.proj10_title">인천 도시가스 / 서해 도시가스 검침원용 앱 개발</h3>
                         <div class="project-detail">
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="고객사:" data-en="Client:">고객사:</span>
-                                <span class="detail-value" data-ko="인천 도시가스 / 미래엔서해에너지" data-en="Incheon City Gas / MiraeN Seohae Energy">인천 도시가스 / 미래엔서해에너지</span>
+                                <span class="detail-label" data-i18n="projects.client">고객사:</span>
+                                <span class="detail-value" data-i18n="projects.proj10_client">인천 도시가스 / 미래엔서해에너지</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="기간:" data-en="Period:">기간:</span>
-                                <span class="detail-value" data-ko="2016.09 - 2017.01 (5개월)" data-en="2016.09 - 2017.01 (5 months)">2016.09 - 2017.01 (5개월)</span>
+                                <span class="detail-label" data-i18n="projects.period">기간:</span>
+                                <span class="detail-value" data-i18n="projects.proj10_period">2016.09 - 2017.01 (5개월)</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                                <span class="detail-label" data-i18n="projects.env">개발환경:</span>
                                 <span class="detail-value">Android OS, Windows, Javascript, JQuery, Spring Framework, Mybatis</span>
                             </div>
                         </div>
                         <div class="project-data" style="display: none;">
-                            <div data-field="introduction" data-ko="도시가스 검침원용 휴대단말기 앱(Android OS) 개발" data-en="Developed handheld meter reader app (Android OS) for city gas company">도시가스 검침원용 휴대단말기 앱(Android OS) 개발</div>
-                            <div data-field="role" data-ko="Spring 서버단 Mybatis Mapper 작성|Javascript, JQuery를 활용한 기능구현" data-en="Wrote Spring server MyBatis mappers|Implemented features using JavaScript and jQuery">Spring 서버단 Mybatis Mapper 작성|Javascript, JQuery를 활용한 기능구현</div>
-                            <div data-field="review" data-ko="자바스크립트를 이용한 화면개발과 Spring SQL Mapper 작성을 수행하였습니다." data-en="Performed UI development using JavaScript and Spring SQL mapper implementation.">자바스크립트를 이용한 화면개발과 Spring SQL Mapper 작성을 수행하였습니다.</div>
+                            <div data-field="introduction" data-i18n="projects.proj10_intro">도시가스 검침원용 휴대단말기 앱(Android OS) 개발</div>
+                            <div data-field="role" data-i18n="projects.proj10_role">Spring 서버단 Mybatis Mapper 작성|Javascript, JQuery를 활용한 기능구현</div>
+                            <div data-field="review" data-i18n="projects.proj10_review">자바스크립트를 이용한 화면개발과 Spring SQL Mapper 작성을 수행하였습니다.</div>
                         </div>
                         <div class="project-tags">
                             <span class="tag">Spring</span>
@@ -1269,38 +1270,38 @@
     <!-- Contact Section -->
     <section id="contact" class="section contact-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-ko="연락처" data-en="Contact">Contact</h2>
-                <p class="section-subtitle" data-ko="연락 주시면 빠르게 답변드리겠습니다" data-en="Feel free to reach out">연락 주시면 빠르게 답변드리겠습니다</p>
+                <div class="section-header">
+                <h2 class="section-title" data-i18n="contact.title">Contact</h2>
+                <p class="section-subtitle" data-i18n="contact.subtitle">연락 주시면 빠르게 답변드리겠습니다</p>
             </div>
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-item">
                         <div class="contact-icon">🎓</div>
                         <div class="contact-details">
-                            <h4 data-ko="학력" data-en="Education">학력</h4>
-                            <p data-ko="광주과학기술원 기전공학과 석사(2005.03 ~ 2007.08)" data-en="Master's, Gwangju Institute of Science and Technology (2005.03 ~ 2007.08)">광주과학기술원 기전공학과 석사(2005.03 ~ 2007.08)</p>
-                            <p data-ko="강원대학교 전기전자공학과 학사(1995.03 ~ 2004.02)" data-en="Bachelor's, Kangwon National University (1995.03 ~ 2004.02)">강원대학교 전기전자공학과 학사(1995.03 ~ 2004.02)</p>
+                            <h4 data-i18n="contact.education_title">학력</h4>
+                            <p data-i18n="contact.education_master">광주과학기술원 기전공학과 석사(2005.03 ~ 2007.08)</p>
+                            <p data-i18n="contact.education_bachelor">강원대학교 전기전자공학과 학사(1995.03 ~ 2004.02)</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon">📜</div>
                         <div class="contact-details">
-                            <h4 data-ko="자격증" data-en="Certifications">자격증</h4>
-                            <p data-ko="정보처리기사 (2025.09)" data-en="Engineer Information Processing (2025.09)">정보처리기사 (2025.09)</p>
-                            <p data-ko="RFID-GL (2013.11)" data-en="RFID-GL (2013.11)">RFID-GL (2013.11)</p>
-                            <p data-ko="SCJP (2010.04)" data-en="SCJP (2010.04)">SCJP (2010.04)</p>
-                            <p data-ko="전기공사 (2004.08)" data-en="Electrical Engineer (2004.08)">전기공사 (2004.08)</p>
+                            <h4 data-i18n="contact.cert_title">자격증</h4>
+                            <p data-i18n="contact.cert1">정보처리기사 (2025.09)</p>
+                            <p data-i18n="contact.cert2">RFID-GL (2013.11)</p>
+                            <p data-i18n="contact.cert3">SCJP (2010.04)</p>
+                            <p data-i18n="contact.cert4">전기공사 (2004.08)</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon">💼</div>
                         <div class="contact-details">
-                            <h4 data-ko="경력" data-en="Experience">경력</h4>
-                            <p><strong data-ko="위자드랩" data-en="WizardLab">위자드랩</strong> - <span data-ko="대리 (2014.04 ~ 2014.09, 6개월)" data-en="Assistant Manager (2014.04 ~ 2014.09, 6 months)">대리 (2014.04 ~ 2014.09, 6개월)</span></p>
-                            <p><strong data-ko="스마텍" data-en="SmarTek">스마텍</strong> - <span data-ko="선임연구원 (2008.04 ~ 2010.02, 23개월)" data-en="Senior Researcher (2008.04 ~ 2010.02, 23 months)">선임연구원 (2008.04 ~ 2010.02, 23개월)</span></p>
-                            <p data-ko="9년 이상 개발 경력" data-en="9+ years of development experience">9년 이상 개발 경력</p>
-                            <p data-ko="금융권 프로젝트 다수 참여" data-en="Multiple financial industry projects">금융권 프로젝트 다수 참여</p>
+                            <h4 data-i18n="contact.exp_title">경력</h4>
+                            <p><strong data-i18n="contact.exp_wizard_company">위자드랩</strong> - <span data-i18n="contact.exp_wizard">대리 (2014.04 ~ 2014.09, 6개월)</span></p>
+                            <p><strong data-i18n="contact.exp_smartek_company">스마텍</strong> - <span data-i18n="contact.exp_smartek">선임연구원 (2008.04 ~ 2010.02, 23개월)</span></p>
+                            <p data-i18n="contact.exp_total">9년 이상 개발 경력</p>
+                            <p data-i18n="contact.exp_financial">금융권 프로젝트 다수 참여</p>
                         </div>
                     </div>
                 </div>
@@ -1311,10 +1312,10 @@
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                             </svg>
                         </div>
-                        <h3 data-ko="LinkedIn으로 연락하기" data-en="Contact via LinkedIn">LinkedIn으로 연락하기</h3>
-                        <p data-ko="LinkedIn을 통해 메시지를 보내주시면 빠르게 답변드리겠습니다." data-en="Please send me a message via LinkedIn and I will respond quickly.">LinkedIn을 통해 메시지를 보내주시면 빠르게 답변드리겠습니다.</p>
-                        <a href="https://www.linkedin.com/in/namil-kim-a59951123" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-linkedin">
-                            <span data-ko="LinkedIn 프로필 보기" data-en="View LinkedIn Profile">LinkedIn 프로필 보기</span>
+                        <h3 data-i18n="contact.linkedin_title">LinkedIn으로 연락하기</h3>
+                        <p data-i18n="contact.linkedin_desc">LinkedIn을 통해 메시지를 보내주시면 빠르게 답변드리겠습니다.</p>
+                            <a href="https://www.linkedin.com/in/namil-kim-a59951123" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-linkedin" data-i18n-attr="title:contact.linkedin_btn">
+                            <span data-i18n="contact.linkedin_btn">LinkedIn 프로필 보기</span>
                         </a>
                     </div>
                 </div>
@@ -1329,7 +1330,7 @@
                 <p>&copy; 2025 Portfolio. All rights reserved.</p>
                 <div class="footer-info">
                     <div class="visitor-count">
-                        <span class="visitor-label" data-ko="방문자 수:" data-en="Visitors:">방문자 수:</span>
+                        <span class="visitor-label" data-i18n="footer.visitors">방문자 수:</span>
                         <span id="visitorCount" class="visitor-number">0</span>
                     </div>
                     <div class="social-links">
@@ -1342,7 +1343,7 @@
     </footer>
 
     <!-- Scroll to Top Button -->
-    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top" data-i18n-attr="aria-label:nav.scrollTop">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -1351,34 +1352,34 @@
     <!-- Project Modal -->
     <div id="projectModal" class="modal">
         <div class="modal-overlay"></div>
-        <div class="modal-container">
-            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <div class="modal-container">
+            <button class="modal-close" aria-label="Close modal" data-i18n-attr="aria-label:modal.close">&times;</button>
             <div class="modal-content">
                 <h2 class="modal-title" id="modalProjectTitle"></h2>
                 <div class="modal-details">
                     <div class="modal-detail-item">
-                        <span class="modal-label" data-ko="고객사:" data-en="Client:">고객사:</span>
+                        <span class="modal-label" data-i18n="modal.client">고객사:</span>
                         <span class="modal-value" id="modalClient"></span>
                     </div>
                     <div class="modal-detail-item">
-                        <span class="modal-label" data-ko="기간:" data-en="Period:">기간:</span>
+                        <span class="modal-label" data-i18n="modal.period">기간:</span>
                         <span class="modal-value" id="modalPeriod"></span>
                     </div>
                     <div class="modal-detail-item">
-                        <span class="modal-label" data-ko="개발환경:" data-en="Environment:">개발환경:</span>
+                        <span class="modal-label" data-i18n="modal.env">개발환경:</span>
                         <span class="modal-value" id="modalEnvironment"></span>
                     </div>
                 </div>
                 <div class="modal-section">
-                    <h3 class="modal-section-title" data-ko="프로젝트 소개" data-en="Project Introduction">프로젝트 소개</h3>
+                    <h3 class="modal-section-title" data-i18n="modal.intro">프로젝트 소개</h3>
                     <p class="modal-text" id="modalIntroduction"></p>
                 </div>
                 <div class="modal-section">
-                    <h3 class="modal-section-title" data-ko="역할" data-en="Role">역할</h3>
+                    <h3 class="modal-section-title" data-i18n="modal.role">역할</h3>
                     <div class="modal-text" id="modalRole"></div>
                 </div>
                 <div class="modal-section">
-                    <h3 class="modal-section-title" id="modalReviewTitle" data-ko="프로젝트 후기" data-en="Project Review">프로젝트 후기</h3>
+                    <h3 class="modal-section-title" id="modalReviewTitle" data-i18n="modal.review">프로젝트 후기</h3>
                     <div class="modal-text" id="modalReview"></div>
                 </div>
                 <div class="modal-tags" id="modalTags"></div>

@@ -1017,6 +1017,7 @@ body {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     position: relative;
     overflow: hidden;
+    z-index: 9998; /* ensure image/overlay stack above project content/tags */
 }
 
 .project-overlay {
@@ -1031,10 +1032,13 @@ body {
     justify-content: center;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 9999; /* ensure overlay appears above tags and other content */
+    pointer-events: none; /* disable interactions when hidden */
 }
 
 .project-card:hover .project-overlay {
     opacity: 1;
+    pointer-events: auto; /* enable interactions when visible */
 }
 
 .project-link {
@@ -1044,6 +1048,8 @@ body {
     border: 2px solid white;
     border-radius: 0.5rem;
     transition: all 0.3s ease;
+    position: relative; /* ensure link stacks above overlay children if needed */
+    z-index: 10000;
 }
 
 .project-link:hover {
@@ -1056,6 +1062,8 @@ body {
     display: flex;
     flex-direction: column;
     flex: 1;
+    position: relative;
+    z-index: 10; /* keep content below overlay */
 }
 
 .project-title {
@@ -2216,4 +2224,15 @@ body {
         width: 100%;
         text-align: center;
     }
+}
+
+/* Temporary override: force project overlay visible and clickable to debug stacking issues */
+.project-overlay {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+.project-card .project-overlay .project-link {
+    z-index: 10001 !important;
 }

@@ -70,6 +70,14 @@ function switchLanguage(lang) {
             console.error('Error updating language elements:', e);
         }
     }, 10);
+    // Also attempt to load JSON locale file and apply data-i18n translations
+    setTimeout(() => {
+        try {
+            if (typeof loadLocale === 'function') loadLocale(lang);
+        } catch (e) {
+            // ignore
+        }
+    }, 60);
 }
 
 // Safe function to update language elements without causing infinite loops
@@ -184,6 +192,117 @@ function updateVisitorLabel(lang) {
         console.warn('Error updating visitor label:', e);
     }
 }
+
+// --- JSON-based locale loader and applier (data-i18n) ---
+async function loadLocale(lang) {
+    try {
+        const url = '/locales/' + lang + '.json';
+        const res = await fetch(url, { cache: 'no-cache' });
+        if (!res.ok) {
+            window.currentLocale = null;
+            return;
+        }
+        const dict = await res.json();
+        window.currentLocale = dict;
+        applyLocaleTranslations(dict);
+    } catch (e) {
+        window.currentLocale = null;
+        // silent fail, fallback to data-ko/data-en handling
+    }
+}
+
+// Enhanced: support data-i18n-attr and data-i18n-html
+function applyLocaleTranslations(dict) {
+    if (!dict) return;
+    try {
+        // text content via data-i18n (already present)
+        const i18nEls = document.querySelectorAll('[data-i18n]');
+        i18nEls.forEach(el => {
+            try {
+                const key = el.getAttribute('data-i18n');
+                // Apply all keys when present; prefer locale values over DOM fallbacks
+
+                const val = getValueByPath(dict, key);
+                if (val === undefined || val === null) return;
+                const tag = el.tagName.toLowerCase();
+                if (tag === 'input' || tag === 'textarea') {
+                    if (el.hasAttribute('placeholder')) el.placeholder = val;
+                    else el.value = val;
+                } else {
+                    if (el.textContent !== val) el.textContent = val;
+                }
+            } catch (e) {
+                // ignore element error
+            }
+        });
+
+        // HTML content override
+        const htmlEls = document.querySelectorAll('[data-i18n-html]');
+        htmlEls.forEach(el => {
+            try {
+                const key = el.getAttribute('data-i18n-html');
+                const val = getValueByPath(dict, key);
+                if (val === undefined || val === null) return;
+                if (el.innerHTML !== val) el.innerHTML = val;
+            } catch (e) {
+                // ignore
+            }
+        });
+
+        // attribute mappings: format -> "attr1:json.path1;attr2:json.path2"
+        const attrEls = document.querySelectorAll('[data-i18n-attr]');
+        attrEls.forEach(el => {
+            try {
+            // Skip attributes for elements inside projects section
+            if (el.closest && el.closest('.projects-section')) return;
+                const mapping = el.getAttribute('data-i18n-attr');
+                if (!mapping) return;
+                const pairs = mapping.split(';').map(s => s.trim()).filter(Boolean);
+                pairs.forEach(pair => {
+                    const idx = pair.indexOf(':');
+                    if (idx === -1) return;
+                    const attr = pair.substring(0, idx).trim();
+                    const key = pair.substring(idx + 1).trim();
+                    const val = getValueByPath(dict, key);
+                    if (val === undefined || val === null) return;
+                    // set attribute or property
+                    try {
+                        if (attr in el) el[attr] = val;
+                        el.setAttribute(attr, val);
+                    } catch (e) {
+                        try { el.setAttribute(attr, val); } catch (ee) {}
+                    }
+                });
+            } catch (e) {
+                // ignore
+            }
+        });
+
+        // Optionally update document.title if locale provides pageTitle
+        try {
+            const pageTitle = getValueByPath(dict, 'pageTitle');
+            if (pageTitle) document.title = pageTitle;
+        } catch (e) {}
+
+    } catch (e) {
+        // ignore
+    }
+}
+
+function getValueByPath(obj, path) {
+    if (!obj || !path) return undefined;
+    return path.split('.').reduce((o, k) => (o && Object.prototype.hasOwnProperty.call(o, k) ? o[k] : undefined), obj);
+}
+
+// Load initial locale on DOM ready
+window.addEventListener('DOMContentLoaded', () => {
+    try {
+        if (currentLang) loadLocale(currentLang);
+    } catch (e) {
+        // ignore
+    }
+});
+
 
 
 
@@ -710,36 +829,53 @@ function initializePage() {
                 // Get review data element
                 const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
                 const isPortfolioType = reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio';
-                
-                // Check if this is Miracle Reading System project
-                const isMiracleReading = title === '미라클 리딩 시스템';
-                
-                if (isMiracleReading) {
-                    // Change title to "프로젝트 상세"
-                    if (reviewTitleEl) {
-                        reviewTitleEl.textContent = '프로젝트 상세';
+
+                // Helper: resolve localized string by priority: loaded locale -> element data-<lang> -> fallback
+                const resolveLocalized = (key, el, fallbackKo, fallbackEn) => {
+                    try {
+                        const dict = window.currentLocale || {};
+                        const val = getValueByPath(dict, key);
+                        if (val !== undefined && val !== null && val !== '') return val;
+                        if (el && el.getAttribute) {
+                            const attr = el.getAttribute(`data-${currentLang}`);
+                            if (attr !== null && attr !== undefined && attr !== '') return attr;
+                        }
+                        return currentLang === 'ko' ? fallbackKo : fallbackEn;
+                    } catch (e) {
+                        return currentLang === 'ko' ? fallbackKo : fallbackEn;
                     }
-                    
+                };
+
+                const localizedDetailTitle = resolveLocalized('modal.detail', reviewTitleEl, '프로젝트 상세', 'Project Details');
+                const localizedReviewTitle = resolveLocalized('modal.review', reviewTitleEl, '프로젝트 후기', 'Project Review');
+                const localizedNoDetail = resolveLocalized('modal.no_detail', reviewTitleEl, '프로젝트 상세 정보가 없습니다.', 'No project details available.');
+                const localizedNoReview = resolveLocalized('modal.no_review', reviewTitleEl, '프로젝트 후기 정보가 없습니다.', 'No project review available.');
+
+                // Check if this is Miracle Reading System project (match titles in either lang)
+                const isMiracleReading = title === '미라클 리딩 시스템' || title === 'Miracle Reading System';
+
+                if (isMiracleReading) {
+                    // Use localized detail title
+                    if (reviewTitleEl) reviewTitleEl.textContent = localizedDetailTitle;
+
                     // Get portfolio content from review data
                     if (isPortfolioType) {
                         // Set innerHTML to preserve HTML structure
                         modalReviewEl.innerHTML = reviewDataEl.innerHTML;
                     } else {
-                        modalReviewEl.innerHTML = '<p>프로젝트 상세 정보가 없습니다.</p>';
+                        modalReviewEl.innerHTML = '<p>' + localizedNoDetail + '</p>';
                     }
                 } else {
-                    // Keep original title for other projects
-                    if (reviewTitleEl) {
-                        reviewTitleEl.textContent = '프로젝트 후기';
-                    }
-                    
+                    // Use localized review title for other projects
+                    if (reviewTitleEl) reviewTitleEl.textContent = localizedReviewTitle;
+
                     // Check if portfolio type (like Productivity Hub)
                     if (isPortfolioType) {
                         // Set innerHTML to preserve HTML structure
                         modalReviewEl.innerHTML = reviewDataEl.innerHTML;
                     } else {
                         // Use text content for simple text reviews
-                        modalReviewEl.textContent = review || '프로젝트 후기 정보가 없습니다.';
+                        modalReviewEl.textContent = review || localizedNoReview;
                     }
                 }
                 
