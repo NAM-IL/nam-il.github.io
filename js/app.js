@@ -1107,116 +1107,39 @@ function initTTS() {
 function getMaleVoice(lang) {
     const voices = speechSynthesis.getVoices();
     const langVoices = voices.filter(voice => {
-        if (lang === 'ko') {
-            return voice.lang.includes('ko') || voice.lang.includes('KR');
-        } else {
-            return voice.lang.includes('en') || voice.lang.includes('US') || voice.lang.includes('GB');
-        }
+        if (lang === 'ko') return voice.lang.startsWith('ko');
+        if (lang === 'en') return voice.lang.startsWith('en');
+        return false;
     });
-    
+
     if (langVoices.length === 0) return null;
-    
-    // For Korean: STRICT filtering - exclude ALL known female voices
+
     if (lang === 'ko') {
-        const femaleIndicators = [
-            'female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung',
-            'yeona', 'hyeri', 'jiyeon', 'eunji', 'sohee', 'jisoo', 'jennie', 'rose', 'lisa',
-            '아름', '수진', '지은', '미나', '소영', '지현', '서연', '유나', '소라', '나라',
-            '은지', '소희', '지수', '제니', '로즈', '리사', '혜리', '지연', '예나',
-            'female voice', '여성 음성', 'woman', '여자', 'girl', '소녀'
-        ];
-        
-        // Helper function to check if voice is female
-        function isFemaleVoice(voiceName) {
-            const name = voiceName.toLowerCase();
-            for (const indicator of femaleIndicators) {
-                if (name.includes(indicator.toLowerCase())) {
-                    return true;
-                }
-            }
-            return false;
+        // No true male voice is available on the system.
+        // The only voices are "Microsoft Heami" and "Google 한국의".
+        // We will stop filtering and simply select one, relying on a low pitch setting.
+        const microsoftVoice = langVoices.find(v => v.name.toLowerCase().includes('microsoft'));
+        if (microsoftVoice) {
+            console.log('🎤 No male voice found. Selecting Microsoft voice and using low pitch.', microsoftVoice.name);
+            return microsoftVoice;
+        }
+
+        const googleVoice = langVoices.find(v => v.name.toLowerCase().includes('google'));
+        if (googleVoice) {
+            console.log('🎤 No male voice found. Selecting Google voice and using low pitch.', googleVoice.name);
+            return googleVoice;
         }
         
-        // First pass: Find voices with explicit male indicators
-        const explicitMaleVoices = langVoices.filter(voice => {
-            const name = voice.name.toLowerCase();
-            const maleIndicators = ['male', '남성', 'man', '남자', 'male voice', '남성 음성', '남자 음성'];
-            return maleIndicators.some(indicator => name.includes(indicator)) && !isFemaleVoice(voice.name);
-        });
-        
-        if (explicitMaleVoices.length > 0) {
-            // Prefer Google/Microsoft/Samsung male voices
-            const preferred = explicitMaleVoices.find(voice => {
-                const name = voice.name.toLowerCase();
-                return (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
-            });
-            const selected = preferred || explicitMaleVoices[0];
-            console.log('✅ Selected explicit male Korean voice:', selected.name, 'Lang:', selected.lang);
-            return selected;
-        }
-        
-        // Second pass: Exclude ALL known female voices - STRICT filtering
-        const nonFemaleVoices = langVoices.filter(voice => {
-            // Exclude if contains ANY female indicator
-            if (isFemaleVoice(voice.name)) {
-                return false;
-            }
-            // Additional check: exclude if name suggests female (contains common female name patterns)
-            const name = voice.name.toLowerCase();
-            // Exclude voices with common female name endings or patterns
-            if (name.match(/[가-힣]*[영|은|지|나|라|나|미|희|연|수]$/)) {
-                // Korean female name endings
-                return false;
-            }
-            return true;
-        });
-        
-        console.log('Korean voices filtered:', {
-            total: langVoices.length,
-            nonFemale: nonFemaleVoices.length,
-            allVoices: langVoices.map(v => ({ name: v.name, lang: v.lang })),
-            filteredVoices: nonFemaleVoices.map(v => ({ name: v.name, lang: v.lang }))
-        });
-        
-        if (nonFemaleVoices.length > 0) {
-            // Priority order: Google > Microsoft > Samsung > Others
-            // But ONLY if they don't contain female indicators
-            const preferred = nonFemaleVoices.find(voice => {
-                const name = voice.name.toLowerCase();
-                const isPreferred = (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
-                if (isPreferred) {
-                    // Triple check: make absolutely sure it's not a female voice
-                    return !isFemaleVoice(voice.name);
-                }
-                return false;
-            });
-            
-            const selected = preferred || nonFemaleVoices[0];
-            console.log('✅ Selected Korean voice (filtered):', selected.name, 'Lang:', selected.lang);
-            return selected;
-        } else {
-            console.warn('⚠️ No non-female Korean voices found after filtering');
-            // Last resort: try to find any voice that might be male based on name patterns
-            // But still exclude known female patterns
-            const fallback = langVoices.find(voice => {
-                const name = voice.name.toLowerCase();
-                // Look for patterns that might indicate male (default voices are often male)
-                const mightBeMale = (name.includes('default') || name.includes('standard') || 
-                       (name.includes('google') && !name.includes('female')) ||
-                       (name.includes('microsoft') && !name.includes('female')));
-                return mightBeMale && !isFemaleVoice(voice.name);
-            });
-            if (fallback) {
-                console.log('⚠️ Using fallback Korean voice:', fallback.name);
-                return fallback;
-            }
-            // Absolute last resort: return first voice but log warning
-            console.error('❌ Could not find suitable male Korean voice, using first available:', langVoices[0]?.name);
+        // Fallback to the first available voice.
+        if (langVoices[0]) {
+             console.log('🎤 No male voice found. Selecting first available voice and using low pitch.', langVoices[0].name);
             return langVoices[0];
         }
+
+        return null; // Should not be reached
     }
-    
-    // English male voices
+
+    // English male voices (logic seems fine, keeping it)
     if (lang === 'en') {
         const maleVoice = langVoices.find(voice => {
             const name = voice.name.toLowerCase();
@@ -1234,8 +1157,8 @@ function getMaleVoice(lang) {
         });
         if (maleVoice) return maleVoice;
     }
-    
-    // Final fallback: use first available voice
+
+    // Final fallback for English or other languages
     return langVoices[0];
 }
 
@@ -1324,8 +1247,8 @@ function playTTS() {
         
         currentUtterance.rate = ttsSpeed;
         // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
-        // For Korean, use much lower pitch (0.65) to ensure more masculine sound
-        currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
+        // For Korean, use much lower pitch (0.5) to ensure more masculine sound
+        currentUtterance.pitch = lang === 'ko' ? 0.5 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
         
         // Get male voice
@@ -1333,18 +1256,6 @@ function playTTS() {
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
             console.log('🎤 Using voice:', maleVoice.name, 'Language:', maleVoice.lang, 'Pitch:', currentUtterance.pitch);
-            
-            // Additional validation for Korean: double-check it's not a female voice
-            if (lang === 'ko') {
-                const voiceName = maleVoice.name.toLowerCase();
-                const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
-                if (femaleCheck) {
-                    console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
-                    // Lower pitch even more if female voice detected
-                    currentUtterance.pitch = 0.6;
-                    console.log('🔧 Adjusted pitch to 0.6 to compensate');
-                }
-            }
         } else {
             console.warn('No male voice found for language:', lang);
             // Log all available Korean voices for debugging
@@ -1462,7 +1373,7 @@ function restartTTSWithCurrentText() {
         }
         
         currentUtterance.rate = ttsSpeed; // Use updated speed
-        currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
+        currentUtterance.pitch = lang === 'ko' ? 0.5 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
         
         // Get male voice
@@ -1470,18 +1381,6 @@ function restartTTSWithCurrentText() {
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
             console.log('🎤 Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name, 'Pitch:', currentUtterance.pitch);
-            
-            // Additional validation for Korean: double-check it's not a female voice
-            if (lang === 'ko') {
-                const voiceName = maleVoice.name.toLowerCase();
-                const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
-                if (femaleCheck) {
-                    console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
-                    // Lower pitch even more if female voice detected
-                    currentUtterance.pitch = 0.6;
-                    console.log('🔧 Adjusted pitch to 0.6 to compensate');
-                }
-            }
         }
         
         // Event handlers
