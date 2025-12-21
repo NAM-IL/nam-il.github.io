@@ -254,7 +254,7 @@ function applyLocaleTranslations(dict) {
         attrEls.forEach(el => {
             try {
             // Skip attributes for elements inside projects section
-            if (el.closest && el.closest('.projects-section')) return;
+            // if (el.closest && el.closest('.projects-section')) return;
                 const mapping = el.getAttribute('data-i18n-attr');
                 if (!mapping) return;
                 const pairs = mapping.split(';').map(s => s.trim()).filter(Boolean);
