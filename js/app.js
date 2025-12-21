@@ -287,9 +287,6 @@ function applyLocaleTranslations(dict) {
     } catch (e) {
         // ignore
     }
-
-    // Re-initialize the section observer after translations to handle layout shifts
-    setTimeout(reinitializeSectionObserver, 100);
 }
 
 function getValueByPath(obj, path) {
@@ -692,264 +689,34 @@ function initializePage() {
             }
         }, 100);
 
-        let sectionObserver = null; // For fade-in sections
-
-function reinitializeSectionObserver() {
-    // Disconnect previous observer to prevent duplicates
-    if (sectionObserver) {
-        sectionObserver.disconnect();
-    }
-
-    try {
-        const sections = document.querySelectorAll('.section');
-        if (sections.length > 0) {
-            sectionObserver = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        // Optional: unobserve after animation to save resources
-                        // sectionObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            sections.forEach(section => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(30px)';
-                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                sectionObserver.observe(section);
-            });
-        }
-    } catch (e) {
-        console.error('Error in reinitializeSectionObserver:', e);
-    }
-}
-
-function initializePage() {
-    // Prevent multiple simultaneous initializations
-    if (isInitializing) {
-        console.warn('Initialization already in progress, skipping...');
-        return;
-    }
-    isInitializing = true;
-    
-    // Wrap entire initialization in try-catch to prevent page blocking
-    try {
-        // Initialize language - set state and update elements
-        try {
-            document.documentElement.lang = currentLang;
-            const langBtn = document.getElementById('langBtn');
-            if (langBtn) {
-                const langText = langBtn.querySelector('.lang-text');
-                if (langText) {
-                    langText.textContent = currentLang === 'ko' ? 'EN' : 'KO';
-                }
-            }
-            // Apply initial language to all elements (delayed to prevent blocking)
-            setTimeout(() => {
-                try {
-                    updateLanguageElements(currentLang);
-                } catch (e) {
-                    console.error('Error applying initial language:', e);
-                }
-            }, 100);
-        } catch (e) {
-            console.error('Error initializing language:', e);
-        }
-        
-        // Initialize TTS (wrapped in try-catch to prevent blocking)
-        try {
-            initTTS();
-        } catch (e) {
-            console.error('Error initializing TTS:', e);
-        }
-        
-        // Initialize skill tooltips (wrapped in try-catch to prevent blocking)
-        try {
-            initSkillTooltips();
-        } catch (e) {
-            console.error('Error initializing skill tooltips:', e);
-        }
-        
-        // Initialize project links with language attributes
-        try {
-            initProjectLinkLanguage();
-        } catch (e) {
-            console.error('Error initializing project links:', e);
-        }
-        
-        // Initialize visitor count (wrapped in try-catch to prevent blocking)
-        try {
-            initVisitorCount();
-        } catch (e) {
-            console.error('Error initializing visitor count:', e);
-        }
-        
-        // Profile image click animation
-        const profileImage = document.querySelector('.floating-profile-image');
-        if (profileImage) {
-            profileImage.addEventListener('click', function() {
-                // Add clicked class for spin animation
-                this.classList.add('clicked');
-                
-                // Remove class after animation completes
-                setTimeout(() => {
-                    this.classList.remove('clicked');
-                }, 600);
-            });
-        }
-        
-        // Language switcher button - completely safe implementation
-        const langBtn = document.getElementById('langBtn');
-        if (langBtn) {
-            let lastClickTime = 0;
-            langBtn.addEventListener('click', function(e) {
-                // Prevent rapid clicks (debounce)
-                const now = Date.now();
-                if (now - lastClickTime < 500) {
-                    return;
-                }
-                lastClickTime = now;
-                
-                // Update language immediately - completely synchronous, no async operations
-                try {
-                    const newLang = currentLang === 'ko' ? 'en' : 'ko';
-                    switchLanguage(newLang);
-                } catch (error) {
-                    // Ignore all errors - never block
-                }
-            }, { passive: true });
-        }
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-
-        if (hamburger) {
-            hamburger.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
-            });
-        }
-
-        // Close menu and smooth scroll for navigation links (combined to avoid duplicate listeners)
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Close menu
-                if (navMenu) {
-                    navMenu.classList.remove('active');
-                }
-                // Smooth scroll
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                if (targetSection) {
-                    // Calculate offset more accurately
-                    const rect = targetSection.getBoundingClientRect();
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    const offsetTop = rect.top + scrollTop - 80;
-                    
-                    // Direct scroll without requestAnimationFrame for immediate response
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Navbar background on scroll (throttled for performance)
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            let scrollTimeout = null;
-            let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', function() {
-                const currentScrollY = window.scrollY;
-                
-                // Only update if scroll position changed significantly
-                if (Math.abs(currentScrollY - lastScrollY) < 5) {
-                    return;
-                }
-                lastScrollY = currentScrollY;
-                
-                if (scrollTimeout) {
-                    cancelAnimationFrame(scrollTimeout);
-                }
-                scrollTimeout = requestAnimationFrame(() => {
-                    if (window.scrollY > 50) {
-                        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-                    } else {
-                        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                        navbar.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
-                    }
-                });
-            }, { passive: true });
-        }
-
-        // Animate skill bars on scroll (delayed to prevent blocking)
+        // Add fade-in animation to sections on scroll (delayed to prevent blocking)
         setTimeout(function() {
             try {
-                const skillBars = document.querySelectorAll('.skill-progress');
-                if (skillBars.length > 0) {
-                    const observerOptions = {
-                        threshold: 0.5,
-                        rootMargin: '0px'
-                    };
-
-                    const skillObserver = new IntersectionObserver(function(entries) {
+                const sections = document.querySelectorAll('.section');
+                if (sections.length > 0) {
+                    const sectionObserver = new IntersectionObserver(function(entries) {
                         entries.forEach(entry => {
-                            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                                const progress = entry.target.getAttribute('data-progress');
-                                if (progress) {
-                                    entry.target.style.width = progress + '%';
-                                    entry.target.classList.add('animated');
-                                }
+                            if (entry.isIntersecting) {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
                             }
                         });
-                    }, observerOptions);
+                    }, {
+                        threshold: 0.1,
+                        rootMargin: '0px 0px -50px 0px'
+                    });
 
-                    skillBars.forEach(bar => {
-                        skillObserver.observe(bar);
+                    sections.forEach(section => {
+                        section.style.opacity = '0';
+                        section.style.transform = 'translateY(30px)';
+                        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        sectionObserver.observe(section);
                     });
                 }
             } catch (e) {
-                console.error('Error in skill bars observer:', e);
+                console.error('Error in sections observer:', e);
             }
         }, 100);
-
-        // Animate stats on scroll (delayed to prevent blocking)
-        setTimeout(function() {
-            try {
-                const statNumbers = document.querySelectorAll('.stat-number');
-                if (statNumbers.length > 0) {
-                    const statObserver = new IntersectionObserver(function(entries) {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                                const text = entry.target.textContent;
-                                const value = parseInt(text.replace(/[^0-9]/g, ''));
-                                if (!isNaN(value)) {
-                                    animateValue(entry.target, 0, value, 2000);
-                                    entry.target.classList.add('animated');
-                                }
-                            }
-                        });
-                    }, { threshold: 0.5, rootMargin: '0px' });
-
-                    statNumbers.forEach(stat => {
-                        statObserver.observe(stat);
-                    });
-                }
-            } catch (e) {
-                console.error('Error in stat numbers observer:', e);
-            }
-        }, 100);
-
-        // Initialize the section fade-in animations
-        setTimeout(reinitializeSectionObserver, 100);
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');
@@ -1340,116 +1107,39 @@ function initTTS() {
 function getMaleVoice(lang) {
     const voices = speechSynthesis.getVoices();
     const langVoices = voices.filter(voice => {
-        if (lang === 'ko') {
-            return voice.lang.includes('ko') || voice.lang.includes('KR');
-        } else {
-            return voice.lang.includes('en') || voice.lang.includes('US') || voice.lang.includes('GB');
-        }
+        if (lang === 'ko') return voice.lang.startsWith('ko');
+        if (lang === 'en') return voice.lang.startsWith('en');
+        return false;
     });
-    
+
     if (langVoices.length === 0) return null;
-    
-    // For Korean: STRICT filtering - exclude ALL known female voices
+
     if (lang === 'ko') {
-        const femaleIndicators = [
-            'female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung',
-            'yeona', 'hyeri', 'jiyeon', 'eunji', 'sohee', 'jisoo', 'jennie', 'rose', 'lisa',
-            '아름', '수진', '지은', '미나', '소영', '지현', '서연', '유나', '소라', '나라',
-            '은지', '소희', '지수', '제니', '로즈', '리사', '혜리', '지연', '예나',
-            'female voice', '여성 음성', 'woman', '여자', 'girl', '소녀'
-        ];
-        
-        // Helper function to check if voice is female
-        function isFemaleVoice(voiceName) {
-            const name = voiceName.toLowerCase();
-            for (const indicator of femaleIndicators) {
-                if (name.includes(indicator.toLowerCase())) {
-                    return true;
-                }
-            }
-            return false;
+        // No true male voice is available on the system.
+        // The only voices are "Microsoft Heami" and "Google 한국의".
+        // We will stop filtering and simply select one, relying on a low pitch setting.
+        const microsoftVoice = langVoices.find(v => v.name.toLowerCase().includes('microsoft'));
+        if (microsoftVoice) {
+            console.log('🎤 No male voice found. Selecting Microsoft voice and using low pitch.', microsoftVoice.name);
+            return microsoftVoice;
+        }
+
+        const googleVoice = langVoices.find(v => v.name.toLowerCase().includes('google'));
+        if (googleVoice) {
+            console.log('🎤 No male voice found. Selecting Google voice and using low pitch.', googleVoice.name);
+            return googleVoice;
         }
         
-        // First pass: Find voices with explicit male indicators
-        const explicitMaleVoices = langVoices.filter(voice => {
-            const name = voice.name.toLowerCase();
-            const maleIndicators = ['male', '남성', 'man', '남자', 'male voice', '남성 음성', '남자 음성'];
-            return maleIndicators.some(indicator => name.includes(indicator)) && !isFemaleVoice(voice.name);
-        });
-        
-        if (explicitMaleVoices.length > 0) {
-            // Prefer Google/Microsoft/Samsung male voices
-            const preferred = explicitMaleVoices.find(voice => {
-                const name = voice.name.toLowerCase();
-                return (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
-            });
-            const selected = preferred || explicitMaleVoices[0];
-            console.log('✅ Selected explicit male Korean voice:', selected.name, 'Lang:', selected.lang);
-            return selected;
-        }
-        
-        // Second pass: Exclude ALL known female voices - STRICT filtering
-        const nonFemaleVoices = langVoices.filter(voice => {
-            // Exclude if contains ANY female indicator
-            if (isFemaleVoice(voice.name)) {
-                return false;
-            }
-            // Additional check: exclude if name suggests female (contains common female name patterns)
-            const name = voice.name.toLowerCase();
-            // Exclude voices with common female name endings or patterns
-            if (name.match(/[가-힣]*[영|은|지|나|라|나|미|희|연|수]$/)) {
-                // Korean female name endings
-                return false;
-            }
-            return true;
-        });
-        
-        console.log('Korean voices filtered:', {
-            total: langVoices.length,
-            nonFemale: nonFemaleVoices.length,
-            allVoices: langVoices.map(v => ({ name: v.name, lang: v.lang })),
-            filteredVoices: nonFemaleVoices.map(v => ({ name: v.name, lang: v.lang }))
-        });
-        
-        if (nonFemaleVoices.length > 0) {
-            // Priority order: Google > Microsoft > Samsung > Others
-            // But ONLY if they don't contain female indicators
-            const preferred = nonFemaleVoices.find(voice => {
-                const name = voice.name.toLowerCase();
-                const isPreferred = (name.includes('google') || name.includes('microsoft') || name.includes('samsung'));
-                if (isPreferred) {
-                    // Triple check: make absolutely sure it's not a female voice
-                    return !isFemaleVoice(voice.name);
-                }
-                return false;
-            });
-            
-            const selected = preferred || nonFemaleVoices[0];
-            console.log('✅ Selected Korean voice (filtered):', selected.name, 'Lang:', selected.lang);
-            return selected;
-        } else {
-            console.warn('⚠️ No non-female Korean voices found after filtering');
-            // Last resort: try to find any voice that might be male based on name patterns
-            // But still exclude known female patterns
-            const fallback = langVoices.find(voice => {
-                const name = voice.name.toLowerCase();
-                // Look for patterns that might indicate male (default voices are often male)
-                const mightBeMale = (name.includes('default') || name.includes('standard') || 
-                       (name.includes('google') && !name.includes('female')) ||
-                       (name.includes('microsoft') && !name.includes('female')));
-                return mightBeMale && !isFemaleVoice(voice.name);
-            });
-            if (fallback) {
-                console.log('⚠️ Using fallback Korean voice:', fallback.name);
-                return fallback;
-            }
-            // Absolute last resort: return first voice but log warning
-            console.error('❌ Could not find suitable male Korean voice, using first available:', langVoices[0]?.name);
+        // Fallback to the first available voice.
+        if (langVoices[0]) {
+             console.log('🎤 No male voice found. Selecting first available voice and using low pitch.', langVoices[0].name);
             return langVoices[0];
         }
+
+        return null; // Should not be reached
     }
-    
-    // English male voices
+
+    // English male voices (logic seems fine, keeping it)
     if (lang === 'en') {
         const maleVoice = langVoices.find(voice => {
             const name = voice.name.toLowerCase();
@@ -1467,8 +1157,8 @@ function getMaleVoice(lang) {
         });
         if (maleVoice) return maleVoice;
     }
-    
-    // Final fallback: use first available voice
+
+    // Final fallback for English or other languages
     return langVoices[0];
 }
 
@@ -1557,8 +1247,8 @@ function playTTS() {
         
         currentUtterance.rate = ttsSpeed;
         // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
-        // For Korean, use much lower pitch (0.65) to ensure more masculine sound
-        currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
+        // For Korean, use much lower pitch (0.5) to ensure more masculine sound
+        currentUtterance.pitch = lang === 'ko' ? 0.5 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
         
         // Get male voice
@@ -1566,18 +1256,6 @@ function playTTS() {
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
             console.log('🎤 Using voice:', maleVoice.name, 'Language:', maleVoice.lang, 'Pitch:', currentUtterance.pitch);
-            
-            // Additional validation for Korean: double-check it's not a female voice
-            if (lang === 'ko') {
-                const voiceName = maleVoice.name.toLowerCase();
-                const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
-                if (femaleCheck) {
-                    console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
-                    // Lower pitch even more if female voice detected
-                    currentUtterance.pitch = 0.6;
-                    console.log('🔧 Adjusted pitch to 0.6 to compensate');
-                }
-            }
         } else {
             console.warn('No male voice found for language:', lang);
             // Log all available Korean voices for debugging
@@ -1695,7 +1373,7 @@ function restartTTSWithCurrentText() {
         }
         
         currentUtterance.rate = ttsSpeed; // Use updated speed
-        currentUtterance.pitch = lang === 'ko' ? 0.65 : 0.9; // Very low pitch for Korean male voice
+        currentUtterance.pitch = lang === 'ko' ? 0.5 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
         
         // Get male voice
@@ -1703,18 +1381,6 @@ function restartTTSWithCurrentText() {
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
             console.log('🎤 Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name, 'Pitch:', currentUtterance.pitch);
-            
-            // Additional validation for Korean: double-check it's not a female voice
-            if (lang === 'ko') {
-                const voiceName = maleVoice.name.toLowerCase();
-                const femaleCheck = ['female', '여성', 'yuna', 'sora', 'nara', 'mina', 'jihyun', 'seoyeon', 'soyoung'].some(ind => voiceName.includes(ind));
-                if (femaleCheck) {
-                    console.warn('⚠️ WARNING: Selected voice might be female:', maleVoice.name);
-                    // Lower pitch even more if female voice detected
-                    currentUtterance.pitch = 0.6;
-                    console.log('🔧 Adjusted pitch to 0.6 to compensate');
-                }
-            }
         }
         
         // Event handlers
