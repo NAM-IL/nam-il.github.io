@@ -2201,6 +2201,26 @@ body {
     .projects-grid {
         grid-template-columns: 1fr;
     }
+
+    .timeline {
+        padding-left: 1rem;
+    }
+    .timeline::before {
+        left: 20px;
+    }
+    .timeline-item {
+        padding-left: 3rem;
+        margin-bottom: 2rem;
+    }
+    .timeline-marker {
+        left: 12px;
+    }
+    .timeline-content {
+        padding: 1.5rem;
+    }
+    .timeline-content:hover {
+        transform: translateX(5px);
+    }
 }
 
 @media (max-width: 480px) {
