@@ -78,6 +78,15 @@ function switchLanguage(lang) {
             // ignore
         }
     }, 60);
+
+    // Force all sections to be visible after language switch to prevent observer bugs
+    setTimeout(() => {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        });
+    }, 500); // after DOM updates
 }
 
 // Safe function to update language elements without causing infinite loops
