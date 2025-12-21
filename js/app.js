@@ -78,15 +78,6 @@ function switchLanguage(lang) {
             // ignore
         }
     }, 60);
-
-    // Force all sections to be visible after language switch to prevent observer bugs
-    setTimeout(() => {
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => {
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
-        });
-    }, 500); // after DOM updates
 }
 
 // Safe function to update language elements without causing infinite loops
@@ -296,6 +287,9 @@ function applyLocaleTranslations(dict) {
     } catch (e) {
         // ignore
     }
+
+    // Re-initialize the section observer after translations to handle layout shifts
+    setTimeout(reinitializeSectionObserver, 100);
 }
 
 function getValueByPath(obj, path) {
@@ -698,34 +692,264 @@ function initializePage() {
             }
         }, 100);
 
-        // Add fade-in animation to sections on scroll (delayed to prevent blocking)
+        let sectionObserver = null; // For fade-in sections
+
+function reinitializeSectionObserver() {
+    // Disconnect previous observer to prevent duplicates
+    if (sectionObserver) {
+        sectionObserver.disconnect();
+    }
+
+    try {
+        const sections = document.querySelectorAll('.section');
+        if (sections.length > 0) {
+            sectionObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        // Optional: unobserve after animation to save resources
+                        // sectionObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                sectionObserver.observe(section);
+            });
+        }
+    } catch (e) {
+        console.error('Error in reinitializeSectionObserver:', e);
+    }
+}
+
+function initializePage() {
+    // Prevent multiple simultaneous initializations
+    if (isInitializing) {
+        console.warn('Initialization already in progress, skipping...');
+        return;
+    }
+    isInitializing = true;
+    
+    // Wrap entire initialization in try-catch to prevent page blocking
+    try {
+        // Initialize language - set state and update elements
+        try {
+            document.documentElement.lang = currentLang;
+            const langBtn = document.getElementById('langBtn');
+            if (langBtn) {
+                const langText = langBtn.querySelector('.lang-text');
+                if (langText) {
+                    langText.textContent = currentLang === 'ko' ? 'EN' : 'KO';
+                }
+            }
+            // Apply initial language to all elements (delayed to prevent blocking)
+            setTimeout(() => {
+                try {
+                    updateLanguageElements(currentLang);
+                } catch (e) {
+                    console.error('Error applying initial language:', e);
+                }
+            }, 100);
+        } catch (e) {
+            console.error('Error initializing language:', e);
+        }
+        
+        // Initialize TTS (wrapped in try-catch to prevent blocking)
+        try {
+            initTTS();
+        } catch (e) {
+            console.error('Error initializing TTS:', e);
+        }
+        
+        // Initialize skill tooltips (wrapped in try-catch to prevent blocking)
+        try {
+            initSkillTooltips();
+        } catch (e) {
+            console.error('Error initializing skill tooltips:', e);
+        }
+        
+        // Initialize project links with language attributes
+        try {
+            initProjectLinkLanguage();
+        } catch (e) {
+            console.error('Error initializing project links:', e);
+        }
+        
+        // Initialize visitor count (wrapped in try-catch to prevent blocking)
+        try {
+            initVisitorCount();
+        } catch (e) {
+            console.error('Error initializing visitor count:', e);
+        }
+        
+        // Profile image click animation
+        const profileImage = document.querySelector('.floating-profile-image');
+        if (profileImage) {
+            profileImage.addEventListener('click', function() {
+                // Add clicked class for spin animation
+                this.classList.add('clicked');
+                
+                // Remove class after animation completes
+                setTimeout(() => {
+                    this.classList.remove('clicked');
+                }, 600);
+            });
+        }
+        
+        // Language switcher button - completely safe implementation
+        const langBtn = document.getElementById('langBtn');
+        if (langBtn) {
+            let lastClickTime = 0;
+            langBtn.addEventListener('click', function(e) {
+                // Prevent rapid clicks (debounce)
+                const now = Date.now();
+                if (now - lastClickTime < 500) {
+                    return;
+                }
+                lastClickTime = now;
+                
+                // Update language immediately - completely synchronous, no async operations
+                try {
+                    const newLang = currentLang === 'ko' ? 'en' : 'ko';
+                    switchLanguage(newLang);
+                } catch (error) {
+                    // Ignore all errors - never block
+                }
+            }, { passive: true });
+        }
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        if (hamburger) {
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Close menu and smooth scroll for navigation links (combined to avoid duplicate listeners)
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Close menu
+                if (navMenu) {
+                    navMenu.classList.remove('active');
+                }
+                // Smooth scroll
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Calculate offset more accurately
+                    const rect = targetSection.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const offsetTop = rect.top + scrollTop - 80;
+                    
+                    // Direct scroll without requestAnimationFrame for immediate response
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Navbar background on scroll (throttled for performance)
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            let scrollTimeout = null;
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', function() {
+                const currentScrollY = window.scrollY;
+                
+                // Only update if scroll position changed significantly
+                if (Math.abs(currentScrollY - lastScrollY) < 5) {
+                    return;
+                }
+                lastScrollY = currentScrollY;
+                
+                if (scrollTimeout) {
+                    cancelAnimationFrame(scrollTimeout);
+                }
+                scrollTimeout = requestAnimationFrame(() => {
+                    if (window.scrollY > 50) {
+                        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                    } else {
+                        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                        navbar.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+                    }
+                });
+            }, { passive: true });
+        }
+
+        // Animate skill bars on scroll (delayed to prevent blocking)
         setTimeout(function() {
             try {
-                const sections = document.querySelectorAll('.section');
-                if (sections.length > 0) {
-                    const sectionObserver = new IntersectionObserver(function(entries) {
+                const skillBars = document.querySelectorAll('.skill-progress');
+                if (skillBars.length > 0) {
+                    const observerOptions = {
+                        threshold: 0.5,
+                        rootMargin: '0px'
+                    };
+
+                    const skillObserver = new IntersectionObserver(function(entries) {
                         entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                entry.target.style.opacity = '1';
-                                entry.target.style.transform = 'translateY(0)';
+                            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                                const progress = entry.target.getAttribute('data-progress');
+                                if (progress) {
+                                    entry.target.style.width = progress + '%';
+                                    entry.target.classList.add('animated');
+                                }
                             }
                         });
-                    }, {
-                        threshold: 0.1,
-                        rootMargin: '0px 0px -50px 0px'
-                    });
+                    }, observerOptions);
 
-                    sections.forEach(section => {
-                        section.style.opacity = '0';
-                        section.style.transform = 'translateY(30px)';
-                        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                        sectionObserver.observe(section);
+                    skillBars.forEach(bar => {
+                        skillObserver.observe(bar);
                     });
                 }
             } catch (e) {
-                console.error('Error in sections observer:', e);
+                console.error('Error in skill bars observer:', e);
             }
         }, 100);
+
+        // Animate stats on scroll (delayed to prevent blocking)
+        setTimeout(function() {
+            try {
+                const statNumbers = document.querySelectorAll('.stat-number');
+                if (statNumbers.length > 0) {
+                    const statObserver = new IntersectionObserver(function(entries) {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                                const text = entry.target.textContent;
+                                const value = parseInt(text.replace(/[^0-9]/g, ''));
+                                if (!isNaN(value)) {
+                                    animateValue(entry.target, 0, value, 2000);
+                                    entry.target.classList.add('animated');
+                                }
+                            }
+                        });
+                    }, { threshold: 0.5, rootMargin: '0px' });
+
+                    statNumbers.forEach(stat => {
+                        statObserver.observe(stat);
+                    });
+                }
+            } catch (e) {
+                console.error('Error in stat numbers observer:', e);
+            }
+        }, 100);
+
+        // Initialize the section fade-in animations
+        setTimeout(reinitializeSectionObserver, 100);
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');
