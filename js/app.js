@@ -480,40 +480,16 @@ function initializePage() {
             }
         }, 300);
 
-        // Add fade-in animation to sections on scroll (delayed to prevent blocking)
-        // DISABLED to fix a persistent mobile rendering bug.
-/*
-        setTimeout(function() {
-            try {
-                const sections = document.querySelectorAll('.section');
-                if (sections.length > 0) {
-                    const sectionObserver = new IntersectionObserver(function(entries, observer) {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                entry.target.style.opacity = '1';
-                                entry.target.style.transform = 'translateY(0)';
-                                entry.target.classList.add('is-visible');
-                                observer.unobserve(entry.target);
-                            }
-                        });
-                    }, {
-                        threshold: 0.1, // Start animation when 10% of the section is visible
-                        rootMargin: '0px'
-                    });
-
-                    sections.forEach(section => {
-                        // Initialize sections for fade-in animation
-                        section.style.opacity = '0';
-                        section.style.transform = 'translateY(30px)';
-                        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                        sectionObserver.observe(section);
-                    });
-                }
-            } catch (e) {
-                console.error('Error in sections observer:', e);
-            }
-        }, 300);
-*/
+        // Add staggered fade-in animation to sections
+        try {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                // Apply a sequential delay to each section's animation
+                section.style.animationDelay = `${index * 200}ms`;
+            });
+        } catch (e) {
+            console.error('Error applying staggered animation delays:', e);
+        }
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');
