@@ -484,11 +484,12 @@ function initializePage() {
         try {
             const sections = document.querySelectorAll('.section');
             sections.forEach((section, index) => {
-                // Apply a sequential delay to each section's animation
-                section.style.animationDelay = `${index * 200}ms`;
+                setTimeout(() => {
+                    section.classList.add('is-visible');
+                }, index * 200);
             });
         } catch (e) {
-            console.error('Error applying staggered animation delays:', e);
+            console.error('Error applying staggered transitions:', e);
         }
 
         // Project Modal functionality
