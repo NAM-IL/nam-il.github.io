@@ -956,10 +956,11 @@ body {
     border-radius: 1rem;
     box-shadow: var(--shadow-md);
     transition: transform 0.3s ease;
+    transform: translateZ(0); /* Hardware acceleration fix for mobile rendering */
 }
 
 .timeline-content:hover {
-    transform: translateX(10px);
+    transform: translateX(10px) translateZ(0);
     box-shadow: var(--shadow-lg);
 }
 
