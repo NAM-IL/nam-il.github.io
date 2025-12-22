@@ -1026,7 +1026,7 @@ body {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     position: relative;
     overflow: hidden;
-    z-index: 9998; /* ensure image/overlay stack above project content/tags */
+    z-index: 1; /* Lowered z-index to not conflict with navbar */
 }
 
 .project-overlay {
@@ -1041,7 +1041,7 @@ body {
     justify-content: center;
     opacity: 0;
     transition: opacity 0.3s ease;
-    z-index: 9999; /* ensure overlay appears above tags and other content */
+    z-index: 3; /* Lowered z-index */
     pointer-events: none; /* disable interactions when hidden */
 }
 
@@ -1058,7 +1058,7 @@ body {
     border-radius: 0.5rem;
     transition: all 0.3s ease;
     position: relative; /* ensure link stacks above overlay children if needed */
-    z-index: 10000;
+    z-index: 4; /* Lowered z-index */
 }
 
 .project-link:hover {
@@ -1072,7 +1072,7 @@ body {
     flex-direction: column;
     flex: 1;
     position: relative;
-    z-index: 10; /* keep content below overlay */
+    z-index: 2; /* Lowered z-index */
 }
 
 .project-title {
