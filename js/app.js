@@ -449,7 +449,7 @@ function initializePage() {
             } catch (e) {
                 console.error('Error in skill bars observer:', e);
             }
-        }, 100);
+        }, 300);
 
         // Animate stats on scroll (delayed to prevent blocking)
         setTimeout(function() {
@@ -476,7 +476,7 @@ function initializePage() {
             } catch (e) {
                 console.error('Error in stat numbers observer:', e);
             }
-        }, 100);
+        }, 300);
 
         // Add fade-in animation to sections on scroll (delayed to prevent blocking)
         setTimeout(function() {
@@ -508,7 +508,7 @@ function initializePage() {
             } catch (e) {
                 console.error('Error in sections observer:', e);
             }
-        }, 100);
+        }, 300);
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');
