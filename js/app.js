@@ -964,14 +964,37 @@ function playTTS() {
     
     console.log('playTTS called - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isCurrentlySpeaking:', isCurrentlySpeaking);
     
-    // If paused, resume using the restart workaround for reliability
-    if (isCurrentlyPaused && (isCurrentlySpeaking || currentUtterance)) {
-        console.log('Attempting to resume TTS by restarting...');
-        // Use the restart function which is more reliable across browsers, especially on mobile.
-        // This cancels the current utterance and starts a new one from the last known position.
-        isPaused = false; // Set isPaused to false before restarting
-        restartTTSWithCurrentText();
-        return;
+    // // If paused, resume using the restart workaround for reliability
+    // if (isCurrentlyPaused && (isCurrentlySpeaking || currentUtterance)) {
+    //     console.log('Attempting to resume TTS by restarting...');
+    //     // Use the restart function which is more reliable across browsers, especially on mobile.
+    //     // This cancels the current utterance and starts a new one from the last known position.
+    //     isPaused = false; // Set isPaused to false before restarting
+    //     restartTTSWithCurrentText();
+    //     return;
+    // }
+    // If paused, resume
+    if (isCurrentlyPaused && isCurrentlySpeaking && currentUtterance) {
+        try {
+            console.log('Attempting to resume TTS...');
+            speechSynthesis.resume();
+            isPaused = false;
+            // Update buttons after a short delay to ensure state is updated
+            setTimeout(() => {
+                updateTTSButtons();
+            }, 50);
+            console.log('TTS resumed from playTTS, isPaused:', isPaused);
+            return;
+        } catch (e) {
+            console.error('Resume error:', e);
+            // If resume fails, restart from beginning
+            isPaused = false;
+            stopTTS();
+            setTimeout(() => {
+                playTTS();
+            }, 100);
+            return;
+        }
     }
     
     // If already speaking and not paused, do nothing
