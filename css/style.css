@@ -485,9 +485,10 @@ body {
 /* ===== Section Styles ===== */
 .section {
     padding: 5rem 0;
-    opacity: 0; /* Initial state for animation */
-    transform: translateY(30px); /* Initial state for animation */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Animation properties */
+    /* Animation disabled to fix mobile rendering bug */
+    /* opacity: 0; */
+    /* transform: translateY(30px); */
+    /* transition: opacity 0.6s ease-out, transform 0.6s ease-out; */
 }
 
 .section.is-visible {

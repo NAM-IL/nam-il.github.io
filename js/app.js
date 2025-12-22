@@ -481,6 +481,8 @@ function initializePage() {
         }, 300);
 
         // Add fade-in animation to sections on scroll (delayed to prevent blocking)
+        // DISABLED to fix a persistent mobile rendering bug.
+/*
         setTimeout(function() {
             try {
                 const sections = document.querySelectorAll('.section');
@@ -511,6 +513,7 @@ function initializePage() {
                 console.error('Error in sections observer:', e);
             }
         }, 300);
+*/
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');
