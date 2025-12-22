@@ -496,9 +496,10 @@ function initializePage() {
                     });
 
                     sections.forEach(section => {
-                        section.style.opacity = '0';
-                        section.style.transform = 'translateY(30px)';
-                        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        // 섹션 페이드인 애니메이션 일시 비활성화 (디버깅 목적)
+                        // section.style.opacity = '0';
+                        // section.style.transform = 'translateY(30px)';
+                        // section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                         sectionObserver.observe(section);
                     });
                 }
