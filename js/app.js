@@ -87,6 +87,10 @@ async function loadLocale(lang) {
     } catch (e) {
         window.currentLocale = null;
         // silent fail, fallback to data-ko/data-en handling
+    } finally {
+        // Crucially, run initialization *after* the locale has been loaded.
+        // This prevents a race condition on initial page load.
+        setTimeout(initializePage, 0);
     }
 }
 
@@ -269,24 +273,14 @@ function initVisitorCount() {
     }
 }
 
-// Navigation toggle for mobile
-document.addEventListener('DOMContentLoaded', function() {
-    // Prevent multiple initializations
-    if (isInitialized) return;
-    isInitialized = true;
-    
-    // Execute initialization asynchronously to prevent blocking
-    setTimeout(function() {
-        initializePage();
-    }, 0);
-});
+// Initialization is now triggered after loadLocale completes.
 
 function initializePage() {
     // Prevent multiple simultaneous initializations
-    if (isInitializing) {
-        console.warn('Initialization already in progress, skipping...');
+    if (isInitialized || isInitializing) {
         return;
     }
+    isInitialized = true;
     isInitializing = true;
     
     // Wrap entire initialization in try-catch to prevent page blocking
