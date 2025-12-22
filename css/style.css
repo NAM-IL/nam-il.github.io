@@ -920,13 +920,12 @@ body {
     max-width: 800px;
     margin: 0 auto;
     position: relative;
-    padding-left: 2rem;
 }
 
 .timeline::before {
     content: '';
     position: absolute;
-    left: 0;
+    left: 8px; /* Position line in the middle of the 16px marker */
     top: 0;
     bottom: 0;
     width: 2px;
@@ -936,12 +935,12 @@ body {
 .timeline-item {
     position: relative;
     margin-bottom: 3rem;
-    padding-left: 2rem;
+    padding-left: 3rem; /* Create space for marker + gap */
 }
 
 .timeline-marker {
     position: absolute;
-    left: -2.5rem;
+    left: 0; /* Position marker at the start of the item, within the padding */
     top: 0;
     width: 16px;
     height: 16px;
