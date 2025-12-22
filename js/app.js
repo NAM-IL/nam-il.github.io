@@ -62,14 +62,6 @@ function switchLanguage(lang) {
         // Ignore
     }
     
-    // Update all elements with data-ko and data-en attributes (async, batched for performance)
-    setTimeout(() => {
-        try {
-            updateLanguageElements(lang);
-        } catch (e) {
-            console.error('Error updating language elements:', e);
-        }
-    }, 10);
     // Also attempt to load JSON locale file and apply data-i18n translations
     setTimeout(() => {
         try {
@@ -78,119 +70,6 @@ function switchLanguage(lang) {
             // ignore
         }
     }, 60);
-}
-
-// Safe function to update language elements without causing infinite loops
-function updateLanguageElements(lang) {
-    try {
-        // Get all elements with both data-ko and data-en attributes
-        const elements = document.querySelectorAll('[data-ko][data-en]');
-        const totalElements = elements.length;
-        
-        // Process in smaller batches to prevent blocking
-        const batchSize = 50;
-        let processed = 0;
-        
-        function processBatch(startIndex) {
-            const endIndex = Math.min(startIndex + batchSize, totalElements);
-            
-            for (let i = startIndex; i < endIndex; i++) {
-                try {
-                    const element = elements[i];
-                    if (!element || !element.isConnected) continue;
-                    
-                    const text = element.getAttribute(`data-${lang}`);
-                    if (text !== null && text !== undefined && text !== '') {
-                        // Only update if text is different to prevent unnecessary DOM updates
-                        if (element.textContent !== text) {
-                            element.textContent = text;
-                        }
-                    }
-                } catch (e) {
-                    // Ignore individual element errors
-                }
-            }
-            
-            processed = endIndex;
-            
-            // Continue with next batch if there are more elements
-            if (processed < totalElements) {
-                setTimeout(() => processBatch(processed), 0);
-            }
-        }
-        
-        // Start processing
-        if (totalElements > 0) {
-            processBatch(0);
-        }
-        
-        // Update TTS labels
-        updateTTSLabels(lang);
-        
-        // Update visitor label
-        updateVisitorLabel(lang);
-        
-        // Update skill tooltips
-        updateSkillTooltips(lang);
-        
-        // Update skill category titles
-        updateSkillCategories(lang);
-        
-    } catch (e) {
-        console.error('Error in updateLanguageElements:', e);
-    }
-}
-
-
-// Helper function to update TTS labels
-function updateTTSLabels(lang) {
-    try {
-        const playBtn = document.getElementById('ttsPlayBtn');
-        const pauseBtn = document.getElementById('ttsPauseBtn');
-        const stopBtn = document.getElementById('ttsStopBtn');
-        const speedLabel = document.querySelector('.tts-speed-label');
-        
-        if (playBtn) {
-            const playText = playBtn.querySelector('.tts-button-text');
-            if (playText) {
-                const text = playText.getAttribute(`data-${lang}`);
-                if (text) playText.textContent = text;
-            }
-        }
-        if (pauseBtn) {
-            const pauseText = pauseBtn.querySelector('.tts-button-text');
-            if (pauseText) {
-                const text = pauseText.getAttribute(`data-${lang}`);
-                if (text) pauseText.textContent = text;
-            }
-        }
-        if (stopBtn) {
-            const stopText = stopBtn.querySelector('.tts-button-text');
-            if (stopText) {
-                const text = stopText.getAttribute(`data-${lang}`);
-                if (text) stopText.textContent = text;
-            }
-        }
-        if (speedLabel) {
-            const text = speedLabel.getAttribute(`data-${lang}`);
-            if (text) speedLabel.textContent = text;
-        }
-    } catch (e) {
-        console.warn('Error updating TTS labels:', e);
-    }
-}
-
-// Helper function to update visitor label
-function updateVisitorLabel(lang) {
-    try {
-        const visitorLabel = document.querySelector('.visitor-label');
-        if (visitorLabel) {
-            const text = visitorLabel.getAttribute(`data-${lang}`);
-            if (text) visitorLabel.textContent = text;
-        }
-    } catch (e) {
-        console.warn('Error updating visitor label:', e);
-    }
 }
 
 // --- JSON-based locale loader and applier (data-i18n) ---
@@ -303,26 +182,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-
-
-// Initialize project links with language data attributes
-function initProjectLinkLanguage() {
-    try {
-        const projectLinks = document.querySelectorAll('.project-link');
-        projectLinks.forEach(link => {
-            if (!link.hasAttribute('data-ko')) {
-                link.setAttribute('data-ko', '자세히 보기');
-            }
-            if (!link.hasAttribute('data-en')) {
-                link.setAttribute('data-en', 'View Details');
-            }
-        });
-    } catch (e) {
-        console.warn('Error initializing project link language:', e);
-    }
-}
-
 // Skill tooltip descriptions (both Korean and English)
 const skillTooltips = {
     'Java': { ko: '객체지향 프로그래밍 언어, 엔터프라이즈 애플리케이션 개발', en: 'Object-oriented programming language for enterprise applications' },
@@ -371,43 +230,6 @@ function initSkillTooltips() {
     }
 }
 
-// Update skill tooltips when language changes
-function updateSkillTooltips(lang) {
-    try {
-        const skillNames = document.querySelectorAll('.skill-name');
-        skillNames.forEach(skillName => {
-            const skillText = skillName.textContent.trim();
-            const tooltipObj = skillTooltips[skillText];
-            let text = null;
-            // prefer stored data attributes if present
-            if (skillName.hasAttribute(`data-tooltip-${lang}`)) {
-                text = skillName.getAttribute(`data-tooltip-${lang}`);
-            } else if (tooltipObj && tooltipObj[lang]) {
-                text = tooltipObj[lang];
-            }
-            if (text) {
-                skillName.setAttribute('title', text);
-            }
-        });
-    } catch (e) {
-        console.warn('Error updating skill tooltips:', e);
-    }
-}
-
-// Update skill category titles when language changes
-function updateSkillCategories(lang) {
-    try {
-        const categoryTitles = document.querySelectorAll('.category-title');
-        categoryTitles.forEach(title => {
-            if (title.hasAttribute(`data-${lang}`)) {
-                title.textContent = title.getAttribute(`data-${lang}`);
-            }
-        });
-    } catch (e) {
-        console.warn('Error updating skill categories:', e);
-    }
-}
-
 // Visitor Count Management
 function initVisitorCount() {
     // Prevent multiple initializations
@@ -442,16 +264,6 @@ function initVisitorCount() {
         // Format number with commas
         const formattedCount = totalVisits.toLocaleString('ko-KR');
         visitorCountEl.textContent = formattedCount;
-        
-        // Update visitor label on language change (without MutationObserver to prevent infinite loop)
-        const visitorLabel = document.querySelector('.visitor-label');
-        if (visitorLabel) {
-            // Set initial label
-            const label = visitorLabel.getAttribute(`data-${currentLang}`) || visitorLabel.textContent;
-            if (visitorLabel.getAttribute(`data-${currentLang}`)) {
-                visitorLabel.textContent = label;
-            }
-        }
     } catch (e) {
         console.error('Error in initVisitorCount:', e);
         isVisitorCountInitialized = false; // Reset on error
@@ -490,14 +302,6 @@ function initializePage() {
                     langText.textContent = currentLang === 'ko' ? 'EN' : 'KO';
                 }
             }
-            // Apply initial language to all elements (delayed to prevent blocking)
-            setTimeout(() => {
-                try {
-                    updateLanguageElements(currentLang);
-                } catch (e) {
-                    console.error('Error applying initial language:', e);
-                }
-            }, 100);
         } catch (e) {
             console.error('Error initializing language:', e);
         }
@@ -514,13 +318,6 @@ function initializePage() {
             initSkillTooltips();
         } catch (e) {
             console.error('Error initializing skill tooltips:', e);
-        }
-        
-        // Initialize project links with language attributes
-        try {
-            initProjectLinkLanguage();
-        } catch (e) {
-            console.error('Error initializing project links:', e);
         }
         
         // Initialize visitor count (wrapped in try-catch to prevent blocking)
@@ -756,16 +553,13 @@ function initializePage() {
 
                 // Prefer attributes like data-en or data-ko if present
                 if (introEl) {
-                    const attr = introEl.getAttribute(`data-${currentLang}`);
-                    introduction = (attr !== null && attr !== undefined && attr !== '') ? attr.trim() : introEl.textContent.trim();
+                    introduction = introEl.textContent.trim();
                 }
                 if (roleEl) {
-                    const attr = roleEl.getAttribute(`data-${currentLang}`);
-                    role = (attr !== null && attr !== undefined && attr !== '') ? attr.trim() : roleEl.textContent.trim();
+                    role = roleEl.textContent.trim();
                 }
                 if (reviewEl) {
-                    const attr = reviewEl.getAttribute(`data-${currentLang}`);
-                    review = (attr !== null && attr !== undefined && attr !== '') ? attr.trim() : reviewEl.textContent.trim();
+                    review = reviewEl.textContent.trim();
                 }
             } else {
                 console.warn('Project data not found for:', title);
@@ -830,16 +624,12 @@ function initializePage() {
                 const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
                 const isPortfolioType = reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio';
 
-                // Helper: resolve localized string by priority: loaded locale -> element data-<lang> -> fallback
+                // Helper: resolve localized string by priority: loaded locale zement data-<lang> -> fallback
                 const resolveLocalized = (key, el, fallbackKo, fallbackEn) => {
                     try {
                         const dict = window.currentLocale || {};
                         const val = getValueByPath(dict, key);
                         if (val !== undefined && val !== null && val !== '') return val;
-                        if (el && el.getAttribute) {
-                            const attr = el.getAttribute(`data-${currentLang}`);
-                            if (attr !== null && attr !== undefined && attr !== '') return attr;
-                        }
                         return currentLang === 'ko' ? fallbackKo : fallbackEn;
                     } catch (e) {
                         return currentLang === 'ko' ? fallbackKo : fallbackEn;
@@ -1218,13 +1008,8 @@ function playTTS() {
     let text = '';
     const paragraphs = aboutTextContent.querySelectorAll('p');
     paragraphs.forEach(p => {
-        const langText = p.getAttribute(`data-${lang}`);
-        if (langText) {
-            text += langText + ' ';
-        } else {
-            // Fallback to visible text if data attribute not found
-            text += (p.innerText || p.textContent) + ' ';
-        }
+        // Fallback to visible text if data attribute not found
+        text += (p.innerText || p.textContent) + ' ';
     });
     text = text.trim();
     
@@ -1553,8 +1338,8 @@ function updateTTSButtons() {
             // Update button text from span element
             const playSpan = playBtn.querySelector('.tts-button-text');
             if (playSpan) {
-                const playTextKo = playSpan.getAttribute('data-ko') || '재생';
-                const playTextEn = playSpan.getAttribute('data-en') || 'Play';
+                const playTextKo = '재생';
+                const playTextEn = 'Play';
                 playSpan.textContent = currentLang === 'ko' ? playTextKo : playTextEn;
             }
         }
@@ -1572,8 +1357,8 @@ function updateTTSButtons() {
             // Update button text from span element
             const pauseSpan = pauseBtn.querySelector('.tts-button-text');
             if (pauseSpan) {
-                const pauseTextKo = pauseSpan.getAttribute('data-ko') || '일시정지';
-                const pauseTextEn = pauseSpan.getAttribute('data-en') || 'Pause';
+                const pauseTextKo = '일시정지';
+                const pauseTextEn = 'Pause';
                 pauseSpan.textContent = currentLang === 'ko' ? pauseTextKo : pauseTextEn;
             }
         }
@@ -1588,8 +1373,8 @@ function updateTTSButtons() {
         // Update button text from span element
         const playSpan = playBtn.querySelector('.tts-button-text');
         if (playSpan) {
-            const playTextKo = playSpan.getAttribute('data-ko') || '재생';
-            const playTextEn = playSpan.getAttribute('data-en') || 'Play';
+            const playTextKo = '재생';
+            const playTextEn = 'Play';
             playSpan.textContent = currentLang === 'ko' ? playTextKo : playTextEn;
         }
     }
