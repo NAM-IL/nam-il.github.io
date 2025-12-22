@@ -2017,6 +2017,13 @@ body {
     box-shadow: 0 6px 12px -1px rgba(0, 119, 181, 0.4);
 }
 
+/* Diagnostic CSS: Force experience section visible */
+#experience {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
 /* ===== Footer ===== */
 .footer {
     background: var(--text-primary);
