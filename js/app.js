@@ -483,19 +483,22 @@ function initializePage() {
             try {
                 const sections = document.querySelectorAll('.section');
                 if (sections.length > 0) {
-                    const sectionObserver = new IntersectionObserver(function(entries) {
+                    const sectionObserver = new IntersectionObserver(function(entries, observer) {
                         entries.forEach(entry => {
                             if (entry.isIntersecting) {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
                                 entry.target.classList.add('is-visible');
+                                observer.unobserve(entry.target);
                             }
                         });
                     }, {
-                        threshold: 0.1,
-                        rootMargin: '0px 0px -50px 0px'
+                        threshold: 0.1, // Start animation when 10% of the section is visible
+                        rootMargin: '0px'
                     });
 
                     sections.forEach(section => {
-                        // 섹션 페이드인 애니메이션 초기화
+                        // Initialize sections for fade-in animation
                         section.style.opacity = '0';
                         section.style.transform = 'translateY(30px)';
                         section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
