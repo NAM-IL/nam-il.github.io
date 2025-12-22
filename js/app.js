@@ -480,37 +480,7 @@ function initializePage() {
             }
         }, 300);
 
-        // Add staggered fade-in animation to sections (manual JS animation)
-        try {
-            const sections = document.querySelectorAll('.section');
-            
-            // Manual fade-in function using requestAnimationFrame for maximum compatibility
-            function animateFadeIn(element, duration = 800) {
-                let start = null;
-                element.style.opacity = 0;
-
-                function step(timestamp) {
-                    if (!start) start = timestamp;
-                    const progress = timestamp - start;
-                    const opacity = Math.min(progress / duration, 1);
-                    element.style.opacity = opacity;
-                    if (progress < duration) {
-                        window.requestAnimationFrame(step);
-                    }
-                }
-                window.requestAnimationFrame(step);
-            }
-
-            sections.forEach((section, index) => {
-                // Set initial state just in case, then trigger animation after a delay
-                section.style.opacity = 0;
-                setTimeout(() => {
-                    animateFadeIn(section, 800);
-                }, index * 200);
-            });
-        } catch (e) {
-            console.error('Error applying manual staggered fade-in:', e);
-        }
+        // All section animations have been disabled to fix a persistent mobile rendering bug.
 
         // Project Modal functionality
         const modal = document.getElementById('projectModal');

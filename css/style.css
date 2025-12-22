@@ -485,7 +485,10 @@ body {
 /* ===== Section Styles ===== */
 .section {
     padding: 5rem 0;
-    opacity: 0; /* Start hidden, JS will fade it in. */
+    /* Animation disabled to fix mobile rendering bug */
+    /* opacity: 0; */
+    /* transform: translateY(30px); */
+    /* transition: opacity 0.6s ease-out, transform 0.6s ease-out; */
 }
 
 .section.is-visible {
