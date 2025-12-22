@@ -166,6 +166,13 @@ function applyLocaleTranslations(dict) {
     } catch (e) {
         // ignore
     }
+
+    // After translations, force a minor scroll to help IntersectionObservers on mobile
+    // This can fix issues where element positions change and observers don't fire.
+    setTimeout(() => {
+        window.scrollBy(0, 1);
+        window.scrollBy(0, -1);
+    }, 150); // Delay to allow DOM to repaint with new text
 }
 
 function getValueByPath(obj, path) {
