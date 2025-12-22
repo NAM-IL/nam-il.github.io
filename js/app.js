@@ -235,35 +235,27 @@ function initVisitorCount() {
     // Prevent multiple initializations
     if (isVisitorCountInitialized) return;
     isVisitorCountInitialized = true;
-    
+
     try {
         const visitorCountEl = document.getElementById('visitorCount');
         if (!visitorCountEl) return;
-        
-        // Get today's date as key
+
+        let totalVisits = parseInt(localStorage.getItem('total_visits') || '0');
+
+        // Use a single key to check if a visit was counted today
         const today = new Date().toISOString().split('T')[0];
-        const todayKey = `visit_${today}`;
-        const totalKey = 'total_visits';
-        const lastVisitKey = 'last_visit_date';
-        
-        // Check if already visited today
-        const lastVisit = localStorage.getItem(lastVisitKey);
-        const visitedToday = localStorage.getItem(todayKey);
-        
-        // Get total visits
-        let totalVisits = parseInt(localStorage.getItem(totalKey) || '0');
-        
-        // If first visit today, increment
-        if (lastVisit !== today || !visitedToday) {
+        const lastVisitDate = localStorage.getItem('last_visit_date');
+
+        // If the last recorded visit was not today, increment the count
+        if (lastVisitDate !== today) {
             totalVisits++;
-            localStorage.setItem(totalKey, totalVisits.toString());
-            localStorage.setItem(todayKey, 'true');
-            localStorage.setItem(lastVisitKey, today);
+            localStorage.setItem('total_visits', totalVisits.toString());
+            // Record today as the last visit date
+            localStorage.setItem('last_visit_date', today);
         }
-        
-        // Format number with commas
-        const formattedCount = totalVisits.toLocaleString('ko-KR');
-        visitorCountEl.textContent = formattedCount;
+
+        // Display the count
+        visitorCountEl.textContent = totalVisits.toLocaleString('ko-KR');
     } catch (e) {
         console.error('Error in initVisitorCount:', e);
         isVisitorCountInitialized = false; // Reset on error
@@ -964,37 +956,14 @@ function playTTS() {
     
     console.log('playTTS called - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isCurrentlySpeaking:', isCurrentlySpeaking);
     
-    // // If paused, resume using the restart workaround for reliability
-    // if (isCurrentlyPaused && (isCurrentlySpeaking || currentUtterance)) {
-    //     console.log('Attempting to resume TTS by restarting...');
-    //     // Use the restart function which is more reliable across browsers, especially on mobile.
-    //     // This cancels the current utterance and starts a new one from the last known position.
-    //     isPaused = false; // Set isPaused to false before restarting
-    //     restartTTSWithCurrentText();
-    //     return;
-    // }
-    // If paused, resume
-    if (isCurrentlyPaused && isCurrentlySpeaking && currentUtterance) {
-        try {
-            console.log('Attempting to resume TTS...');
-            speechSynthesis.resume();
-            isPaused = false;
-            // Update buttons after a short delay to ensure state is updated
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
-            console.log('TTS resumed from playTTS, isPaused:', isPaused);
-            return;
-        } catch (e) {
-            console.error('Resume error:', e);
-            // If resume fails, restart from beginning
-            isPaused = false;
-            stopTTS();
-            setTimeout(() => {
-                playTTS();
-            }, 100);
-            return;
-        }
+    // If paused, resume using the restart workaround for reliability
+    if (isCurrentlyPaused && (isCurrentlySpeaking || currentUtterance)) {
+        console.log('Attempting to resume TTS by restarting...');
+        // Use the restart function which is more reliable across browsers, especially on mobile.
+        // This cancels the current utterance and starts a new one from the last known position.
+        isPaused = false; // Set isPaused to false before restarting
+        restartTTSWithCurrentText();
+        return;
     }
     
     // If already speaking and not paused, do nothing
@@ -1256,45 +1225,14 @@ function restartTTSWithCurrentText() {
 
 function pauseTTS() {
     if (!speechSynthesis) return;
-    
-    // Check actual paused state from speechSynthesis
-    const actuallyPaused = speechSynthesis.paused === true;
-    const isCurrentlyPaused = isPaused || actuallyPaused;
-    const isCurrentlySpeaking = speechSynthesis.speaking || speechSynthesis.pending;
-    
-    console.log('pauseTTS called - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isCurrentlySpeaking:', isCurrentlySpeaking);
-    
-    // If paused, resume
-    if (isCurrentlyPaused && isCurrentlySpeaking && currentUtterance) {
-        try {
-            console.log('Resuming TTS from pauseTTS...');
-            speechSynthesis.resume();
-            isPaused = false;
-            // Update buttons after a short delay
-            setTimeout(() => {
-                updateTTSButtons();
-            }, 50);
-            console.log('TTS resumed from pauseTTS, isPaused:', isPaused);
-            return;
-        } catch (e) {
-            console.error('Resume error:', e);
-            // If resume fails, restart from beginning
-            isPaused = false;
-            stopTTS();
-            setTimeout(() => {
-                playTTS();
-            }, 100);
-            return;
-        }
-    }
-    
-    // If speaking and not paused, pause
-    if (isCurrentlySpeaking && !isCurrentlyPaused) {
+
+    // Only pause if it is currently speaking and not already paused.
+    if (speechSynthesis.speaking && !speechSynthesis.paused) {
         try {
             console.log('Pausing TTS...');
             speechSynthesis.pause();
             isPaused = true;
-            // Update buttons after a short delay
+            // Update buttons after a short delay to ensure state is updated
             setTimeout(() => {
                 updateTTSButtons();
             }, 50);
@@ -1302,10 +1240,6 @@ function pauseTTS() {
         } catch (e) {
             console.error('Pause error:', e);
         }
-    } else if (!isCurrentlySpeaking) {
-        // If not speaking, reset state
-        isPaused = false;
-        updateTTSButtons();
     }
 }
 
