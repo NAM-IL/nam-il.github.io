@@ -89,8 +89,9 @@ async function loadLocale(lang) {
         // silent fail, fallback to data-ko/data-en handling
     } finally {
         // Crucially, run initialization *after* the locale has been loaded.
-        // This prevents a race condition on initial page load.
-        setTimeout(initializePage, 0);
+        // This prevents a race condition on initial page load. A small delay
+        // is added to give the browser time to repaint layout changes from new text.
+        setTimeout(initializePage, 200);
     }
 }
 
