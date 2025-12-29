@@ -1,0 +1,60 @@
+<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="dropshadow" height="130%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5"/>
+      </feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8c0ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3c78f8;stop-opacity:1" />
+    </linearGradient>
+     <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a0baff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#356de2;stop-opacity:1" />
+    </linearGradient>
+     <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#99b3ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2e63ce;stop-opacity:1" />
+    </linearGradient>
+     <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c2d1ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#538cff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <g style="filter:url(#dropshadow)">
+    <!-- Bottom Left Piece -->
+    <path d="M20,80 V60 C20,55 25,55 25,50 C25,45 20,45 20,40 V20 H40 C45,20 45,25 50,25 C55,25 55,20 60,20 H80 V40 C80,45 75,45 75,50 C75,55 80,55 80,60 V80 H20 Z" fill="#f0f0f0" opacity="0.1"/>
+    <path d="M25,75 V55 C25,52.23 27.23,50 30,50 C32.77,50 35,47.77 35,45 V25 H55 C57.77,25 60,27.23 60,30 C60,32.77 62.77,35 65,35 H75 V55"
+          fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+
+    <!-- Bottom-left -->
+    <path d="M45,75 V55 C45,52.23 42.77,50 40,50 C37.23,50 35,52.23 35,55 V75 H45 Z" fill="url(#grad1)" />
+    <path d="M25,55 C27.77,55 30,52.77 30,50 C30,47.23 27.77,45 25,45 H5 V75 H25 V55 Z" fill="url(#grad1)" />
+
+    <!-- Top-left -->
+    <path d="M5,45 V25 H25 C27.77,25 30,27.23 30,30 C30,32.77 27.77,35 25,35 H5 V45 Z" fill="url(#grad2)"/>
+    <path d="M35,45 V25 H55 C57.77,25 60,22.77 60,20 C60,17.23 57.77,15 55,15 H35 V45 Z" fill="url(#grad2)"/>
+    <path d="M35,45 C37.23,45 40,47.23 40,50 C40,52.77 37.23,55 35,55 V45Z" fill="url(#grad2)"/>
+
+    <!-- Bottom-right -->
+    <path d="M55,75 V55 C52.23,55 50,57.23 50,60 C50,62.77 52.23,65 55,65 H75 V75 H55 Z" fill="url(#grad3)"/>
+    <path d="M55,55 V35 H75 V55 H55Z" fill="url(#grad3)"/>
+    <path d="M55,35 C52.23,35 50,32.77 50,30 C50,27.23 52.23,25 55,25 V35 Z" fill="url(#grad3)"/>
+    
+    <!-- Top-right flying piece -->
+    <g transform="translate(10, -10) rotate(15, 75, 25)">
+      <path d="M65,35 H85 C87.77,35 90,32.77 90,30 C90,27.23 87.77,25 85,25 H65 C62.23,25 60,22.77 60,20 C60,17.23 62.23,15 65,15 H85 V-5 H65 C62.23,-5 60,-2.77 60,0 C60,2.77 62.23,5 65,5 H85 V15 H65 C62.23,15 60,17.23 60,20 C60,22.77 62.23,25 65,25 H85 C87.77,25 90,27.23 90,30 C90,32.77 87.77,35 85,35 H65 Z" 
+            transform="translate(-5, 10)" fill="url(#grad4)"/>
+    </g>
+
+  </g>
+</svg>

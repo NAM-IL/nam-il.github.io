@@ -1,0 +1,46 @@
+<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .shield-fill { fill: #e9efff; }
+      .shield-stroke { stroke: #4285f4; stroke-width: 2.5; }
+      .icon-fill { fill: #4285f4; }
+      .icon-stroke { stroke: #4285f4; stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round;}
+    </style>
+  </defs>
+
+  <!-- Shield Outline -->
+  <path d="M50,10 C50,10 90,20 90,50 C90,80 50,90 50,90 C50,90 10,80 10,50 C10,20 50,10 50,10 Z" class="shield-fill shield-stroke" />
+
+  <!-- Icons inside the shield -->
+  <g transform="translate(0, 5)">
+    <!-- Collaboration Icon (Top) -->
+    <g transform="translate(38, 15) scale(0.6)">
+        <circle cx="12" cy="8" r="4" class="icon-fill" />
+        <path d="M12,12 C8,12 4,14 4,18 L20,18 C20,14 16,12 12,12 Z" class="icon-fill"/>
+        <circle cx="28" cy="8" r="4" class="icon-fill" />
+        <path d="M28,12 C24,12 20,14 20,18 L36,18 C36,14 32,12 28,12 Z" class="icon-fill"/>
+    </g>
+
+    <!-- Diverse Systems Icon (Middle - CPU) -->
+    <g transform="translate(35, 38) scale(0.7)">
+      <rect x="5" y="5" width="30" height="30" rx="2" class="icon-stroke"/>
+      <rect x="11" y="11" width="18" height="18" class="icon-fill"/>
+      <line x1="15" y1="5" x2="15" y2="0" class="icon-stroke"/>
+      <line x1="25" y1="5" x2="25" y2="0" class="icon-stroke"/>
+      <line x1="15" y1="40" x2="15" y2="35" class="icon-stroke"/>
+      <line x1="25" y1="40" x2="25" y2="35" class="icon-stroke"/>
+      <line x1="5" y1="15" x2="0" y2="15" class="icon-stroke"/>
+      <line x1="5" y1="25" x2="0" y2="25" class="icon-stroke"/>
+      <line x1="35" y1="15" x2="40" y2="15" class="icon-stroke"/>
+      <line x1="35" y1="25" x2="40" y2="25" class="icon-stroke"/>
+    </g>
+    
+    <!-- Automation/CI-CD Icon (Bottom) -->
+    <g transform="translate(38, 65) scale(0.6)">
+      <path d="M32 12 A12 12 0 1 0 25 3" class="icon-stroke"/>
+      <path d="M32 8 L32 12 L28 12" class="icon-stroke"/>
+      <path d="M8 28 A12 12 0 1 0 15 37" class="icon-stroke"/>
+      <path d="M8 32 L8 28 L12 28" class="icon-stroke"/>
+    </g>
+  </g>
+</svg>
