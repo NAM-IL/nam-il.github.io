@@ -1775,6 +1775,13 @@ body {
     background: var(--text-secondary);
 }
 
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* ===== Scroll to Top Button ===== */
 .scroll-top-btn {
     position: fixed;
