@@ -14,9 +14,6 @@ let isInitializing = false;
 let currentLang = localStorage.getItem('language') || 'ko';
 
 function switchLanguage(lang) {
-    // Re-trigger project card animations
-    animateProjectCards();
-    
     // Update language state (synchronous, safe)
     currentLang = lang;
     
@@ -246,37 +243,6 @@ function initSkillTooltips() {
 
 // Initialization is now triggered after loadLocale completes.
 
-function animateProjectCards() {
-    try {
-        const projectsGrid = document.querySelector('.projects-grid');
-        if (projectsGrid) {
-            const cards = projectsGrid.querySelectorAll('.project-card');
-            
-            // Reset any existing animations
-            cards.forEach(card => {
-                card.classList.remove('animated');
-            });
-
-            const projectObserver = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        cards.forEach((card, index) => {
-                            setTimeout(() => {
-                                card.classList.add('animated');
-                            }, index * 100);
-                        });
-                        observer.disconnect();
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: '0px' });
-
-            projectObserver.observe(projectsGrid);
-        }
-    } catch (e) {
-        console.error('Error in project cards animation:', e);
-    }
-}
-
 function initializePage() {
     // Prevent multiple simultaneous initializations
     if (isInitialized || isInitializing) {
@@ -473,9 +439,6 @@ function initializePage() {
                 console.error('Error in stat numbers observer:', e);
             }
         }, 300);
-
-        // Animate project cards on scroll
-        setTimeout(animateProjectCards, 300);
 
         // All section animations have been disabled to fix a persistent mobile rendering bug.
 
