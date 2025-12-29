@@ -6,7 +6,6 @@
 let isInitialized = false;
 let isTTSInitialized = false;
 let isSkillTooltipsInitialized = false;
-let isVisitorCountInitialized = false;
 
 // Global flag to prevent infinite loops
 let isInitializing = false;
@@ -242,38 +241,6 @@ function initSkillTooltips() {
     }
 }
 
-// Visitor Count Management
-function initVisitorCount() {
-    // Prevent multiple initializations
-    if (isVisitorCountInitialized) return;
-    isVisitorCountInitialized = true;
-
-    try {
-        const visitorCountEl = document.getElementById('visitorCount');
-        if (!visitorCountEl) return;
-
-        let totalVisits = parseInt(localStorage.getItem('total_visits') || '0');
-
-        // Use a single key to check if a visit was counted today
-        const today = new Date().toISOString().split('T')[0];
-        const lastVisitDate = localStorage.getItem('last_visit_date');
-
-        // If the last recorded visit was not today, increment the count
-        if (lastVisitDate !== today) {
-            totalVisits++;
-            localStorage.setItem('total_visits', totalVisits.toString());
-            // Record today as the last visit date
-            localStorage.setItem('last_visit_date', today);
-        }
-
-        // Display the count
-        visitorCountEl.textContent = totalVisits.toLocaleString('ko-KR');
-    } catch (e) {
-        console.error('Error in initVisitorCount:', e);
-        isVisitorCountInitialized = false; // Reset on error
-    }
-}
-
 // Initialization is now triggered after loadLocale completes.
 
 function initializePage() {
@@ -312,13 +279,6 @@ function initializePage() {
             initSkillTooltips();
         } catch (e) {
             console.error('Error initializing skill tooltips:', e);
-        }
-        
-        // Initialize visitor count (wrapped in try-catch to prevent blocking)
-        try {
-            initVisitorCount();
-        } catch (e) {
-            console.error('Error initializing visitor count:', e);
         }
         
         // Profile image click animation
