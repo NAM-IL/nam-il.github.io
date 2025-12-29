@@ -1036,6 +1036,12 @@ body {
     z-index: 1; /* Lowered z-index to not conflict with navbar */
 }
 
+.project-image.project-bg-1 {
+    background-image: url('../img/1_미라클리딩_0.png');
+    background-size: cover;
+    background-position: center;
+}
+
 .project-overlay {
     position: absolute;
     top: 0;
