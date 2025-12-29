@@ -1035,6 +1035,18 @@ body {
     background-position: center;
 }
 
+.project-image.project-bg-3 {
+    background-image: url('../img/2_WON_뱅킹.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.project-image.project-bg-4 {
+    background-image: url('../img/3_땡겨요_1.png');
+    background-size: cover;
+    background-position: center;
+}
+
 .project-overlay {
     position: absolute;
     top: 0;
