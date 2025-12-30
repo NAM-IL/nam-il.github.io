@@ -836,6 +836,38 @@ body {
     margin-bottom: 0;
 }
 
+.competency-summary {
+    margin-bottom: 1.5rem !important;
+    min-height: 80px; /* Give a minimum height to avoid layout shifts */
+}
+
+.competency-details {
+    text-align: left;
+    background-color: var(--bg-light);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.btn-toggle-details {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    margin-top: auto; /* Push button to the bottom */
+}
+
+.btn-toggle-details:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
 /* ===== Skills Section ===== */
 .skills-section {
     background: var(--bg-white);

@@ -49,17 +49,22 @@
         "title": "Core Competencies",
         "subtitle": "Introducing my key strengths",
         "item1_title": "Problem-Solving Ability",
+        "item1_summary": "Resolves technical issues in various development environments through in-depth analysis and active collaboration, and efficiently improves development processes.",
         "item1_desc1": "Experience in resolving issues across various system environments: Extensive experience in solving technical issues in diverse environments, from embedded Linux-based system firmware development (forklift transmissions, mobile routers) to Android native apps and Spring-based web servers.",
         "item1_desc2": "Problem-solving through collaboration: Successfully resolved the 'secure keypad issue' in the 'Hana Bank Linebank' project and the 'app encryption and build system' issue in the 'Shinhan Bank Ddangyo' project through collaboration with external solution providers and partners. This demonstrates the ability to grasp the core of complex problems and solve them through smooth communication with relevant stakeholders.",
         "item1_desc3": "CI/CD environment construction and automation: Experience in directly building a 'local CI/CD environment' using Jenkins, Docker, and GitLab in the 'Woori Bank WON Banking' project, and managing the 'encryption/build system' using Docker in the 'Shinhan Bank Ddangyo' project, proves problem-solving skills in improving development process inefficiencies and building a stable deployment environment.",
         "item2_title": "Fast Learning Ability",
+        "item2_summary": "Quickly acquires the latest technologies through IT professional training and study activities, successfully applying them to real projects and sharing knowledge.",
         "item2_desc1": "Continuous completion of professional training: Systematically learned new technology stacks, from C/C++ based embedded systems to Java/Spring and Flutter, by completing long-term professional training courses such as the 'Embedded SW Expert Course (960 hours)' and 'Java Full-Stack Developer Training Course (944 hours)'.",
         "item2_desc2": "Acquisition and application of new technologies: Successfully learned 'Kotlin' and 'Django' through the 'Hana Bank Linebank' project and applied them to actual app development and internal deployment site construction. In the 'Kiwoom Securities' project, constantly expanded technical capabilities by acquiring and utilizing the latest technologies such as 'C++11, Boost.Asio, and ECMAScript 6'.",
         "item2_desc3": "Proactive learning and knowledge sharing: Voluntarily studied machine learning and deep learning through 'AI Study Group' activities. The review from the 'Woori Bank' project, which states \"learned new technologies and shared them with colleagues,\" confirms a proactive attitude of contributing acquired knowledge to the team.",
         "item3_title": "Data Analysis Ability",
+        "item3_summary": "Possesses the capability to implement data-driven intelligent features by learning and applying AI technologies to actual services, based on an understanding of database modeling.",
         "item3_desc1": "Database design and modeling capabilities: Learned 'E-R Diagram creation' and 'conceptual/logical/physical database modeling' in the 'Oracle' training course. Experience linking relational databases using MyBatis, Spring Data, etc., in numerous projects supports the ability to understand and effectively design data structures.",
         "item3_desc2": "Understanding and application of AI and machine learning technologies: Studied machine learning/deep learning theories and practiced with Tensorflow, PyTorch, etc., through an 'Artificial Intelligence' study group. In the recent 'Miracle Reading' project, directly integrated generative AI into the service using 'Spring AI, Oracle 23c AI, Ollama', demonstrating the ability to utilize data-based AI technology.",
-        "item3_desc3": "Implementation of data-driven features: Experience participating in the 'KB Kookmin Card MyData' project shows the capability to understand and develop data-driven services that create new value by collecting and integrating scattered personal data through standard APIs."
+        "item3_desc3": "Implementation of data-driven features: Experience participating in the 'KB Kookmin Card MyData' project shows the capability to understand and develop data-driven services that create new value by collecting and integrating scattered personal data through standard APIs.",
+        "viewMore": "View More",
+        "viewLess": "Hide"
     },
     "skills": {
         "title": "Skills",

@@ -744,6 +744,28 @@ function initializePage() {
                 }
             });
         });
+
+        // Toggle competency details
+        const toggleButtons = document.querySelectorAll('.btn-toggle-details');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const competencyItem = this.closest('.competency-item');
+                if (!competencyItem) return;
+
+                const details = competencyItem.querySelector('.competency-details');
+                if (!details) return;
+
+                const isHidden = details.style.display === 'none' || details.style.display === '';
+
+                if (isHidden) {
+                    details.style.display = 'block';
+                    this.textContent = getValueByPath(window.currentLocale, 'competencies.viewLess') || 'Hide';
+                } else {
+                    details.style.display = 'none';
+                    this.textContent = getValueByPath(window.currentLocale, 'competencies.viewMore') || 'View More';
+                }
+            });
+        });
     } catch (e) {
         // Critical: Catch any errors in initialization to prevent page blocking
         console.error('Critical error in initializePage:', e);
