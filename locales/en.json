@@ -28,6 +28,10 @@
     "about": {
         "title": "About Me",
         "subtitle": "Get to know me",
+        "freelance_summary_period": "2013.03 - 2023.07 (6 years 2 months)",
+        "freelance_summary_title": "Freelance Developer (Summary)",
+        "freelance_summary_company": "Multiple Financial & IT Companies",
+        "freelance_summary_desc": "Participated in projects for multiple financial institutions such as Woori Bank, Shinhan Bank, KB Kookmin Card, and Hana Bank, and IT companies like LG Electronics and Kiwoom Securities, developing with various tech stacks including Android, C++, and Java/Spring.",
         "jobTitle": "Full-Stack Developer",
         "p1": "I am a developer who creates web and mobile applications using various technology stacks such as Java, Spring Framework, and Flutter. I have experience in financial sector projects including Woori Bank, Shinhan Bank, and KB Kookmin Card, and possess comprehensive development capabilities from Android native app development to backend server development.",
         "p2": "I strive to become a better developer through continuous learning and growth, and recently completed a Spring Framework-based Java Full-Stack developer training course to acquire the latest technologies.",
@@ -76,10 +80,6 @@
     "experience": {
         "title": "Experience",
         "subtitle": "Career & Experience",
-        "freelance_summary_period": "2015.02 - 2023.07 (8 years 6 months)",
-        "freelance_summary_title": "Freelance Developer (Summary)",
-        "freelance_summary_company": "Multiple Financial & IT Companies",
-        "freelance_summary_desc": "Participated in projects for multiple financial institutions such as Woori Bank, Shinhan Bank, KB Kookmin Card, and Hana Bank, and IT companies like LG Electronics and Kiwoom Securities, developing with various tech stacks including Android, C++, and Java/Spring.",
 
         "timeline1_period": "2025.05.12 - 2025.11.12 (6 months)",
         "timeline1_title": "Java Full-Stack Developer Training (Spring Framework based)",
