@@ -1030,51 +1030,27 @@ body {
 }
 
 .project-image.project-bg-1 {
-    background-image: url('../img/1_미라클리딩_0.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-3 {
-    background-image: url('../img/2_WON_뱅킹.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-4 {
-    background-image: url('../img/3_땡겨요_1.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-5 {
-    background-image: url('../img/4_국민카드.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-6 {
-    background-image: url('../img/5_라인뱅크.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-8 {
-    background-image: url('../img/6_KB마이머니.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-9 {
-    background-image: url('../img/7_영웅문S.png');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-image.project-bg-12 {
-    background-image: url('../img/8_발권시스템.jpg');
-    background-size: cover;
-    background-position: center;
 }
 
 .project-overlay {

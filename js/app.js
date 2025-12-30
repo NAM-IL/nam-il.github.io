@@ -215,6 +215,47 @@ const skillTooltips = {
     'Figma': { ko: 'UI/UX 디자인 및 프로토타이핑 도구', en: 'UI/UX design and prototyping tool' }
 };
 
+// Map for lazy-loading project images
+const projectImageMap = {
+    'project-bg-1': 'img/1_미라클리딩_0.png',
+    'project-bg-3': 'img/2_WON_뱅킹.png',
+    'project-bg-4': 'img/3_땡겨요_1.png',
+    'project-bg-5': 'img/4_국민카드.png',
+    'project-bg-6': 'img/5_라인뱅크.png',
+    'project-bg-8': 'img/6_KB마이머니.png',
+    'project-bg-9': 'img/7_영웅문S.png',
+    'project-bg-12': 'img/8_발권시스템.jpg'
+};
+
+// Lazy load project images
+function lazyLoadProjectImages() {
+    const projectImages = document.querySelectorAll('.project-image');
+    if (projectImages.length === 0) return;
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const imageDiv = entry.target;
+                const classList = Array.from(imageDiv.classList);
+                
+                for (const className of classList) {
+                    if (projectImageMap[className]) {
+                        imageDiv.style.backgroundImage = `url('${projectImageMap[className]}')`;
+                        imageDiv.style.backgroundSize = 'cover';
+                        imageDiv.style.backgroundPosition = 'center';
+                        break; // Image found and applied, no need to check other classes
+                    }
+                }
+                observer.unobserve(imageDiv);
+            }
+        });
+    }, { rootMargin: '100px' }); // Load images when they are 100px away from the viewport
+
+    projectImages.forEach(img => {
+        observer.observe(img);
+    });
+}
+
 // Initialize skill tooltips
 function initSkillTooltips() {
     // Prevent multiple initializations
@@ -265,6 +306,13 @@ function initializePage() {
             }
         } catch (e) {
             console.error('Error initializing language:', e);
+        }
+        
+        // Initialize lazy loading for project images
+        try {
+            lazyLoadProjectImages();
+        } catch (e) {
+            console.error('Error initializing project image lazy loading:', e);
         }
         
         // Initialize TTS (wrapped in try-catch to prevent blocking)
