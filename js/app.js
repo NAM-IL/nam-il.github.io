@@ -745,6 +745,47 @@ function initializePage() {
             });
         });
 
+        // Freelance Experience Modal functionality
+        const freelanceModal = document.getElementById('freelanceModal');
+        const freelanceModalClose = freelanceModal ? freelanceModal.querySelector('.modal-close') : null;
+        const freelanceModalOverlay = freelanceModal ? freelanceModal.querySelector('.modal-overlay') : null;
+        const freelanceStatTrigger = document.getElementById('freelance-stat-trigger');
+
+        function openFreelanceModal() {
+            if (freelanceModal) {
+                freelanceModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeFreelanceModal() {
+            if (freelanceModal) {
+                freelanceModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (freelanceStatTrigger) {
+            freelanceStatTrigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                openFreelanceModal();
+            });
+        }
+
+        if (freelanceModalClose) {
+            freelanceModalClose.addEventListener('click', closeFreelanceModal);
+        }
+
+        if (freelanceModalOverlay) {
+            freelanceModalOverlay.addEventListener('click', closeFreelanceModal);
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && freelanceModal && freelanceModal.classList.contains('active')) {
+                closeFreelanceModal();
+            }
+        });
+
         // Toggle competency details
         const toggleButtons = document.querySelectorAll('.btn-toggle-details');
         toggleButtons.forEach(button => {
