@@ -37,7 +37,7 @@
         "studyItem2": "동영상 강의를 활용하여 머신러닝, 딥러닝, 강화학습 개론 학습",
         "studyItem3": "Tensorflow 실습, PyTorch & Keras 실습",
         "statsProjects": "프로젝트",
-        "statsFreelance": "년 프리랜서 경력",
+        "statsTotalExperience": "년 개발 경력",
         "statsCerts": "자격증"
     },
     "competencies": {
@@ -71,6 +71,11 @@
     "experience": {
         "title": "경력",
         "subtitle": "경력 및 경험",
+        "freelance_summary_period": "2015.02 - 2023.07 (8년 6개월)",
+        "freelance_summary_title": "프리랜서 개발자 (요약)",
+        "freelance_summary_company": "다수 금융권 및 IT 기업",
+        "freelance_summary_desc": "우리은행, 신한은행, KB국민카드, 하나은행 등 다수의 금융권 프로젝트와 LG전자, 키움증권 등 IT 기업의 프로젝트에 참여하여 Android, C++, Java/Spring 등 다양한 기술 스택으로 개발을 수행했습니다.",
+
         "timeline1_period": "2025.05.12 - 2025.11.12 (6개월)",
         "timeline1_title": "Spring Framework 기반 Java Full-Stack 개발자 양성과정",
         "timeline1_company": "쌍용강북교육센터 (944시간 / 118일)",

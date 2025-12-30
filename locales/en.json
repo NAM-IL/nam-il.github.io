@@ -42,7 +42,7 @@
         "studyItem2": "Studied machine learning, deep learning, and reinforcement learning basics using video lectures",
         "studyItem3": "Hands-on practice with Tensorflow, PyTorch & Keras",
         "statsProjects": "Projects",
-        "statsFreelance": "Years Freelance",
+        "statsTotalExperience": "Years of Dev Experience",
         "statsCerts": "Certifications"
     },
     "competencies": {
@@ -76,6 +76,11 @@
     "experience": {
         "title": "Experience",
         "subtitle": "Career & Experience",
+        "freelance_summary_period": "2015.02 - 2023.07 (8 years 6 months)",
+        "freelance_summary_title": "Freelance Developer (Summary)",
+        "freelance_summary_company": "Multiple Financial & IT Companies",
+        "freelance_summary_desc": "Participated in projects for multiple financial institutions such as Woori Bank, Shinhan Bank, KB Kookmin Card, and Hana Bank, and IT companies like LG Electronics and Kiwoom Securities, developing with various tech stacks including Android, C++, and Java/Spring.",
+
         "timeline1_period": "2025.05.12 - 2025.11.12 (6 months)",
         "timeline1_title": "Java Full-Stack Developer Training (Spring Framework based)",
         "timeline1_company": "Ssangyong Gangbuk Training Center (944 hours / 118 days)",
