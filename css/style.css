@@ -789,6 +789,53 @@ body {
     font-weight: 600;
 }
 
+/* ===== Competencies Section ===== */
+.competencies-section {
+    background: var(--bg-light);
+}
+
+.competencies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.competency-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease;
+    text-align: center; /* Center the icon and title */
+}
+
+.competency-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.competency-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.competency-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.competency-item p {
+    color: var(--text-secondary);
+    text-align: left; /* Keep paragraph text aligned left */
+    margin-bottom: 1rem;
+}
+
+.competency-item p:last-child {
+    margin-bottom: 0;
+}
+
 /* ===== Skills Section ===== */
 .skills-section {
     background: var(--bg-white);
