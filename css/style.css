@@ -1953,6 +1953,7 @@ body {
     background: white;
     border-radius: 50%;
     box-shadow: var(--shadow-md);
+    flex-shrink: 0;
 }
 
 .contact-details h4 {
