@@ -1266,24 +1266,32 @@ if ('speechSynthesis' in window) {
     speechSynthesis = window.speechSynthesis;
 }
 
-// Add active class to current navigation link
+// Add active class to current navigation link (Throttled)
+let scrollTimeout;
 window.addEventListener('scroll', function() {
-    const sections = document.querySelectorAll('.section');
-    const navLinks = document.querySelectorAll('.nav-link');
+    if (scrollTimeout) {
+        return;
+    }
 
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (window.scrollY >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
+    scrollTimeout = setTimeout(function() {
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        let current = '';
 
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === '#' + current) {
-            link.classList.add('active');
-        }
-    });
-});
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (window.scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+        
+        scrollTimeout = null;
+    }, 100); // Run this at most every 100ms
+}, { passive: true });
