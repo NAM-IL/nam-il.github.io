@@ -1071,6 +1071,12 @@ body {
     background-position: center;
 }
 
+.project-image.project-bg-12 {
+    background-image: url('../img/8_발권시스템.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
 .project-overlay {
     position: absolute;
     top: 0;
