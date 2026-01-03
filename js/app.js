@@ -16,7 +16,7 @@ let currentLang = localStorage.getItem('language') || 'ko';
 function switchLanguage(lang) {
     // Update language state (synchronous, safe)
     currentLang = lang;
-    
+
     // Update localStorage asynchronously to prevent blocking
     setTimeout(() => {
         try {
@@ -25,7 +25,7 @@ function switchLanguage(lang) {
             // Ignore localStorage errors
         }
     }, 0);
-    
+
     // Update HTML lang attribute (synchronous, safe)
     try {
         if (document && document.documentElement) {
@@ -34,7 +34,7 @@ function switchLanguage(lang) {
     } catch (e) {
         // Ignore
     }
-    
+
     // Update language button (single element, synchronous, safe)
     try {
         const langBtn = document.getElementById('langBtn');
@@ -47,7 +47,7 @@ function switchLanguage(lang) {
     } catch (e) {
         // Ignore
     }
-    
+
     // Stop TTS (non-blocking, safe)
     try {
         if (typeof speechSynthesis !== 'undefined' && speechSynthesis) {
@@ -60,7 +60,7 @@ function switchLanguage(lang) {
     } catch (e) {
         // Ignore
     }
-    
+
     // Also attempt to load JSON locale file and apply data-i18n translations
     setTimeout(() => {
         try {
@@ -81,8 +81,46 @@ async function loadLocale(lang) {
             return;
         }
         const dict = await res.json();
+
+        // --- SCROLL ANCHORING START ---
+        // Find the element currently closest to the top of the viewport to maintain relative scroll position
+        // We consider sections, cards, and timeline items as good anchors
+        const scrollAnchors = document.querySelectorAll('section, h1, h2, h3, .project-card, .timeline-item');
+        let anchor = null;
+        let minDiff = Infinity;
+
+        // Find element closest to the top edge of the viewport
+        scrollAnchors.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            // We prioritize elements that are visible at the top or slightly above
+            const absTop = Math.abs(rect.top);
+            if (absTop < minDiff) {
+                minDiff = absTop;
+                anchor = el;
+            }
+        });
+
+        let previousAnchorTop = 0;
+        if (anchor) {
+            previousAnchorTop = anchor.getBoundingClientRect().top;
+        }
+        // --- SCROLL ANCHORING END ---
+
         window.currentLocale = dict;
         applyLocaleTranslations(dict);
+
+        // --- SCROLL RESTORATION START ---
+        if (anchor) {
+            // Recalculate position after text changes (reflow)
+            const newAnchorTop = anchor.getBoundingClientRect().top;
+            const diff = newAnchorTop - previousAnchorTop;
+
+            // If the element moved significantly, adjust scroll to keep it in the same visual position
+            if (Math.abs(diff) > 1) {
+                window.scrollBy(0, diff);
+            }
+        }
+        // --- SCROLL RESTORATION END ---
     } catch (e) {
         window.currentLocale = null;
         // silent fail, fallback to data-ko/data-en handling
@@ -136,8 +174,8 @@ function applyLocaleTranslations(dict) {
         const attrEls = document.querySelectorAll('[data-i18n-attr]');
         attrEls.forEach(el => {
             try {
-            // Skip attributes for elements inside projects section
-            // if (el.closest && el.closest('.projects-section')) return;
+                // Skip attributes for elements inside projects section
+                // if (el.closest && el.closest('.projects-section')) return;
                 const mapping = el.getAttribute('data-i18n-attr');
                 if (!mapping) return;
                 const pairs = mapping.split(';').map(s => s.trim()).filter(Boolean);
@@ -153,7 +191,7 @@ function applyLocaleTranslations(dict) {
                         if (attr in el) el[attr] = val;
                         el.setAttribute(attr, val);
                     } catch (e) {
-                        try { el.setAttribute(attr, val); } catch (ee) {}
+                        try { el.setAttribute(attr, val); } catch (ee) { }
                     }
                 });
             } catch (e) {
@@ -165,7 +203,7 @@ function applyLocaleTranslations(dict) {
         try {
             const pageTitle = getValueByPath(dict, 'pageTitle');
             if (pageTitle) document.title = pageTitle;
-        } catch (e) {}
+        } catch (e) { }
 
     } catch (e) {
         // ignore
@@ -237,7 +275,7 @@ function lazyLoadProjectImages() {
             if (entry.isIntersecting) {
                 const imageDiv = entry.target;
                 const classList = Array.from(imageDiv.classList);
-                
+
                 for (const className of classList) {
                     if (projectImageMap[className]) {
                         imageDiv.style.backgroundImage = `url('${projectImageMap[className]}')`;
@@ -261,7 +299,7 @@ function initSkillTooltips() {
     // Prevent multiple initializations
     if (isSkillTooltipsInitialized) return;
     isSkillTooltipsInitialized = true;
-    
+
     try {
         const skillNames = document.querySelectorAll('.skill-name');
         skillNames.forEach(skillName => {
@@ -291,7 +329,7 @@ function initializePage() {
     }
     isInitialized = true;
     isInitializing = true;
-    
+
     // Wrap entire initialization in try-catch to prevent page blocking
     try {
         // Initialize language - set state and update elements
@@ -307,54 +345,54 @@ function initializePage() {
         } catch (e) {
             console.error('Error initializing language:', e);
         }
-        
+
         // Initialize lazy loading for project images
         try {
             lazyLoadProjectImages();
         } catch (e) {
             console.error('Error initializing project image lazy loading:', e);
         }
-        
+
         // Initialize TTS (wrapped in try-catch to prevent blocking)
         try {
             initTTS();
         } catch (e) {
             console.error('Error initializing TTS:', e);
         }
-        
+
         // Initialize skill tooltips (wrapped in try-catch to prevent blocking)
         try {
             initSkillTooltips();
         } catch (e) {
             console.error('Error initializing skill tooltips:', e);
         }
-        
+
         // Profile image click animation
         const profileImage = document.querySelector('.floating-profile-image');
         if (profileImage) {
-            profileImage.addEventListener('click', function() {
+            profileImage.addEventListener('click', function () {
                 // Add clicked class for spin animation
                 this.classList.add('clicked');
-                
+
                 // Remove class after animation completes
                 setTimeout(() => {
                     this.classList.remove('clicked');
                 }, 600);
             });
         }
-        
+
         // Language switcher button - completely safe implementation
         const langBtn = document.getElementById('langBtn');
         if (langBtn) {
             let lastClickTime = 0;
-            langBtn.addEventListener('click', function(e) {
+            langBtn.addEventListener('click', function (e) {
                 // Prevent rapid clicks (debounce)
                 const now = Date.now();
                 if (now - lastClickTime < 500) {
                     return;
                 }
                 lastClickTime = now;
-                
+
                 // Update language immediately - completely synchronous, no async operations
                 try {
                     const newLang = currentLang === 'ko' ? 'en' : 'ko';
@@ -368,7 +406,7 @@ function initializePage() {
         const navMenu = document.querySelector('.nav-menu');
 
         if (hamburger) {
-            hamburger.addEventListener('click', function() {
+            hamburger.addEventListener('click', function () {
                 navMenu.classList.toggle('active');
             });
         }
@@ -376,7 +414,7 @@ function initializePage() {
         // Close menu and smooth scroll for navigation links (combined to avoid duplicate listeners)
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
                 // Close menu
                 if (navMenu) {
@@ -385,13 +423,13 @@ function initializePage() {
                 // Smooth scroll
                 const targetId = this.getAttribute('href');
                 const targetSection = document.querySelector(targetId);
-                
+
                 if (targetSection) {
                     // Calculate offset more accurately
                     const rect = targetSection.getBoundingClientRect();
                     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                     const offsetTop = rect.top + scrollTop - 80;
-                    
+
                     // Direct scroll without requestAnimationFrame for immediate response
                     window.scrollTo({
                         top: offsetTop,
@@ -406,15 +444,15 @@ function initializePage() {
         if (navbar) {
             let scrollTimeout = null;
             let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', function() {
+            window.addEventListener('scroll', function () {
                 const currentScrollY = window.scrollY;
-                
+
                 // Only update if scroll position changed significantly
                 if (Math.abs(currentScrollY - lastScrollY) < 5) {
                     return;
                 }
                 lastScrollY = currentScrollY;
-                
+
                 if (scrollTimeout) {
                     cancelAnimationFrame(scrollTimeout);
                 }
@@ -431,7 +469,7 @@ function initializePage() {
         }
 
         // Animate skill bars on scroll (delayed to prevent blocking)
-        setTimeout(function() {
+        setTimeout(function () {
             try {
                 const skillBars = document.querySelectorAll('.skill-progress');
                 if (skillBars.length > 0) {
@@ -440,7 +478,7 @@ function initializePage() {
                         rootMargin: '0px'
                     };
 
-                    const skillObserver = new IntersectionObserver(function(entries) {
+                    const skillObserver = new IntersectionObserver(function (entries) {
                         entries.forEach(entry => {
                             if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
                                 const progress = entry.target.getAttribute('data-progress');
@@ -462,11 +500,11 @@ function initializePage() {
         }, 300);
 
         // Animate stats on scroll (delayed to prevent blocking)
-        setTimeout(function() {
+        setTimeout(function () {
             try {
                 const statNumbers = document.querySelectorAll('.stat-number');
                 if (statNumbers.length > 0) {
-                    const statObserver = new IntersectionObserver(function(entries) {
+                    const statObserver = new IntersectionObserver(function (entries) {
                         entries.forEach(entry => {
                             if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
                                 const text = entry.target.textContent;
@@ -498,161 +536,161 @@ function initializePage() {
 
         // Open modal when project link is clicked
         projectLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const projectCard = this.closest('.project-card');
-            if (!projectCard) return;
-            
-            const projectContent = projectCard.querySelector('.project-content');
-            if (!projectContent) return;
-            
-            // Extract project information
-            const titleEl = projectContent.querySelector('.project-title');
-            const title = titleEl ? titleEl.textContent : '';
-            
-            const detailRows = projectContent.querySelectorAll('.detail-row .detail-value');
-            const client = detailRows[0] ? detailRows[0].textContent : '';
-            const period = detailRows[1] ? detailRows[1].textContent : '';
-            const environment = detailRows[2] ? detailRows[2].textContent : '';
-            
-            // Get data from hidden project-data div (prefer language-specific attributes)
-            const projectData = projectContent.querySelector('.project-data');
-            let introduction = '';
-            let role = '';
-            let review = '';
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const projectCard = this.closest('.project-card');
+                if (!projectCard) return;
 
-            if (projectData) {
-                const introEl = projectData.querySelector('[data-field="introduction"]');
-                const roleEl = projectData.querySelector('[data-field="role"]');
-                const reviewEl = projectData.querySelector('[data-field="review"]');
+                const projectContent = projectCard.querySelector('.project-content');
+                if (!projectContent) return;
 
-                // Prefer attributes like data-en or data-ko if present
-                if (introEl) {
-                    introduction = introEl.textContent.trim();
-                }
-                if (roleEl) {
-                    role = roleEl.textContent.trim();
-                }
-                if (reviewEl) {
-                    review = reviewEl.textContent.trim();
-                }
-            } else {
-                console.warn('Project data not found for:', title);
-            }
-            
-            // Get tags
-            const tags = [];
-            const tagElements = projectContent.querySelectorAll('.project-tags .tag');
-            tagElements.forEach(tag => {
-                tags.push(tag.textContent.trim());
-            });
-            
-            // Populate modal - get all modal elements
-            const modalTitleEl = document.getElementById('modalProjectTitle');
-            const modalClientEl = document.getElementById('modalClient');
-            const modalPeriodEl = document.getElementById('modalPeriod');
-            const modalEnvironmentEl = document.getElementById('modalEnvironment');
-            const modalIntroductionEl = document.getElementById('modalIntroduction');
-            const modalRoleEl = document.getElementById('modalRole');
-            const modalReviewEl = document.getElementById('modalReview');
-            
-            // Populate basic info
-            if (modalTitleEl) modalTitleEl.textContent = title || '';
-            if (modalClientEl) modalClientEl.textContent = client || '';
-            if (modalPeriodEl) modalPeriodEl.textContent = period || '';
-            if (modalEnvironmentEl) modalEnvironmentEl.textContent = environment || '';
-            
-            // Populate introduction - always show section
-            if (modalIntroductionEl) {
-                modalIntroductionEl.textContent = introduction || '';
-                const introSection = modalIntroductionEl.closest('.modal-section');
-                if (introSection) {
-                    introSection.style.display = 'block';
-                }
-            }
-            
-            // Populate role - always show section
-            if (modalRoleEl) {
-                if (role && role.includes('|')) {
-                    modalRoleEl.innerHTML = '<ul class="modal-role-list">' + 
-                        role.split('|').map(r => '<li>' + r.trim() + '</li>').join('') + 
-                        '</ul>';
-                } else {
-                    modalRoleEl.textContent = role || '';
-                    // Add padding class for text-only content
-                    if (role) {
-                        modalRoleEl.style.paddingLeft = '1.5rem';
+                // Extract project information
+                const titleEl = projectContent.querySelector('.project-title');
+                const title = titleEl ? titleEl.textContent : '';
+
+                const detailRows = projectContent.querySelectorAll('.detail-row .detail-value');
+                const client = detailRows[0] ? detailRows[0].textContent : '';
+                const period = detailRows[1] ? detailRows[1].textContent : '';
+                const environment = detailRows[2] ? detailRows[2].textContent : '';
+
+                // Get data from hidden project-data div (prefer language-specific attributes)
+                const projectData = projectContent.querySelector('.project-data');
+                let introduction = '';
+                let role = '';
+                let review = '';
+
+                if (projectData) {
+                    const introEl = projectData.querySelector('[data-field="introduction"]');
+                    const roleEl = projectData.querySelector('[data-field="role"]');
+                    const reviewEl = projectData.querySelector('[data-field="review"]');
+
+                    // Prefer attributes like data-en or data-ko if present
+                    if (introEl) {
+                        introduction = introEl.textContent.trim();
                     }
-                }
-                const roleSection = modalRoleEl.closest('.modal-section');
-                if (roleSection) {
-                    roleSection.style.display = 'block';
-                }
-            }
-            
-            // Populate review - always show section
-            if (modalReviewEl) {
-                const reviewSection = modalReviewEl.closest('.modal-section');
-                const reviewTitleEl = document.getElementById('modalReviewTitle');
-                
-                // Get review data element
-                const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
-                const isPortfolioType = reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio';
-
-                // Helper: resolve localized string by priority: loaded locale zement data-<lang> -> fallback
-                const resolveLocalized = (key, el, fallbackKo, fallbackEn) => {
-                    try {
-                        const dict = window.currentLocale || {};
-                        const val = getValueByPath(dict, key);
-                        if (val !== undefined && val !== null && val !== '') return val;
-                        return currentLang === 'ko' ? fallbackKo : fallbackEn;
-                    } catch (e) {
-                        return currentLang === 'ko' ? fallbackKo : fallbackEn;
+                    if (roleEl) {
+                        role = roleEl.textContent.trim();
                     }
-                };
-
-                const localizedDetailTitle = resolveLocalized('modal.detail', reviewTitleEl, '프로젝트 상세', 'Project Details');
-                const localizedReviewTitle = resolveLocalized('modal.review', reviewTitleEl, '프로젝트 후기', 'Project Review');
-                const localizedNoDetail = resolveLocalized('modal.no_detail', reviewTitleEl, '프로젝트 상세 정보가 없습니다.', 'No project details available.');
-                const localizedNoReview = resolveLocalized('modal.no_review', reviewTitleEl, '프로젝트 후기 정보가 없습니다.', 'No project review available.');
-
-                // Check if this is Miracle Reading System project (match titles in either lang)
-                const isMiracleReading = title === '미라클 리딩 시스템' || title === 'Miracle Reading System';
-
-                if (isMiracleReading) {
-                    // Use localized detail title
-                    if (reviewTitleEl) reviewTitleEl.textContent = localizedDetailTitle;
-
-                    // Get portfolio content from review data
-                    if (isPortfolioType) {
-                        // Set innerHTML to preserve HTML structure
-                        modalReviewEl.innerHTML = reviewDataEl.innerHTML;
-                    } else {
-                        modalReviewEl.innerHTML = '<p>' + localizedNoDetail + '</p>';
+                    if (reviewEl) {
+                        review = reviewEl.textContent.trim();
                     }
                 } else {
-                    // Use localized review title for other projects
-                    if (reviewTitleEl) reviewTitleEl.textContent = localizedReviewTitle;
+                    console.warn('Project data not found for:', title);
+                }
 
-                    // Check if portfolio type (like Productivity Hub)
-                    if (isPortfolioType) {
-                        // Set innerHTML to preserve HTML structure
-                        modalReviewEl.innerHTML = reviewDataEl.innerHTML;
-                    } else {
-                        // Use text content for simple text reviews
-                        modalReviewEl.textContent = review || localizedNoReview;
+                // Get tags
+                const tags = [];
+                const tagElements = projectContent.querySelectorAll('.project-tags .tag');
+                tagElements.forEach(tag => {
+                    tags.push(tag.textContent.trim());
+                });
+
+                // Populate modal - get all modal elements
+                const modalTitleEl = document.getElementById('modalProjectTitle');
+                const modalClientEl = document.getElementById('modalClient');
+                const modalPeriodEl = document.getElementById('modalPeriod');
+                const modalEnvironmentEl = document.getElementById('modalEnvironment');
+                const modalIntroductionEl = document.getElementById('modalIntroduction');
+                const modalRoleEl = document.getElementById('modalRole');
+                const modalReviewEl = document.getElementById('modalReview');
+
+                // Populate basic info
+                if (modalTitleEl) modalTitleEl.textContent = title || '';
+                if (modalClientEl) modalClientEl.textContent = client || '';
+                if (modalPeriodEl) modalPeriodEl.textContent = period || '';
+                if (modalEnvironmentEl) modalEnvironmentEl.textContent = environment || '';
+
+                // Populate introduction - always show section
+                if (modalIntroductionEl) {
+                    modalIntroductionEl.textContent = introduction || '';
+                    const introSection = modalIntroductionEl.closest('.modal-section');
+                    if (introSection) {
+                        introSection.style.display = 'block';
                     }
                 }
-                
-                if (reviewSection) {
-                    reviewSection.style.display = 'block';
+
+                // Populate role - always show section
+                if (modalRoleEl) {
+                    if (role && role.includes('|')) {
+                        modalRoleEl.innerHTML = '<ul class="modal-role-list">' +
+                            role.split('|').map(r => '<li>' + r.trim() + '</li>').join('') +
+                            '</ul>';
+                    } else {
+                        modalRoleEl.textContent = role || '';
+                        // Add padding class for text-only content
+                        if (role) {
+                            modalRoleEl.style.paddingLeft = '1.5rem';
+                        }
+                    }
+                    const roleSection = modalRoleEl.closest('.modal-section');
+                    if (roleSection) {
+                        roleSection.style.display = 'block';
+                    }
                 }
-            }
-            
-            // Populate tags
-            const tagsContainer = document.getElementById('modalTags');
-            tagsContainer.innerHTML = tags.map(tag => '<span class="tag">' + tag + '</span>').join('');
-            
+
+                // Populate review - always show section
+                if (modalReviewEl) {
+                    const reviewSection = modalReviewEl.closest('.modal-section');
+                    const reviewTitleEl = document.getElementById('modalReviewTitle');
+
+                    // Get review data element
+                    const reviewDataEl = projectData ? projectData.querySelector('[data-field="review"]') : null;
+                    const isPortfolioType = reviewDataEl && reviewDataEl.getAttribute('data-type') === 'portfolio';
+
+                    // Helper: resolve localized string by priority: loaded locale zement data-<lang> -> fallback
+                    const resolveLocalized = (key, el, fallbackKo, fallbackEn) => {
+                        try {
+                            const dict = window.currentLocale || {};
+                            const val = getValueByPath(dict, key);
+                            if (val !== undefined && val !== null && val !== '') return val;
+                            return currentLang === 'ko' ? fallbackKo : fallbackEn;
+                        } catch (e) {
+                            return currentLang === 'ko' ? fallbackKo : fallbackEn;
+                        }
+                    };
+
+                    const localizedDetailTitle = resolveLocalized('modal.detail', reviewTitleEl, '프로젝트 상세', 'Project Details');
+                    const localizedReviewTitle = resolveLocalized('modal.review', reviewTitleEl, '프로젝트 후기', 'Project Review');
+                    const localizedNoDetail = resolveLocalized('modal.no_detail', reviewTitleEl, '프로젝트 상세 정보가 없습니다.', 'No project details available.');
+                    const localizedNoReview = resolveLocalized('modal.no_review', reviewTitleEl, '프로젝트 후기 정보가 없습니다.', 'No project review available.');
+
+                    // Check if this is Miracle Reading System project (match titles in either lang)
+                    const isMiracleReading = title === '미라클 리딩 시스템' || title === 'Miracle Reading System';
+
+                    if (isMiracleReading) {
+                        // Use localized detail title
+                        if (reviewTitleEl) reviewTitleEl.textContent = localizedDetailTitle;
+
+                        // Get portfolio content from review data
+                        if (isPortfolioType) {
+                            // Set innerHTML to preserve HTML structure
+                            modalReviewEl.innerHTML = reviewDataEl.innerHTML;
+                        } else {
+                            modalReviewEl.innerHTML = '<p>' + localizedNoDetail + '</p>';
+                        }
+                    } else {
+                        // Use localized review title for other projects
+                        if (reviewTitleEl) reviewTitleEl.textContent = localizedReviewTitle;
+
+                        // Check if portfolio type (like Productivity Hub)
+                        if (isPortfolioType) {
+                            // Set innerHTML to preserve HTML structure
+                            modalReviewEl.innerHTML = reviewDataEl.innerHTML;
+                        } else {
+                            // Use text content for simple text reviews
+                            modalReviewEl.textContent = review || localizedNoReview;
+                        }
+                    }
+
+                    if (reviewSection) {
+                        reviewSection.style.display = 'block';
+                    }
+                }
+
+                // Populate tags
+                const tagsContainer = document.getElementById('modalTags');
+                tagsContainer.innerHTML = tags.map(tag => '<span class="tag">' + tag + '</span>').join('');
+
                 // Show modal
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
@@ -674,7 +712,7 @@ function initializePage() {
         }
 
         // Close modal on Escape key
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('active')) {
                 closeModal();
             }
@@ -682,21 +720,21 @@ function initializePage() {
 
         // Scroll to Top Button
         const scrollTopBtn = document.getElementById('scrollTopBtn');
-        
+
         if (scrollTopBtn) {
             // Show/hide scroll top button based on scroll position (throttled for performance)
             let scrollTopTimeout = null;
             let lastScrollTopY = window.scrollY;
             let isScrollTopVisible = false;
-            window.addEventListener('scroll', function() {
+            window.addEventListener('scroll', function () {
                 const currentScrollY = window.scrollY;
-                
+
                 // Only update if scroll position changed significantly
                 if (Math.abs(currentScrollY - lastScrollTopY) < 10) {
                     return;
                 }
                 lastScrollTopY = currentScrollY;
-                
+
                 if (scrollTopTimeout) {
                     cancelAnimationFrame(scrollTopTimeout);
                 }
@@ -714,7 +752,7 @@ function initializePage() {
             }, { passive: true });
 
             // Smooth scroll to top when button is clicked
-            scrollTopBtn.addEventListener('click', function() {
+            scrollTopBtn.addEventListener('click', function () {
                 // Cancel any ongoing scroll animations
                 window.scrollTo({
                     top: 0,
@@ -726,16 +764,16 @@ function initializePage() {
         // Stat items click to scroll to sections
         const statItems = document.querySelectorAll('.stat-item[data-target]');
         statItems.forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 const targetId = this.getAttribute('data-target');
                 const targetSection = document.querySelector(targetId);
-                
+
                 if (targetSection) {
                     // Calculate offset more accurately
                     const rect = targetSection.getBoundingClientRect();
                     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                     const offsetTop = rect.top + scrollTop - 80;
-                    
+
                     // Direct scroll without requestAnimationFrame for immediate response
                     window.scrollTo({
                         top: offsetTop,
@@ -766,7 +804,7 @@ function initializePage() {
         }
 
         if (freelanceStatTrigger) {
-            freelanceStatTrigger.addEventListener('click', function(e) {
+            freelanceStatTrigger.addEventListener('click', function (e) {
                 e.preventDefault();
                 openFreelanceModal();
             });
@@ -780,7 +818,7 @@ function initializePage() {
             freelanceModalOverlay.addEventListener('click', closeFreelanceModal);
         }
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && freelanceModal && freelanceModal.classList.contains('active')) {
                 closeFreelanceModal();
             }
@@ -789,7 +827,7 @@ function initializePage() {
         // Toggle competency details
         const toggleButtons = document.querySelectorAll('.btn-toggle-details');
         toggleButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const competencyItem = this.closest('.competency-item');
                 if (!competencyItem) return;
 
@@ -846,86 +884,86 @@ function initTTS() {
     // Prevent multiple initializations
     if (isTTSInitialized) return;
     isTTSInitialized = true;
-    
+
     try {
         // Check if browser supports Web Speech API
         if ('speechSynthesis' in window) {
             speechSynthesis = window.speechSynthesis;
-        
-        // Get buttons
-        const playBtn = document.getElementById('ttsPlayBtn');
-        const pauseBtn = document.getElementById('ttsPauseBtn');
-        const stopBtn = document.getElementById('ttsStopBtn');
-        const speedSlider = document.getElementById('ttsSpeed');
-        const speedValue = document.getElementById('ttsSpeedValue');
-        
-        // Play button
-        if (playBtn) {
-            playBtn.addEventListener('click', function() {
-                playTTS();
-            });
-        }
-        
-        // Pause button
-        if (pauseBtn) {
-            pauseBtn.addEventListener('click', function() {
-                pauseTTS();
-            });
-        }
-        
-        // Stop button
-        if (stopBtn) {
-            stopBtn.addEventListener('click', function() {
-                stopTTS();
-            });
-        }
-        
-        // Speed control
-        if (speedSlider && speedValue) {
-            let speedChangeTimeout = null;
-            speedSlider.addEventListener('input', function() {
-                const newSpeed = parseFloat(this.value);
-                const wasSpeaking = speechSynthesis.speaking || speechSynthesis.pending;
-                const wasPaused = isPaused;
-                
-                ttsSpeed = newSpeed;
-                speedValue.textContent = ttsSpeed.toFixed(1) + 'x';
-                
-                // Clear any pending restart
-                if (speedChangeTimeout) {
-                    clearTimeout(speedChangeTimeout);
-                }
-                
-                // If currently speaking, restart with new speed
-                if (wasSpeaking && currentTTSText && !wasPaused) {
-                    // Use debounce to avoid multiple restarts during slider drag
-                    speedChangeTimeout = setTimeout(() => {
-                        console.log('Speed changed during playback, restarting with new speed:', ttsSpeed);
-                        // Cancel current speech immediately
-                        speechSynthesis.cancel();
-                        isPaused = false;
-                        currentUtterance = null;
-                        
-                        // Restart with new speed immediately (no delay for smoother transition)
-                        restartTTSWithCurrentText();
-                    }, 150); // Small debounce delay
-                }
-            });
-        }
-        
-        // Stop TTS when page is unloaded
-        window.addEventListener('beforeunload', function() {
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
+
+            // Get buttons
+            const playBtn = document.getElementById('ttsPlayBtn');
+            const pauseBtn = document.getElementById('ttsPauseBtn');
+            const stopBtn = document.getElementById('ttsStopBtn');
+            const speedSlider = document.getElementById('ttsSpeed');
+            const speedValue = document.getElementById('ttsSpeedValue');
+
+            // Play button
+            if (playBtn) {
+                playBtn.addEventListener('click', function () {
+                    playTTS();
+                });
             }
-        });
-    } else {
-        // Hide TTS controls if not supported
-        const ttsControls = document.querySelector('.tts-controls');
-        if (ttsControls) {
-            ttsControls.style.display = 'none';
+
+            // Pause button
+            if (pauseBtn) {
+                pauseBtn.addEventListener('click', function () {
+                    pauseTTS();
+                });
+            }
+
+            // Stop button
+            if (stopBtn) {
+                stopBtn.addEventListener('click', function () {
+                    stopTTS();
+                });
+            }
+
+            // Speed control
+            if (speedSlider && speedValue) {
+                let speedChangeTimeout = null;
+                speedSlider.addEventListener('input', function () {
+                    const newSpeed = parseFloat(this.value);
+                    const wasSpeaking = speechSynthesis.speaking || speechSynthesis.pending;
+                    const wasPaused = isPaused;
+
+                    ttsSpeed = newSpeed;
+                    speedValue.textContent = ttsSpeed.toFixed(1) + 'x';
+
+                    // Clear any pending restart
+                    if (speedChangeTimeout) {
+                        clearTimeout(speedChangeTimeout);
+                    }
+
+                    // If currently speaking, restart with new speed
+                    if (wasSpeaking && currentTTSText && !wasPaused) {
+                        // Use debounce to avoid multiple restarts during slider drag
+                        speedChangeTimeout = setTimeout(() => {
+                            console.log('Speed changed during playback, restarting with new speed:', ttsSpeed);
+                            // Cancel current speech immediately
+                            speechSynthesis.cancel();
+                            isPaused = false;
+                            currentUtterance = null;
+
+                            // Restart with new speed immediately (no delay for smoother transition)
+                            restartTTSWithCurrentText();
+                        }, 150); // Small debounce delay
+                    }
+                });
+            }
+
+            // Stop TTS when page is unloaded
+            window.addEventListener('beforeunload', function () {
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+            });
+        } else {
+            // Hide TTS controls if not supported
+            const ttsControls = document.querySelector('.tts-controls');
+            if (ttsControls) {
+                ttsControls.style.display = 'none';
+            }
         }
-    }
     } catch (e) {
         console.error('Error in initTTS:', e);
         isTTSInitialized = false; // Reset on error
@@ -957,10 +995,10 @@ function getMaleVoice(lang) {
             console.log('🎤 No male voice found. Selecting Google voice and using low pitch.', googleVoice.name);
             return googleVoice;
         }
-        
+
         // Fallback to the first available voice.
         if (langVoices[0]) {
-             console.log('🎤 No male voice found. Selecting first available voice and using low pitch.', langVoices[0].name);
+            console.log('🎤 No male voice found. Selecting first available voice and using low pitch.', langVoices[0].name);
             return langVoices[0];
         }
 
@@ -971,17 +1009,17 @@ function getMaleVoice(lang) {
     if (lang === 'en') {
         const maleVoice = langVoices.find(voice => {
             const name = voice.name.toLowerCase();
-            return name.includes('male') || 
-                   name.includes('man') || 
-                   name.includes('david') || 
-                   name.includes('daniel') ||
-                   name.includes('james') ||
-                   name.includes('john') ||
-                   name.includes('mark') ||
-                   name.includes('paul') ||
-                   name.includes('thomas') ||
-                   (name.includes('google') && name.includes('male')) ||
-                   (name.includes('microsoft') && (name.includes('david') || name.includes('mark')));
+            return name.includes('male') ||
+                name.includes('man') ||
+                name.includes('david') ||
+                name.includes('daniel') ||
+                name.includes('james') ||
+                name.includes('john') ||
+                name.includes('mark') ||
+                name.includes('paul') ||
+                name.includes('thomas') ||
+                (name.includes('google') && name.includes('male')) ||
+                (name.includes('microsoft') && (name.includes('david') || name.includes('mark')));
         });
         if (maleVoice) return maleVoice;
     }
@@ -992,16 +1030,16 @@ function getMaleVoice(lang) {
 
 function playTTS() {
     const aboutTextContent = document.getElementById('aboutTextContent');
-    
+
     if (!speechSynthesis || !aboutTextContent) return;
-    
+
     // Check current state
     const actuallyPaused = speechSynthesis.paused === true;
     const isCurrentlyPaused = isPaused || actuallyPaused;
     const isCurrentlySpeaking = speechSynthesis.speaking || speechSynthesis.pending;
-    
+
     console.log('playTTS called - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isCurrentlySpeaking:', isCurrentlySpeaking);
-    
+
     // If paused, resume using the restart workaround for reliability
     if (isCurrentlyPaused && (isCurrentlySpeaking || currentUtterance)) {
         console.log('Attempting to resume TTS by restarting...');
@@ -1011,23 +1049,23 @@ function playTTS() {
         restartTTSWithCurrentText();
         return;
     }
-    
+
     // If already speaking and not paused, do nothing
     if (isCurrentlySpeaking && !isCurrentlyPaused) {
         console.log('Already speaking, doing nothing');
         return;
     }
-    
+
     // Stop any current speech before starting new
     if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
         isPaused = false;
     }
-    
+
     // Get current language
     const lang = currentLang || 'ko';
     currentTTSLang = lang;
-    
+
     // Get text content based on current language
     let text = '';
     const paragraphs = aboutTextContent.querySelectorAll('p');
@@ -1036,30 +1074,30 @@ function playTTS() {
         text += (p.innerText || p.textContent) + ' ';
     });
     text = text.trim();
-    
+
     if (!text) return;
-    
+
     // Store current text for potential restart
     currentTTSText = text;
-    
+
     // Function to speak with voice selection
     function speakWithVoice() {
         // Create utterance
         currentUtterance = new SpeechSynthesisUtterance(text);
-        
+
         // Set language based on current language mode
         if (lang === 'ko') {
             currentUtterance.lang = 'ko-KR';
         } else {
             currentUtterance.lang = 'en-US';
         }
-        
+
         currentUtterance.rate = ttsSpeed;
         // Set lower pitch for male voice (0.8 to 1.2 range, 1.0 is default)
         // For Korean, use much lower pitch (0.5) to ensure more masculine sound
         currentUtterance.pitch = lang === 'ko' ? 0.5 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
-        
+
         // Get male voice
         const maleVoice = getMaleVoice(lang);
         if (maleVoice) {
@@ -1074,24 +1112,24 @@ function playTTS() {
             }
             // Even if no specific male voice found, keep the lower pitch setting
         }
-        
+
         // Event handlers
-        currentUtterance.onstart = function() {
+        currentUtterance.onstart = function () {
             isPaused = false;
             ttsCharIndex = 0; // Reset character index on start
             setTimeout(() => {
                 updateTTSButtons();
             }, 50);
         };
-        
+
         // Track character position during playback
-        currentUtterance.onboundary = function(event) {
+        currentUtterance.onboundary = function (event) {
             if (event.name === 'word' || event.name === 'sentence') {
                 ttsCharIndex = event.charIndex;
             }
         };
-        
-        currentUtterance.onend = function() {
+
+        currentUtterance.onend = function () {
             isPaused = false;
             currentUtterance = null;
             currentTTSText = ''; // Clear stored text when finished
@@ -1100,8 +1138,8 @@ function playTTS() {
                 updateTTSButtons();
             }, 50);
         };
-        
-        currentUtterance.onerror = function(event) {
+
+        currentUtterance.onerror = function (event) {
             // Ignore 'interrupted' error - it's normal when cancelling speech for speed change
             if (event.error !== 'interrupted') {
                 console.error('TTS Error:', event.error);
@@ -1114,26 +1152,26 @@ function playTTS() {
                 }, 50);
             }
         };
-        
+
         // Reset state before speaking
         isPaused = false;
-        
+
         // Speak
         speechSynthesis.speak(currentUtterance);
-        
+
         // Update buttons after a short delay to ensure state is set
         setTimeout(() => {
             updateTTSButtons();
         }, 100);
     }
-    
+
     // Check if voices are loaded
     const voices = speechSynthesis.getVoices();
     if (voices.length > 0) {
         speakWithVoice();
     } else {
         // Wait for voices to load
-        const voicesChangedHandler = function() {
+        const voicesChangedHandler = function () {
             speakWithVoice();
             speechSynthesis.removeEventListener('voiceschanged', voicesChangedHandler);
         };
@@ -1147,53 +1185,53 @@ function restartTTSWithCurrentText() {
         console.warn('Cannot restart TTS: speechSynthesis or currentTTSText is missing');
         return;
     }
-    
+
     const lang = currentTTSLang || 'ko';
-    
+
     // Get remaining text from current position
     const remainingText = currentTTSText.substring(ttsCharIndex);
     const charOffset = ttsCharIndex; // Store offset for boundary tracking
-    
+
     if (!remainingText || remainingText.trim().length === 0) {
         // If we've reached the end, just stop
         stopTTS();
         return;
     }
-    
+
     // Cancel any current speech immediately
     if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
     }
-    
+
     // Reset state
     isPaused = false;
     currentUtterance = null;
-    
+
     // Function to speak with voice selection
     function speakWithVoiceRestart() {
         // Create utterance with remaining text
         currentUtterance = new SpeechSynthesisUtterance(remainingText);
-        
+
         // Set language
         if (lang === 'ko') {
             currentUtterance.lang = 'ko-KR';
         } else {
             currentUtterance.lang = 'en-US';
         }
-        
+
         currentUtterance.rate = ttsSpeed; // Use updated speed
         currentUtterance.pitch = lang === 'ko' ? 0.5 : 0.9; // Very low pitch for Korean male voice
         currentUtterance.volume = 1.0;
-        
+
         // Get male voice
         const maleVoice = getMaleVoice(lang);
         if (maleVoice) {
             currentUtterance.voice = maleVoice;
             console.log('🎤 Restarting TTS with new speed:', ttsSpeed, 'Voice:', maleVoice.name, 'Pitch:', currentUtterance.pitch);
         }
-        
+
         // Event handlers
-        currentUtterance.onstart = function() {
+        currentUtterance.onstart = function () {
             isPaused = false;
             // Keep the current character index (don't reset)
             console.log('✅ TTS restarted successfully from position:', charOffset, 'remaining text length:', remainingText.length);
@@ -1201,16 +1239,16 @@ function restartTTSWithCurrentText() {
                 updateTTSButtons();
             }, 50);
         };
-        
+
         // Track character position during playback (adjust for offset)
-        currentUtterance.onboundary = function(event) {
+        currentUtterance.onboundary = function (event) {
             if (event.name === 'word' || event.name === 'sentence') {
                 // event.charIndex is relative to current utterance, so add offset
                 ttsCharIndex = charOffset + event.charIndex;
             }
         };
-        
-        currentUtterance.onend = function() {
+
+        currentUtterance.onend = function () {
             isPaused = false;
             currentUtterance = null;
             currentTTSText = '';
@@ -1219,8 +1257,8 @@ function restartTTSWithCurrentText() {
                 updateTTSButtons();
             }, 50);
         };
-        
-        currentUtterance.onerror = function(event) {
+
+        currentUtterance.onerror = function (event) {
             // Ignore 'interrupted' error - it's normal when cancelling speech for speed change
             if (event.error !== 'interrupted') {
                 console.error('TTS Error:', event.error);
@@ -1233,10 +1271,10 @@ function restartTTSWithCurrentText() {
                 }, 50);
             }
         };
-        
+
         // Reset state before speaking
         isPaused = false;
-        
+
         // Speak immediately
         try {
             speechSynthesis.speak(currentUtterance);
@@ -1249,7 +1287,7 @@ function restartTTSWithCurrentText() {
             updateTTSButtons();
         }
     }
-    
+
     // Check if voices are loaded
     const availableVoices = speechSynthesis.getVoices();
     if (availableVoices.length > 0) {
@@ -1259,7 +1297,7 @@ function restartTTSWithCurrentText() {
         }, 50);
     } else {
         // Wait for voices to load
-        const voicesChangedHandler = function() {
+        const voicesChangedHandler = function () {
             setTimeout(() => {
                 speakWithVoiceRestart();
             }, 50);
@@ -1304,7 +1342,7 @@ function updateTTSButtons() {
     const playBtn = document.getElementById('ttsPlayBtn');
     const pauseBtn = document.getElementById('ttsPauseBtn');
     const stopBtn = document.getElementById('ttsStopBtn');
-    
+
     if (!speechSynthesis) {
         // No speech synthesis - show play button only
         if (playBtn) playBtn.style.display = 'flex';
@@ -1312,14 +1350,14 @@ function updateTTSButtons() {
         if (stopBtn) stopBtn.style.display = 'none';
         return;
     }
-    
+
     // Check actual state from speechSynthesis API
     const actuallyPaused = speechSynthesis.paused === true;
     const isActuallyPaused = isPaused || actuallyPaused;
     const isActuallySpeaking = speechSynthesis.speaking || speechSynthesis.pending;
-    
+
     console.log('updateTTSButtons - isPaused:', isPaused, 'actuallyPaused:', actuallyPaused, 'isActuallySpeaking:', isActuallySpeaking, 'hasUtterance:', !!currentUtterance);
-    
+
     // Priority 1: If paused (but utterance exists), show play button to resume
     if (isActuallyPaused && (isActuallySpeaking || currentUtterance)) {
         if (playBtn) {
@@ -1337,7 +1375,7 @@ function updateTTSButtons() {
         console.log('Buttons updated: Paused state - showing play button for resume');
         return;
     }
-    
+
     // Priority 2: If playing (not paused), show pause button
     if (isActuallySpeaking && !isActuallyPaused) {
         if (playBtn) playBtn.style.display = 'none';
@@ -1355,7 +1393,7 @@ function updateTTSButtons() {
         console.log('Buttons updated: Playing state - showing pause button');
         return;
     }
-    
+
     // Priority 3: Not playing - show play button only
     if (playBtn) {
         playBtn.style.display = 'flex';
@@ -1379,12 +1417,12 @@ if ('speechSynthesis' in window) {
 
 // Add active class to current navigation link (Throttled)
 let scrollTimeout;
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     if (scrollTimeout) {
         return;
     }
 
-    scrollTimeout = setTimeout(function() {
+    scrollTimeout = setTimeout(function () {
         const sections = document.querySelectorAll('.section');
         const navLinks = document.querySelectorAll('.nav-link');
         let current = '';
@@ -1402,7 +1440,7 @@ window.addEventListener('scroll', function() {
                 link.classList.add('active');
             }
         });
-        
+
         scrollTimeout = null;
     }, 100); // Run this at most every 100ms
 }, { passive: true });
